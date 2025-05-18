@@ -23,6 +23,24 @@
                   },
               },
               {
+                id: "pnpm",
+                name: "Set up pnpm",
+                uses: "pnpm/action-setup@v4",
+                with: { package_json_file: "comments/package.json" },
+              },
+              {
+                id: "node",
+                name: "Set up Node.js",
+                uses: "actions/setup-node@v4",
+                with:
+                  {
+                    node-version-file: "comments/.nvmrc",
+                    cache-dependency-path: "comments/pnpm-lock.yaml",
+                    cache: "pnpm",
+                  },
+              },
+              { name: "Build Next.js app", run: "pnpm run build" },
+              {
                 name: "Build and push",
                 uses: "docker/build-push-action@v5",
                 with:
