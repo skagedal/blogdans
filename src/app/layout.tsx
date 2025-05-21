@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import "./globals.css";
-
-// This is the root layout for the app. It wraps all pages in the app directory.
+import "./splash.css";
 
 export const metadata: Metadata = {
   title: "blogdans",

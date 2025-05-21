@@ -75,7 +75,11 @@
               {
                 name: "Pull Docker image",
                 run: "ssh blogdans ./bin/fetch-latest",
-              }
+              },
+              {
+                name: "Stop Docker container, making systemd restart it",
+                run: "ssh blogdans ./bin/stop-service",
+              },
             ],
         },
     },
