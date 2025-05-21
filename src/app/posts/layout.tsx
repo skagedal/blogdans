@@ -27,7 +27,7 @@ export default function RootLayout({
             <footer className="mt-8">
               <hr className="mb-4" />
               <p className="text-sm text-gray-500">
-                &copy; {new Date().getFullYear()} Simon&apos;s blog
+                &copy; 2025 Simon Kågedal Reimer
               </p>
             </footer>
           </article>
