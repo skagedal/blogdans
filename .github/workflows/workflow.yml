@@ -40,6 +40,10 @@
                   cache: "pnpm" 
                 },
               },
+              {
+                name: "Install dependencies",
+                run: "pnpm install --frozen-lockfile",
+              },
               { 
                 name: "Build Next.js app", 
                 run: "pnpm run build" 
