@@ -71,6 +71,10 @@
               {
                 name: "Deploy files to server",
                 run: "rsync --archive --verbose --compress --delete ./bin blogdans:",
+              },
+              {
+                name: "Pull Docker image",
+                run: "ssh blogdans ./bin/fetch-latest",
               }
             ],
         },
