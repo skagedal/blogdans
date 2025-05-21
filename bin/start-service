@@ -1,0 +1,2 @@
+#!/usr/bin/bash
+docker run --rm --name blogdans --publish 9030:3000 skagedal/blogdans:latest

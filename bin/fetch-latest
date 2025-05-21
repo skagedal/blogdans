@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+docker login --username skagedal --password-stdin < .secrets/docker-hub-token
+docker pull skagedal/blogdans:latest
