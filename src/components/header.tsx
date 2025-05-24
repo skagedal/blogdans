@@ -10,12 +10,6 @@ export function Header() {
         >
           skagedal.tech
         </Link>
-        <Link
-          href="/feed.xml"
-          className="text-sm hover:underline hover:opacity-80"
-        >
-          RSS
-        </Link>
       </nav>
     </header>
   );

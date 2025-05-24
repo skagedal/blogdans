@@ -1,6 +1,8 @@
 import { Post } from "@/lib/posts";
 import { Next, Prev } from "./prev-next";
 import { SiGithub, SiBluesky } from "react-icons/si";
+import Link from "next/link";
+import { RssIcon } from "lucide-react";
 
 export function Footer({ previous, next }: { previous?: Post; next?: Post }) {
   return (
@@ -18,10 +20,10 @@ export function Footer({ previous, next }: { previous?: Post; next?: Post }) {
             <div className="w-1/2 max-w-xs" />
           )}
         </div>
-      ) : <div className="w-full border-t  border-gray-200" />}
-      <div className="">
-        Simon Kågedal Reimer &lt;skagedal@gmail.com&gt;
-      </div>
+      ) : (
+        <div className="w-full border-t  border-gray-200" />
+      )}
+      <div className="">Simon Kågedal Reimer &lt;skagedal@gmail.com&gt;</div>
       <SocialLinks />
     </footer>
   );
@@ -35,6 +37,9 @@ export default function SocialLinks() {
       </a>
       <a href="https://bsky.app/profile/skagedal.tech">
         <SiBluesky />
+      </a>
+      <a href="/feed.xml">
+        <RssIcon />
       </a>
     </nav>
   );
