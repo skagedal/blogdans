@@ -64,12 +64,12 @@ class AppTest {
 
 When I run this little test with `./gradlew test` and my Docker context as described above, I get this error:
 
-```
-    [Test worker] ERROR org.testcontainers.dockerclient.DockerClientProviderStrategy - Could not find a valid Docker environment. Please check configuration. Attempted configurations were:
-        UnixSocketClientProviderStrategy: failed with exception InvalidConfigurationException (Could not find unix domain socket). Root cause NoSuchFileException (/var/run/docker.sock)As no valid configuration was found, execution cannot continue.
-    See https://www.testcontainers.org/on_failure.html for more details.
-    We failed:
-    Could not find a valid Docker environment. Please see logs and check configuration
+```text
+[Test worker] ERROR org.testcontainers.dockerclient.DockerClientProviderStrategy - Could not find a valid Docker environment. Please check configuration. Attempted configurations were:
+    UnixSocketClientProviderStrategy: failed with exception InvalidConfigurationException (Could not find unix domain socket). Root cause NoSuchFileException (/var/run/docker.sock)As no valid configuration was found, execution cannot continue.
+See https://www.testcontainers.org/on_failure.html for more details.
+We failed:
+Could not find a valid Docker environment. Please see logs and check configuration
 ```
 
 Apparently, it's trying to use the default socket at `/var/run/docker.sock`, rather than our chosen current docker context.

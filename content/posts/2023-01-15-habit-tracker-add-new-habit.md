@@ -32,15 +32,15 @@ It works great – I can confirm that "Add a habit!" now gets printed on the con
 Let's try this:
 
 ```java
-    @PostMapping("/habits")
-    void addHabit(Habit habit) {
-        System.out.println("Add a habit: " + habit);
-    }
+@PostMapping("/habits")
+void addHabit(Habit habit) {
+    System.out.println("Add a habit: " + habit);
+}
 ```
 
 Cool, that works! I type "Very good habit" in the text field, press "Add", and my Java service logs:
 
-```
+```text
 Add a habit: Habit[id=null, ownedBy=null, description=Very good habit, createdAt=null]
 ```
 
@@ -49,33 +49,33 @@ There's a lot of `null` in there. I don't feel so good about that. I've already 
 Let's explore some alternatives. One thing I could think of is that there might be some annotation we could add somewhere so that the authenticated user name somehow gets injected in the `ownedBy` field. If anyone knows of a way, let me know. I could also just do this:
 
 ```java
-    private record HabitFromForm(String description) {}
+private record HabitFromForm(String description) {}
 
-    @PostMapping("/habits")
-    void addHabit(HabitFromForm habit) {
-        System.out.println("Add a habit: " + habit);
-    }
+@PostMapping("/habits")
+void addHabit(HabitFromForm habit) {
+    System.out.println("Add a habit: " + habit);
+}
 ```
 
 We then get a little clean object, representing the actual data posted in the form, which I feel is kind of _right_. Also just showing this example to illustrate that creating little data types in Java is now much cheaper than it used to be. But in fact, I think I'm gonna just go with this signature: 
 
 ```java
-    @PostMapping("/habits")
-    void addHabit(String description) {
-        System.out.println("Add a habit: " + description);
-    }
+@PostMapping("/habits")
+void addHabit(String description) {
+    System.out.println("Add a habit: " + description);
+}
 ```
 
 This also works, and then I can create my `Habit` model with the right user – getting it from the `Principal` as we did in the `getHabits` endpoint – and save it in the repository:
 
 ```java
-    @PostMapping("/habits")
-    void addHabit(String description, Principal principal) {
-        habits.save(Habit.create(
-            principal.getName(),
-            description
-        ));
-    }
+@PostMapping("/habits")
+void addHabit(String description, Principal principal) {
+    habits.save(Habit.create(
+        principal.getName(),
+        description
+    ));
+}
 ```
 
 We can now type a habit name, press "Add", load the "habits" page again and boom, there it is! Yay! 
@@ -83,20 +83,20 @@ We can now type a habit name, press "Add", load the "habits" page again and boom
 Obviously, we shouldn't have to reload anything – it should just show up. Can we perhaps just return a `ModelAndView`[^2], just like with the `getHabits` handler?
 
 ```java
-    @PostMapping("/habits")
-    ModelAndView addHabit(String description, Principal principal) {
-        habits.save(Habit.create(
-            principal.getName(),
-            description
-        ));
-        return new ModelAndView(
+@PostMapping("/habits")
+ModelAndView addHabit(String description, Principal principal) {
+    habits.save(Habit.create(
+        principal.getName(),
+        description
+    ));
+    return new ModelAndView(
+        "habits",
+        Map.of(
             "habits",
-            Map.of(
-                "habits",
-                habits.findAllByOwnedBy(principal.getName())
-            )
-        );
-    }
+            habits.findAllByOwnedBy(principal.getName())
+        )
+    );
+}
 ```
 
 BOOM, that works! I can now just WRITE the name of a habit, PRESS that flippin' Add button, and then it's just RIGHT THERE IN THE LIST! AMAZING!

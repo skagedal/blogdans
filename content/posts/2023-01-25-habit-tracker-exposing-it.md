@@ -49,7 +49,7 @@ I definitely did not specifically set that up. So I guess we're good, DNS-wise â
 
 One thing I like with Digital Ocean is that they have really nice guides for everything. Like this one: [How To Configure Nginx as a Reverse Proxy on Ubuntu 22.04](https://www.digitalocean.com/community/tutorials/how-to-configure-nginx-as-a-reverse-proxy-on-ubuntu-22-04). I'm literally just following that and putting this is as my `/etc/nginx/sites-available/hahabit.skagedal.tech`:
 
-```
+```nginx
 server {
     listen 80;
     listen [::]:80;
@@ -65,7 +65,7 @@ server {
 
 One thing I didn't quite understand here is what the second line of these two is actually doing:
 
-```
+```nginx
     listen 80;
     listen [::]:80;
 ```

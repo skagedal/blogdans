@@ -80,7 +80,7 @@ Done installing documentation for bundler after 0 seconds
 
 Allright, cool! Did, that help? It did not help. It seems that the version of `bundler` that is used is also somehow controlled by the `Gemfile.lock`. Indeed, taking a look in `Gemfile.lock`, there are these lines at the end:
 
-```
+```text
 BUNDLED WITH
    2.0.1
 ```
@@ -106,7 +106,7 @@ Perfect. I'll change my deploy script to include that instead, trusting it would
 
 Now, the next step in the `deploy.sh` script is to actually build the HTML pages from Markdown and some other things. That's done with `bundle exec jekyll build`. This invocation also spits out lots of annoying stuff:
 
-```
+```shell
 $ bundle exec jekyll build
 Configuration file: /Users/simon/code/blog.skagedal.tech/_config.yml
             Source: /Users/simon/code/blog.skagedal.tech
@@ -215,7 +215,7 @@ Oh... with the `--verbose` flag. I guess Past Simon wanted some verbosity. I mea
 
 Here's what I ended up with for now:
 
-```shell
+```bash
 #!/bin/bash
 
 if [[ "$1" == "--verbose" ]]; then

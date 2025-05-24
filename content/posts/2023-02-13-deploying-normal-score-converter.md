@@ -24,13 +24,13 @@ The first step in the guide, "Setting up a Wildcard DNS", is something I've alre
 
 But then apparently, I'm going to need to install a "certbot DNS plugin". Hmm. Not sure why, but let's continue. As you know, I'm on DigitalOcean, so I'll go with the `certbot-dns-digitalocean` plugin. 
 
-```
+```shell
 $ sudo apt install python3-certbot-dns-digitalocean
 ```
 
 And now let's check if the plugins are loaded:
 
-```
+```shell
 $ certbot plugins
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -83,7 +83,7 @@ $ sudo certbot certonly \
 
 It responds with:
 
-```
+```text
 Saving debug log to /var/log/letsencrypt/letsencrypt.log
 Requesting a certificate for *.skagedal.tech
 Waiting 10 seconds for DNS changes to propagate
@@ -110,7 +110,7 @@ But now I worry about something: when it renews this certificate this time, will
 
 Or is that just something it does the first time? I'll take a look at how this renewal thing is configured. Finding some very relevant stuff in the `/etc/letsencrypt/renewal` folder – here's the configuration for the certificate it just created, which I guess is called `skagedal.tech-0001` since there was already one called `skagedal.tech`:
 
-```
+```text
 # renew_before_expiry = 30 days
 version = 1.21.0
 archive_dir = /etc/letsencrypt/archive/skagedal.tech-0001
@@ -137,7 +137,7 @@ Now, can we set up my `normalscore.skagedal.tech` site to use this certificate?
 
 Making my `normalscore.nginx` file to be this:
 
-```
+```nginx
 server {
     server_name normalscore.skagedal.tech;
 

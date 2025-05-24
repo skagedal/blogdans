@@ -6,7 +6,7 @@ Now, let's add Spring Security back again, by un-commenting out the line in `bui
 
 It turns out that this default security setting – which gets applied when you have Spring Security on the class path, but have not configured it – means all of your endpoints are protected with a Basic Auth login where the user is `user` and the password is posted in the console output, like this:
 
-```
+```text
 Using generated security password: 78fa095d-3f4c-48b1-ad50-e24c31d5cf35
 
 This generated password is for development use only. Your security configuration must be updated before running your application in production.
@@ -54,13 +54,13 @@ In this mode, `curl` is using `*` at the start of lines that contain general "lo
 
 So, I'm a bit confused. We can see that we get a [401](https://http.cat/401) response:
 
-```
+```text
 < HTTP/1.1 401
 ```
 
 This means that we're unauthorized. And we get this header that challenges us to do a `Basic` authentication:
 
-```
+```text
 < WWW-Authenticate: Basic realm="Realm"
 ```
 
@@ -70,7 +70,7 @@ I'm now looking opening up `localhost:8080` in Chrome again, but this time with 
 
 I can indeed see that the request here receives a `302` ["Found"](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/302) status code in the response, i.e. a kind of temporary redirect. I can also find the exact Request sent by Chrome:
 
-```
+```text
 GET / HTTP/1.1
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
 Accept-Encoding: gzip, deflate, br
@@ -113,7 +113,8 @@ sec-ch-ua-platform: "macOS"
 ```
 
 And then I get back this! 
-```
+
+```text
 HTTP/1.1 302
 Set-Cookie: JSESSIONID=04F316F0F19E7C633286DF814E74F39B; Path=/; HttpOnly
 X-Content-Type-Options: nosniff
@@ -178,7 +179,7 @@ I used the password posted in my Spring Boot console.
 
 Interestingly, I don't get a session ID cookie back now. If you look back to the unauthenticated `curl` call I did earlier in the post, I got this header back: 
 
-```
+```text
 Set-Cookie: JSESSIONID=A0A8B589732A7DDE0CBDBA58A6901218; Path=/; HttpOnly
 ```
 

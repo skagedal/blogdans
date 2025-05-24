@@ -77,7 +77,7 @@ That's great for now. It clearly says "forbidden". (By the way, I guess another 
 Now, instead of just doing `if (true)`[^1], we do an actual check. We write the `if` statement like this:
 
 ```java
-        if (!userOwnsHabitWithId(principal.getName(), achieveForm.habitId())) {
+if (!userOwnsHabitWithId(principal.getName(), achieveForm.habitId())) {
 ```
 
 And implement that helper method like this:

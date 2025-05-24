@@ -79,9 +79,9 @@ public class HomeController {
 And then in my `home.html` I'm just adding this little bit of JavaScript in the `head` of the `html` to se the cookie:
 
 ```html
-    <script>
-        document.cookie = 'zoneId=' + Intl.DateTimeFormat().resolvedOptions().timeZone;
-    </script>
+<script>
+    document.cookie = 'zoneId=' + Intl.DateTimeFormat().resolvedOptions().timeZone;
+</script>
 ```
 
 This means that at the first view of the page, we'll need to reload it to get the right time zone. Not very nice, but let's view this part as a proof of concept; it'll do for now. If we add that to the login page later, and make the cookie live for at least as long as the session, we should be pretty good. (Also, there are libraries we could use that tries various fallback approaches if that `Intl` API is not available, apparently it's new-ish, but for now I'll just support modern browsers.)  
@@ -89,7 +89,7 @@ This means that at the first view of the page, we'll need to reload it to get th
 I'm adding this to the bottom of the page as well to just kind of remind me of this, and so I can be aware of what I'm actually looking at:   
 
 ```html
-    <p>Timezone ID: <span th:text="${zoneId}">Unknown</span></p>
+<p>Timezone ID: <span th:text="${zoneId}">Unknown</span></p>
 ```
 
 _[Continue reading part nineteen.](/posts/2023-01-19-habit-tracker-achieving-some-habits)_

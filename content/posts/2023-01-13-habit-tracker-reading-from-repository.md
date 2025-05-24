@@ -18,9 +18,7 @@ public class HabitsController {
 
 This is called "field injection", and it works. But hey, what's this – IntelliJ IDEA puts a squiggly yellow line on the annotation. Hovering over it tells me this:
 
-<figure>
-<img src="/images/habit-tracker/field-injection-not-recommended.png" alt="Screenshot of IntelliJ IDEA, saying that field injection with @Autowired is not recommended." />
-</figure>
+[![Screenshot of IntelliJ IDEA, saying that field injection with @Autowired is not recommended.](/images/habit-tracker/field-injection-not-recommended.png)](https://www.jetbrains.com/help/idea/spring-field-injection.html)
 
 "Field injection is not recommended." It would be really sweet if it would also link to some page, explaining in more detail why this is. But I think I know why, and I agree. If I press Option-Enter (on Mac), it offers me the quick fix "Create constructor HabitsController(HabitsRepository)", and agreeing with that, I press enter and my code gets transformed to:
 
@@ -85,10 +83,7 @@ INSERT INTO habits (description, owned_by)
 
 I now have an interface where I can list the habit I committed to – and have so far also followed, I would like to point out! – in the first part of this series:
 
-
-<figure>
-<img src="/images/habit-tracker/your-habits-be-outside-for-30-minutes.png" alt="Screenshot of the hahabit habits page, listing my first habit." />
-</figure>
+[![Screenshot of the hahabit habits page, listing my first habit.](/images/habit-tracker/your-habits-be-outside-for-30-minutes.png)](https://hahabit.com/habits)
 
 NICE.
 

@@ -40,9 +40,9 @@ public class HomeController {
 Actually, I guess instead of sending the hidden fields, I could have done this in a slightly more REST-like fashion by putting these as path parameters. Turns out the syntax to set those [in Thymeleaf](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#link-urls) is a bit finicky – I would have expected this to work: 
 
 ```html
-    <form th:unless="${habit.achieved}" th:action="@{/habit/${habit.habitId}/${date}/achieve">
-        <input type="submit" th:value="${habit.description}"
-    </form>
+<form th:unless="${habit.achieved}" th:action="@{/habit/${habit.habitId}/${date}/achieve">
+    <input type="submit" th:value="${habit.description}"
+</form>
 ```
 
 (Disregard the syntax highlighter doing something weird with that `</`, I don't know why it does that.)
@@ -51,19 +51,19 @@ Actually, I guess instead of sending the hidden fields, I could have done this i
 But no, I have to go like this:
 
 ```html
-    <form th:unless="${habit.achieved}" th:action="@{/habit/{habitId}/{date}/achieve(habitId=${habit.habitId},date=${date})}" method="post">
-        <input type="submit" th:value="${habit.description}">
-    </form>
+<form th:unless="${habit.achieved}" th:action="@{/habit/{habitId}/{date}/achieve(habitId=${habit.habitId},date=${date})}" method="post">
+    <input type="submit" th:value="${habit.description}">
+</form>
 ```
 
 Oh well. Still kinda nice I guess, and the handler works just the same, just have to change the mapping a little bit:
 
 ```java
-    @PostMapping("/habit/{habitId}/{date}/achieve")
-    View achieve(Principal principal, AchieveForm achieveForm) {
-        System.out.println("Achieve: " + achieveForm);
-        return new RedirectView("/");
-    }
+@PostMapping("/habit/{habitId}/{date}/achieve")
+View achieve(Principal principal, AchieveForm achieveForm) {
+    System.out.println("Achieve: " + achieveForm);
+    return new RedirectView("/");
+}
 ```
 
 I redirect back to the home screen rather than keeping the URL as `/achieve` because that looks a bit weird – and also, if the user tries to reload, they will get an annoying "do you want to sent form input again?" popup. This is called the [Post/Redirect/Get](https://en.wikipedia.org/wiki/Post/Redirect/Get) pattern, and I should have also used it in [part fifteen](/posts/2023-01-15-habit-tracker-add-new-habit) when we saved new habits. 
@@ -87,11 +87,11 @@ And regarding the second point, about "knowing from start" that it will be a red
 But I could of course sort of perhaps identify the feeling that it would be a bit nice and clean if those methods just all returned the same type, identified from the start. We can totally do that:
 
 ```java
-    @PostMapping("/habit/{habitId}/{date}/achieve")
-    ModelAndView achieve(Principal principal, AchieveForm achieveForm) {
-        System.out.println("Achieve: " + achieveForm);
-        return new ModelAndView(new RedirectView("/"));
-    }
+@PostMapping("/habit/{habitId}/{date}/achieve")
+ModelAndView achieve(Principal principal, AchieveForm achieveForm) {
+    System.out.println("Achieve: " + achieveForm);
+    return new ModelAndView(new RedirectView("/"));
+}
 ```
 
 Sure, let's do that. I'm fine with that. That also helps if we want to add some query parameters or such to the redirect URL, instead of using that _ghastly_ method that Baeldung also uses here and that I ranted about in [part twelve](/posts/2023-01-12-habit-tracker-making-habits-page-work), where you get some kind of Model object as input to the handler and then call setters on that. It's just really, really weird.

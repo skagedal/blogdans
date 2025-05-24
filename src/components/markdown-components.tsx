@@ -64,7 +64,11 @@ export const markdownComponents: Components = {
   ),
   blockquote: ({ children, ...props }) => (
     <blockquote
-      className="my-6 border-l-4 border-slate-300 pl-4 italic text-slate-700 dark:border-slate-600 dark:text-slate-300"
+      className="
+          my-6 p-4 border-l-4 rounded-md pb-1
+        bg-emerald-500/5    border-emerald-300/60  text-emerald-800
+        dark:bg-emerald-400/10  dark:border-emerald-500/50  dark:text-emerald-300
+        "
       {...props}
     >
       {children}
@@ -75,5 +79,53 @@ export const markdownComponents: Components = {
       className="my-8 border-t border-gray-200 dark:border-gray-700"
       {...props}
     />
+  ),
+  table: ({ children, ...props }) => (
+    /* horizontal scroll on narrow screens */
+    <div className="my-6 overflow-x-auto">
+      <table className="w-full border-collapse text-left text-sm" {...props}>
+        {children}
+      </table>
+    </div>
+  ),
+
+  thead: ({ children, ...props }) => (
+    <thead
+      className="border-b-2 border-slate-300 dark:border-slate-600"
+      {...props}
+    >
+      {children}
+    </thead>
+  ),
+
+  tbody: ({ children, ...props }) => (
+    <tbody
+      className="divide-y divide-slate-200 dark:divide-slate-700"
+      {...props}
+    >
+      {children}
+    </tbody>
+  ),
+
+  tr: ({ children, ...props }) => (
+    /* zebra stripes every other row */
+    <tr className="even:bg-slate-50 dark:even:bg-slate-800" {...props}>
+      {children}
+    </tr>
+  ),
+
+  th: ({ children, ...props }) => (
+    <th
+      className="whitespace-nowrap px-4 py-2 font-semibold text-slate-700 dark:text-slate-200"
+      {...props}
+    >
+      {children}
+    </th>
+  ),
+
+  td: ({ children, ...props }) => (
+    <td className="whitespace-nowrap px-4 py-2" {...props}>
+      {children}
+    </td>
   ),
 };

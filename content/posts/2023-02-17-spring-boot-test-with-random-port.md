@@ -106,7 +106,7 @@ public class WebTests {
 
 It prints this:
 
-```
+```text
 Status:  302
 Headers: java.net.http.HttpHeaders@e1bcad42 { {cache-control=[no-cache, no-store, max-age=0, must-revalidate], content-length=[0], date=[Thu, 16 Feb 2023 20:28:07 GMT], expires=[0], location=[http://127.0.0.1:64687/login], pragma=[no-cache], set-cookie=[SESSION=ZTMyMThkOTctYjlkNy00ODRhLWI2NTgtYjYyNTI1YmJhMzc3; Path=/; HttpOnly; SameSite=Lax], x-content-type-options=[nosniff], x-frame-options=[DENY], x-xss-protection=[0]} }
 Body:    

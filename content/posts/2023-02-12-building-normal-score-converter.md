@@ -7,7 +7,7 @@ I was [asking on Mastodon](https://mastodon.social/@skagedal/109850568196541644)
 
 So, as I mentioned, instead of a modern JavaScript build tool like Yarn, I have a Python script, [build.py](https://github.com/skagedal/normalscore/blob/5b512f2302083479ed25c80bd8ff6b93cef7b839/build.py) to put all the stuff together. Let's try running it.
 
-```
+```shell
 $ python3 build.py
 Traceback (most recent call last):
   File "/Users/simon/code/normalscore/build.py", line 7, in <module>
@@ -24,7 +24,7 @@ So, i used this build tool called [fabricate.py](https://github.com/brushtechnol
 
 It was shipped backed then as a single Python file you can include in your project, and seems it still is. So I'm gonna try just upgrading it. 
 
-```
+```shell
 $ curl https://raw.githubusercontent.com/brushtechnology/fabricate/master/fabricate.py -o fabricate.py
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
@@ -33,7 +33,7 @@ $ curl https://raw.githubusercontent.com/brushtechnology/fabricate/master/fabric
 
 And then, let's try the build again.
 
-```
+```shell
 $ python3 build.py
 Traceback (most recent call last):
   File "/Users/simon/code/normalscore/build.py", line 29, in <module>
@@ -43,7 +43,7 @@ AttributeError: 'dict' object has no attribute 'has_key'```
 
 Ah, seems that one was [deprecated](https://portingguide.readthedocs.io/en/latest/dicts.html#:~:text=has_key()%20method%2C%20long%20deprecated,longer%20available%20in%20Python%203.) with Python 3, and you should now use the `in` operator instead. There's also a `python-modernize` tool that can do this for you – I love such tools, remember the nice sass-migrator [from the other day](/posts/2023-02-08-fixing-my-blog)? – but I think I'll just do this change myself. Now, next thing:
 
-```
+```shell
 $ python3 build.py
 yui-compressor js/jquery.flot.js -o js/jquery.flot.mintmp.js
 Traceback (most recent call last):
@@ -57,7 +57,7 @@ Hm, ok, so this is some Javascript minifier tool I used... [here's](https://yui.
 
 I'm installing that with `brew install yuicompressor`. Then it seems the executable is called `yuicompressor`, not `yui-compressor`. So I'll just change that in the build script. And then, let's try again.
 
-```
+```shell
 $ python3 build.py
 yuicompressor js/jquery.flot.js -o js/jquery.flot.mintmp.js
 yuicompressor js/jquery.flot.canvas.js -o js/jquery.flot.canvas.mintmp.js
@@ -73,7 +73,7 @@ $
 
 Oh cool, are we done? 
 
-```
+```shell
 $ open -a Safari prod.index.html
 ```
 

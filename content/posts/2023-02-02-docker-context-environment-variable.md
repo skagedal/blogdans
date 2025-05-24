@@ -69,7 +69,7 @@ class DefaultDockerClientConfigTest {
 
 When running the test, I get this:
 
-```
+```text
 Expected :unix:///testcontext.sock
 Actual   :unix:///var/run/docker.sock
 ```

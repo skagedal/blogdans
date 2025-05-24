@@ -30,9 +30,7 @@ This will do for now – I'm realizing that to get the design I sort of have in 
 
 Allright then, you get a screenshot.
 
-<figure>
-<img src="/images/habit-tracker/hahabit-1.0-screenshot.jpeg" alt="Screenshot of hahabit, showing three buttons of habits, two of which have been marked as done" width="375" height="812"/>
-</figure>
+[![Screenshot of hahabit, showing three buttons of habits, two of which have been marked as done](/images/habit-tracker/hahabit-1.0-screenshot.jpeg)](https://blog.skagedal.tech/images/habit-tracker/hahabit-1.0-screenshot.jpeg)
 
 (Yeah, "done" is visualized as "disabled". Not very reinforcing, perhaps.)
 

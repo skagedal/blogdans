@@ -28,15 +28,11 @@ Today, he pointed out that when you search for "normalscore" on Duck Duck Go, th
 
 So, for those of you who might be on Google Chrome, for example, this is what the tool looks like running in Safari:
 
-<figure>
-<img src="/images/normal-score-converter/normal-score-converter.png" alt="Screenshot of Normal Score Converter." />
-</figure>
+![Screenshot of Normal Score Converter.]( /images/normal-score-converter/normal-score-converter.png )
 
 Here, I have clicked at two places on the graph, and the tool has calculated the corresponding values on the other scales. You can also enter values manual in the top-right input field. And if you're not happy with the standard scales that are included, you can add your own! Open it up by pressing Scale Settings:
 
-<figure>
-<img src="/images/normal-score-converter/scale-settings.png" alt="Screenshot of Scale Settings." />
-</figure>
+![Screenshot of Scale Settings.]( /images/normal-score-converter/scale-settings.png )
 
 Johannes favorite thing is to add a 3d6 (the [dice notation](https://en.wikipedia.org/wiki/Dice_notation) for rolling three six-sided dice), which has M=10.5 and SD=2.96.   
 

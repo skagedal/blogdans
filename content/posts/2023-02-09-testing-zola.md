@@ -9,7 +9,7 @@ One thing that I wanted to do before in this blog is to have little custom block
 
 So, I thought maybe I could mix in a little bit of HTML in my Markdown, like:
 
-````
+````markdown
 This is me speaking!
 
 <div class="chatgpt">
@@ -33,7 +33,7 @@ Haha. No, of course I didn't; I just kept googling around, and then I found some
 
 So, I'm following the [Getting Started](https://www.getzola.org/documentation/getting-started/overview/) guide. I'm running Zola 0.16.1, installed with Homebrew. I moved all of my existing Jekyll site into a `jekyll` subdirectory, and ran:
 
-```
+```shell
 $ zola init zola
 Welcome to Zola!
 Please answer a few questions to get started quickly.

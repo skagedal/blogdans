@@ -52,7 +52,7 @@ I have marked the line that fails with three "pointing up"-emojis and the text "
 
 The log output says:
 
-```
+```text
 java.lang.IllegalArgumentException: Input byte array has wrong 4-byte ending unit
 	at java.base/java.util.Base64$Decoder.decode0(Base64.java:736)
 	at java.base/java.util.Base64$Decoder.decode(Base64.java:538)

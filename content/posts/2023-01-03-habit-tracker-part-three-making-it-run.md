@@ -11,7 +11,7 @@ Now I'd like to just make this skeleton app work! Success criteria is to success
 
 Right now, as we try to run the app, we get an error:
 
-```
+```text
 ***************************
 APPLICATION FAILED TO START
 ***************************
@@ -107,7 +107,7 @@ Here I make use of the fact that the `DynamicPropertyRegistry::add` method takes
 
 Yes! It works! The `contextLoads` test is now green, and we can see stuff like this in logs:
 
-```
+```text
 INFO o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:postgresql://localhost:49171/hahabit (PostgreSQL 12.12)
 INFO o.f.core.internal.command.DbValidate     : Successfully validated 0 migrations (execution time 00:00.016s)
 WARN o.f.core.internal.command.DbValidate     : No migrations found. Are your locations set up correctly?

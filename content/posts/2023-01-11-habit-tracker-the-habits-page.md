@@ -54,9 +54,7 @@ Now, we quickly left valid-HTML5 land. Those `th:` tags are totally not valid HT
 
 I _like_ the idea of validating HTML, and Thymeleaf does provide us with an alternative syntax, by using tags that look like `data-th-each` instead. Those are allowed by HTML5. But in this mode, we get less help from the IDE. I'll let pragmatism win today. Here's a screenshot of the IDE being helpful:
 
-<figure>
-<img src="/images/habit-tracker/editing-some-thymeleaf-html.png" alt="Screenshot of IntelliJ IDEA, editing and previewing habits.html." />
-</figure>
+![Screenshot of IntelliJ IDEA, editing and previewing habits.html.](/images/habit-tracker/editing-some-thymeleaf-html.png)
 
 
 But anyway. The page still looks the same when we run the app. We haven't yet hooked up our actual model with the template. 

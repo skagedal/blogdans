@@ -40,7 +40,7 @@ plugins {
 
 Now, I can see that a `git.properties` file gets included when I build the jar:
 
-```
+```shell
 $ ./gradlew bootJar
 
 BUILD SUCCESSFUL in 759ms
@@ -51,7 +51,7 @@ BOOT-INF/classes/git.properties
 
 I can also find the file in the `build` directory and take a look at it:
 
-```
+```shell
 $ find . -name git.properties
 ./build/resources/main/git.properties
 $ cat ./build/resources/main/git.properties
@@ -78,7 +78,7 @@ git.total.commit.count=50
 
 Allright, lots of interesting stuff in there, including a confused version of my last name. So do I get some interesting stuff from the `/actuator/info` endpoint now? No, I get a 401. Only `/actuator/health` is exposed by default. First I need to enable the info one in `application.properties`:
 
-```
+```properties
 management.endpoints.web.exposure.include=health,info 
 ```
 
@@ -105,26 +105,26 @@ The reference guide says you shouldn't expose your actuator endpoints to the who
 
 So now, when we curl the info endpoint, we get this:
 
-```
+```shell
 $ curl http://localhost:8080/actuator/info
 {"git":{"branch":"main","commit":{"id":"5344cd6","time":"2023-01-28T08:20:34Z"}}}
 ```
 
 Very cool! Let's use `jq` to extract the commit id:
 
-```
+```shell
 $ curl -s http://localhost:8080/actuator/info | jq -r .git.commit.id
 5344cd6
 ```
 
 This is the same short version of the SHA hash as we get from 
-```
+```shell
 $ git rev-parse --short HEAD
 ```
 
 So, now I can use this in my deploy script to wait for the new version to come up. We'll do it with a loop like this:
 
-```
+```bash
 while true; do
     if [ "$(curl -s http://localhost:8080/actuator/info | jq -r .git.commit.id)" = "$(git rev-parse --short HEAD)" ]; then
         echo "Done!"
@@ -140,7 +140,7 @@ done
 
 Now, with [this commit](https://github.com/skagedal/hahabit/commit/ebcf38f0f1fc8fa67aef1512f36c033cb1dc8f26), I have a working Actuator and a deploy script that waits for the new version to come up. It also makes sure that I don't try to deploy from a dirty working directory (and yeah, Copilot wrote that too). After just a [few](https://github.com/skagedal/hahabit/commit/bd66e74dcc1e3a61dc881ae79cb870f5189e382a) [more](https://github.com/skagedal/hahabit/commit/d35093e2c28e5513caeb3de90086df0d3dd1b65f) tweaks, this is what running my deploy script looks like:
 
-```
+```shell
 $ ./deploy.sh
 👋 Building JAR with Java 19...
 

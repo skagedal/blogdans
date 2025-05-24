@@ -3,18 +3,18 @@ layout: post
 title:  Upgrading to Ubuntu 22.04
 ---
 
-(Warning: this blog post is pretty boring.)
+**(Warning: this blog post is pretty boring.)**
 
 As I log in to my Ubuntu machine at `skagedal.tech` – where I host this blog and this little habit tracker I'm writing about – it tells me this:
 
-```
+```text
 New release '22.04.1 LTS' available.
 Run 'do-release-upgrade' to upgrade to it.
 ```
 
 I like upgrading things. Let's try that.
 
-```
+```shell
 $ do-release-upgrade
 Checking for a new Ubuntu release
 Get:1 Upgrade tool signature [819 B]
@@ -29,7 +29,7 @@ Jammy! Jammy Jellyfish! Gotta love the Ubuntu release names. Sure, you can have 
 
 But then it says:
 
-```
+```text
 Reading cache
 
 Checking package manager
@@ -57,7 +57,7 @@ Cool, now, apparently I have to wait for up to an hour. Ok, no. It's done, after
 
 Now I log in again and run the `do-release-upgrade`. Now I just yolo and press continue. It tells me:
 
-```
+```text
 Starting additional sshd
 
 To make recovery in case of failure easier, an additional sshd will
@@ -73,7 +73,7 @@ To continue please press [ENTER]
 
 Hmm, I do have a firewall... I think... but whatever. Continuing yolo now that I have a snapshot. Ok, what's it saying now?
 
-```
+```text
 Third party sources disabled
 
 Some third party entries in your sources.list were disabled. You can
@@ -87,7 +87,7 @@ Help me remember to do that. Probably the Temurin one, for one (if you remember,
 
 Ok, now it's fetching lots of stuff. Now it's doing lots of other stuff. Now it paused in a weird state:
 
-```
+```text
 5 packages are going to be removed. 115 new packages are going to be
 installed. 743 packages are going to be upgraded.
 
@@ -109,7 +109,7 @@ Reading state information... Done
 
 I'm in some weird `screen` mode. I don't understand it. I can choose to either kill (`x`) or resurrect (`r`) the window. I choose resurrect. The upgrade starts again. Ok. Ok. What happens now. Now it got a bit further:
 
-```
+```text
 Do you want to start the upgrade?
 
 
@@ -130,7 +130,7 @@ Yeah yeah yeah, just start the upgrade. Or, ok, let's see the details. Gotcha, y
 
 Now it's fetching more lots of stuff. Now I get another question.
 
-```
+```text
 Configuring libc6
 
 Running services and programs that are using NSS need to be restarted, otherwise they might not be able to do lookup or authentication any more. The
@@ -156,7 +156,7 @@ God, I should just do containers. Get an AWS account and do containers.
 
 Now it's asking me about the nginx configuration:
 
-```
+```text
 Configuration file '/etc/nginx/nginx.conf'
  ==> Modified (by you or by a script) since installation.
  ==> Package distributor has shipped an updated version.
@@ -177,7 +177,7 @@ Now it's asking me - this time in full-screen mode - what I want to do about `/e
 
 Ok, what's happening now? Now this is interesting:
 
-```
+```text
  Obsolete major version 12                                                                                                               
  
  The PostgreSQL version 12 is obsolete, but the server or client packages are still installed. Please install the latest packages (postgresql-14 and postgresql-client-14) and upgrade the existing  clusters with pg_upgradecluster (see manpage).                       
@@ -195,7 +195,7 @@ Now it's setting up more stuff.
 
 Now it seems to have paused here:
 
-```
+```text
 /etc/kernel/postinst.d/zz-update-grub:
 Sourcing file `/etc/default/grub'
 Sourcing file `/etc/default/grub.d/50-cloudimg-settings.cfg'
@@ -223,7 +223,7 @@ Come ooooon. Should I press Ctrl-C?
 
 Can I open up a separate ssh session? No, I can not. Oh, yes I could! It says:
 
-```
+```text
 Welcome to Ubuntu 22.04.1 LTS (GNU/Linux 5.4.0-137-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com
@@ -249,7 +249,7 @@ That did nothing.
 
 Oh, now it acted on the interrupt and said things like:
 
-```
+```text
 Traceback (most recent call last):
   File "/tmp/ubuntu-release-upgrader-aps9158x/DistUpgrade/DistUpgradeView.py", line 220, in run
     res = pm.do_install(self.writefd)
@@ -288,8 +288,7 @@ Remember the days when people would brag about their server uptime? Pets, not ca
 
 Yeah, now it just got stuck again after this:
 
-```
-
+```text
 Reading cache
 
 Checking package manager
@@ -309,9 +308,7 @@ My other ssh session is still live. Should I just restart? Am I too impatient?
 
 Yeah, nothing is happening here. Trying the resurrect thing once more. Oh, this time it came a bit further. It's saying:
 
-```
-
-
+```text
 No valid sources.list entry found
 
 While scanning your repository information no entry about impish
@@ -330,7 +327,7 @@ So, aborted that, and now let's restart. `sudo reboot`. Will my server come aliv
 
 Allright, it's rebooted, and now when logging in it's just:
 
-```
+```text
 Welcome to Ubuntu 22.04.1 LTS (GNU/Linux 5.15.0-58-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com

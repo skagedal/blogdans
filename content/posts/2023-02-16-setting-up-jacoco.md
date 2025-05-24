@@ -28,6 +28,7 @@ jacocoTestReport {
     dependsOn test
 }
 ```
+
 Then I get a report in HTML whenever I run the tests. It looks like this:
 
 ![JaCoCo report](/images/habit-tracker/jacoco-report.png)
@@ -49,7 +50,7 @@ jacocoTestReport {
 
 We can then run the tests and get the coverage number:
 
-```
+```shell
 $ ./gradlew test jacocoTestReport
 
 BUILD SUCCESSFUL in 883ms
@@ -58,7 +59,7 @@ BUILD SUCCESSFUL in 883ms
 
 It then puts a CSV file in `build/reports/jacoco/test/jacocoTestReport.csv`:
 
-```
+```shell
 $ cat build/reports/jacoco/test/jacocoTestReport.csv
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 hahabit,tech.skagedal.hahabit,HahabitApplication,5,3,0,0,2,1,1,1,1,1
@@ -88,7 +89,7 @@ awk -F, \
 
 And then just:
 
-```
+```shell
 $ ./test.sh
 
 BUILD SUCCESSFUL in 437ms

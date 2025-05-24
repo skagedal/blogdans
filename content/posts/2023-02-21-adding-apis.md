@@ -58,7 +58,7 @@ public class TestDataManager {
 
 I currently don't have Basic Auth enabled in Spring Security, only form authentication. So the above test fails like this:
 
-```
+```text
 org.opentest4j.AssertionFailedError: 
 expected: 200
  but was: 302
@@ -88,7 +88,7 @@ public class WebSecurityConfig {
 
 Now I expect the authentication to work, but as I haven't implemented the API yet, I should get a [404 Not Found](https://http.cat/404) response!
 
-```
+```text
 org.opentest4j.AssertionFailedError: 
 expected: 200
  but was: 401
@@ -105,7 +105,7 @@ logging.level.org.springframework.web=DEBUG
 
 Running my tests now with the `-Dspring.profiles.active=dev` flag in the VM arguments, I see this in the logs:
 
-```
+```text
 o.s.security.web.FilterChainProxy        : Securing POST /api/habits
 o.s.security.web.csrf.CsrfFilter         : Invalid CSRF token found for http://127.0.0.1:51295/api/habits
 o.s.s.w.access.AccessDeniedHandlerImpl   : Responding with 403 status code
@@ -149,7 +149,7 @@ public class WebSecurityConfig {
 
 Now I get my expected 404 Not Found!
 
-```
+```text
 org.opentest4j.AssertionFailedError:
 expected: 200
 but was: 404

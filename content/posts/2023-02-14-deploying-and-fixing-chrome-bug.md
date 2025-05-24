@@ -27,7 +27,7 @@ I had a variable named `tick` in the code, and it was also used as a function na
 
 Last thing on my to-do list for now is to add a redirect from the old URL to the new one. helgo.net uses Apache, so I could add a `.htaccess` file in my `~/public_html/normalscore` directory, containing:
 
-```
+```text
 Redirect /simon/normalscore/ https://normalscore.skagedal.tech
 ```
 

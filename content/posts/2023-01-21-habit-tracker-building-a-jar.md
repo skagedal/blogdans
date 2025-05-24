@@ -76,7 +76,7 @@ I confirmed that it works by briefly commenting out that `findbugs` dependency.
 
 Cool, so we can now build a jar with `./gradlew bootJar`. It gets placed in `build/libs/hahabit-0.0.1-SNAPSHOT.jar`. A nice little 27 MB JAR. Would neatly fit on the hard disk of the first machine with such a unit I ever owned, which if I remember correctly was 30 MB. Anyway. Can we run it? Yes, with the Gungan command: `java -jar JAR`:
 
-```
+```text
 $ java -jar build/libs/hahabit-0.0.1-SNAPSHOT.jar
 
   .   ____          _            __ _ _
@@ -99,7 +99,7 @@ spring.main.banner-mode=off
 
 And then thanking myself. Now that my attention has been freed up – are there any messages logged in the startup sequence that might be relevant to deal with before we go live? There is one warning:
 
-```
+```text
 2023-01-15T17:21:07.408+01:00  WARN 35159 --- [           main] ocalVariableTableParameterNameDiscoverer : Using deprecated '-debug' fallback for parameter name resolution. Compile the affected code with '-parameters' instead or avoid its introspection: org.springframework.session.config.annotation.web.http.SpringHttpSessionConfiguration
 ```
 

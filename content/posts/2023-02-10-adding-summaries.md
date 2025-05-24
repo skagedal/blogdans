@@ -17,20 +17,18 @@ Interesting! As I noted in the [introductory post](/posts/2023-02-06-improving-s
 
 I'm gonna try using this on the main page, where we list all the posts:
 
-{% raw %}
 ```html
-    {% for post in site.posts %}
-      <li>
-        <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
+{% for post in site.posts %}
+  <li>
+    <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
 
-        <h2>
-          <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
-        </h2>
-        {{ post.excerpt }}
-      </li>
-    {% endfor %}
+    <h2>
+      <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+    </h2>
+    {{ post.excerpt }}
+  </li>
+{% endfor %}
 ```
-{% endraw %}
 
 Aha – so what that seems to be doing is taking the first paragraph of the post, and using that as the excerpt. Works ok for some of my posts, but not so well for others where I start with something silly, or try to connect with the previous post like "Hello! In yesterday's post we did X!" – that's not really a relevant excerpt.
 
@@ -40,20 +38,18 @@ First, I added it as just `{{ post.summary }}` in the above place, but then got 
 
 But then I thought, hey, this can't be hard, googled a little and found the `markdownify` filter. 
 
-{% raw %}
 ```html
-    {% for post in site.posts %}
-      <li>
-        <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
+{% for post in site.posts %}
+  <li>
+    <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
 
-        <h2>
-          <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
-        </h2>
-        {{ post.summary | markdownify }}
-      </li>
-    {% endfor %}
+    <h2>
+      <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+    </h2>
+    {{ post.summary | markdownify }}
+  </li>
+{% endfor %}
 ```
-{% endraw %}
 
 That's a weird name for the filter though, isn't it? To "markdownify" would be more like, "convert this thing to Markdown", but this is more like "convert this Markdown to HTML". But I guess these filters should have short and catchy names. 
 

@@ -11,18 +11,18 @@ I love updating dependencies – who knows, maybe one of the little bugs and ann
 
 There are currently two workaround things in `build.gradle`. One has been there [since](https://github.com/skagedal/hahabit/commit/c968ce4d2c5e839444a9b77a8435a963e01eceab) the following that [Spring Security tutorial](https://spring.io/guides/gs/securing-web/):
 
-```
-    //  Temporary explicit version to fix Thymeleaf bug
-    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE'
+```groovy
+//  Temporary explicit version to fix Thymeleaf bug
+implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE'
 ```
 
 I think I noted before that I got some issues when this was not included. But I don't remember what it was, and don't seem to get any issues now when removing. So. Maybe fixed? Or maybe I no longer have the relevant code. I'll remove it. I filed a [small issue](https://github.com/spring-guides/gs-securing-web/issues/72) against that tutorial to include a reference.
 
  Another thing was mentioned in [part twenty-one](/posts/2023-01-21-habit-tracker-building-a-jar), I had to explicitly add a dependency on some findbugs annotations:
 
-```
-    // Because of https://github.com/spring-projects/spring-framework/issues/25095
-    compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+```groovy
+// Because of https://github.com/spring-projects/spring-framework/issues/25095
+compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
 ``` 
 
 Can I get rid of that now? No, I can't. I then get a warning, which I treat as an error. I should try to find, or file, the more appropriate bug for this, as the one I'm linking above is closed. Oh well.  
@@ -38,7 +38,7 @@ plugins {
 
 While Dependabot gives automatic pull requests, this can be used for manually checking whether there are any potential updates. If I run it now, I get the following report:
 
-```
+```text
 ------------------------------------------------------------
 : Project Dependency Updates (report to plain text file)
 ------------------------------------------------------------
@@ -88,7 +88,7 @@ I also remember something about how Gradle resolves a conflict between two versi
 
 Ok. But how is this dependency management plugin used in my build? The only place where it is explicitly invoked is in its own `dependencyManagement` section, which in my `build.gradle` is like this:
 
-```
+```groovy
 dependencyManagement {
     imports {
         mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
@@ -101,7 +101,7 @@ So, only used for the testcontainers BOM ("bill of materials"), apparently. What
 I'm curious, so I remove the above section and add the following in the `dependencies` section:
 
 ```groovy
-    testImplementation(platform("org.testcontainers:testcontainers-bom:${testcontainersVersion}"))
+testImplementation(platform("org.testcontainers:testcontainers-bom:${testcontainersVersion}"))
 ```
 
 That should make it honour the BOM for resolving the versions of the testcontainers dependencies. How do we find out if we inadvertently changed anything now? I'm doing this to look at the current dependency resolution and save it to a file:
@@ -118,7 +118,7 @@ $ ./gradlew dependencies > ~/with-spring-dependency-management.txt
 
 Then I check the diff between the two files using `diff -u`, and see that there are some differences in the output that look like this:
 
-```
+```text
 -\--- org.testcontainers:postgresql -> 1.17.6
 -     \--- org.testcontainers:jdbc:1.17.6
 -          \--- org.testcontainers:database-commons:1.17.6

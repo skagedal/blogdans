@@ -90,7 +90,7 @@ class HahabitApplicationTests {
 
 It fails with an error:
 
-```
+```text
 org.springframework.data.relational.core.conversion.DbActionExecutionException: Failed to execute InsertRoot{entity=tech.skagedal.hahabit.model.User@394331a8, idValueSource=NONE}
 <cut lots of stacktrace>
 
@@ -116,7 +116,7 @@ public class User {
 
 Now we get a different error:
 
-```
+```text
 org.springframework.data.relational.core.conversion.DbActionExecutionException: Failed to execute InsertRoot{entity=tech.skagedal.hahabit.model.User@642f8b7f, idValueSource=NONE}
 <cut>
 
@@ -177,7 +177,7 @@ class HahabitApplicationTests {
 
 Cool, I press run, and... what now? There was an exception thrown on the insertion!
 
-```
+```text
 org.springframework.data.relational.core.conversion.DbActionExecutionException: Failed to execute InsertRoot{entity=tech.skagedal.hahabit.model.User@278150a1, idValueSource=GENERATED}
 <cut>
 

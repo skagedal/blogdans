@@ -5,7 +5,7 @@ title:  "Writing a habit tracker, part 4: Functionality and schema"
 
 [Part 3](/posts/2023-01-03-habit-tracker-part-three-making-it-run) of my habit tracker series ended with successfully getting these log messages from running the service in the test suite:
 
-```
+```text
 INFO o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:postgresql://localhost:49171/hahabit (PostgreSQL 12.12)
 INFO o.f.core.internal.command.DbValidate     : Successfully validated 0 migrations (execution time 00:00.016s)
 WARN o.f.core.internal.command.DbValidate     : No migrations found. Are your locations set up correctly?
@@ -47,15 +47,15 @@ ChatGPT's response:
 > To create a table in PostgreSQL, you can use the `CREATE TABLE` statement. Here is an example of how you might create a users table:
 > 
 > ```sql
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR (50) NOT NULL,
-    password VARCHAR (50) NOT NULL,
-    email VARCHAR (355) UNIQUE NOT NULL,
-    created_on TIMESTAMP NOT NULL,
-    last_login TIMESTAMP
-);
-```
+> CREATE TABLE users (
+>     id SERIAL PRIMARY KEY,
+>     username VARCHAR (50) NOT NULL,
+>     password VARCHAR (50) NOT NULL,
+>     email VARCHAR (355) UNIQUE NOT NULL,
+>     created_on TIMESTAMP NOT NULL,
+>     last_login TIMESTAMP
+> );
+> ```
 >
 > This will create a table with the following columns:
 > 
