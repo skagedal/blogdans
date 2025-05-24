@@ -5,15 +5,15 @@ import Link from "next/link";
 /* -- global <head> metadata --------------------------------------------- */
 export const metadata: Metadata = {
   title: {
-    default: "My Blog",
+    default: "skagedal.tech",
     template: "%s · My Blog",
   },
-  description: "Personal thoughts and notes on web development.",
-  authors: [{ name: "Your Name", url: "https://example.com" }],
-  metadataBase: new URL("https://example.com"),
+  description: "Thoughts on software development, technology and the future.",
+  authors: [{ name: "Simon Kågedal Reimer", url: "https://skagedal.tech" }],
+  metadataBase: new URL("https://skagedal.tech"),
   openGraph: {
     type: "website",
-    title: "My Blog",
+    title: "skagedal.tech",
     url: "/",
   },
 };
@@ -25,18 +25,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      {/* dark-mode toggle is purely CSS (prefers-color-scheme) */}
       <body className="min-h-screen bg-white text-slate-900 antialiased dark:bg-slate-900 dark:text-slate-100">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div>This should be centered</div>
-          {/* --- site header / nav ---------------------------------------- */}
           <header className="border-b border-slate-200 bg-white/60 backdrop-blur dark:border-slate-800 dark:bg-slate-900/60">
             <nav className="mx-auto flex max-w-4xl items-baseline justify-between p-4">
               <Link
                 href="/"
                 className="font-semibold tracking-tight hover:opacity-80"
               >
-                My&nbsp;Blog
+                skagedal.tech
               </Link>
               <Link
                 href="/feed.xml"
@@ -52,7 +49,7 @@ export default function RootLayout({
 
           {/* --- footer ---------------------------------------------------- */}
           <footer className="border-t border-slate-200 px-4 py-8 text-center text-sm text-slate-500 dark:border-slate-800">
-            © {new Date().getFullYear()} Your Name. All rights reserved.
+            © {new Date().getFullYear()} Simon Kågedal Reimer.
           </footer>
         </div>
       </body>
