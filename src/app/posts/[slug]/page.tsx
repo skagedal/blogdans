@@ -4,6 +4,7 @@ import { getPost, getAllPosts } from "@/lib/posts";
 import type { Metadata } from "next";
 import { Next, Prev } from "@/components/prev-next";
 import { MarkdownPost } from "@/components/markdown-components";
+import { Footer } from "@/components/footer";
 
 interface PostPageProps {
   params: Promise<{
@@ -62,18 +63,7 @@ export default async function PostPage(props: PostPageProps) {
           <MarkdownPost content={post.content} />
         </article>
       </main>
-      <footer className="mt-12 py-4 border-t border-gray-200 flex justify-between gap-4">
-        {post.previousPost ? (
-          <Prev url={post.previousPost.slug} title={post.previousPost.title} />
-        ) : (
-          <div className="w-1/2 max-w-xs" />
-        )}
-        {post.nextPost ? (
-          <Next url={post.nextPost.slug} title={post.nextPost.title} />
-        ) : (
-          <div className="w-1/2 max-w-xs" />
-        )}
-      </footer>
+      <Footer previous={post.previous} next={post.next} />
     </>
   );
 }

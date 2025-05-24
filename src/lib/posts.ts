@@ -24,8 +24,8 @@ export type Post = {
 
 export type PostComplete = Post & {
   content: string;
-  previousPost?: { title: string; slug: string };
-  nextPost?: { title: string; slug: string };
+  previous?: Post;
+  next?: Post;
 };
 
 /**
@@ -93,12 +93,10 @@ export async function getPost(slug: string): Promise<PostComplete> {
   const currentIndex = allPosts.findIndex((p) => p.slug === slug);
   if (currentIndex !== -1) {
     if (currentIndex > 0) {
-      const previous = allPosts[currentIndex - 1];
-      currentPost.previousPost = { title: previous.title, slug: previous.slug };
+      currentPost.previous = allPosts[currentIndex - 1];
     }
     if (currentIndex < allPosts.length - 1) {
-      const next = allPosts[currentIndex + 1];
-      currentPost.nextPost = { title: next.title, slug: next.slug };
+      currentPost.next = allPosts[currentIndex + 1];
     }
   }
 
