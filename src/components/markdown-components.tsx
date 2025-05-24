@@ -1,6 +1,30 @@
 import Link from "next/link";
 import React from "react";
 import type { Components } from "react-markdown";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
+import rehypeRaw from "rehype-raw";
+import rehypeSanitize from "rehype-sanitize";
+import { defaultSchema } from "rehype-sanitize";
+
+// Note: I added rehype-raw and rehype-sanitize only to allow the iframe and figure tags
+// used in some early blog posts. Would be neat if we could avoid this.
+const schema = structuredClone(defaultSchema);
+schema.tagNames!.push("iframe");
+schema.tagNames!.push("figure");
+schema.attributes!.iframe = [
+  // keep the usual <iframe> attributes
+  "src",
+  "allow",
+  "allowfullscreen",
+  "loading",
+  "title",
+  "width",
+  "height",
+  "frameborder",
+  "style",
+];
 
 export const markdownComponents: Components = {
   h1: ({ node, ...props }) => (
@@ -129,3 +153,15 @@ export const markdownComponents: Components = {
     </td>
   ),
 };
+
+export function MarkdownPost({ content }: { content: string }) {
+  return (
+    <Markdown
+      components={markdownComponents}
+      remarkPlugins={[remarkGfm]}
+      rehypePlugins={[rehypeRaw, [rehypeSanitize, schema], rehypeHighlight]}
+    >
+      {content}
+    </Markdown>
+  );
+}

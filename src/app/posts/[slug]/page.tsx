@@ -2,34 +2,8 @@ import { notFound } from "next/navigation";
 import { format } from "date-fns";
 import { getPost, getAllPosts } from "@/lib/posts";
 import type { Metadata } from "next";
-import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
-import rehypeRaw from "rehype-raw";
-import rehypeSanitize from "rehype-sanitize";
-
-import Markdown from "react-markdown";
-import { defaultSchema } from "rehype-sanitize";
-
-// Note: I added rehype-raw and rehype-sanitize only to allow the iframe and figure tags
-// used in some early blog posts. Would be neat if we could avoid this.
-const schema = structuredClone(defaultSchema);
-schema.tagNames!.push("iframe");
-schema.tagNames!.push("figure");
-schema.attributes!.iframe = [
-  // keep the usual <iframe> attributes
-  "src",
-  "allow",
-  "allowfullscreen",
-  "loading",
-  "title",
-  "width",
-  "height",
-  "frameborder",
-  "style",
-];
-
-import { markdownComponents } from "@/components/markdown-components";
 import { Next, Prev } from "@/components/prev-next";
+import { MarkdownPost } from "@/components/markdown-components";
 
 interface PostPageProps {
   params: Promise<{
@@ -85,17 +59,7 @@ export default async function PostPage(props: PostPageProps) {
             </div>
           </header>
 
-          <Markdown
-            components={markdownComponents}
-            remarkPlugins={[remarkGfm]}
-            rehypePlugins={[
-              rehypeRaw,
-              [rehypeSanitize, schema],
-              rehypeHighlight,
-            ]}
-          >
-            {post.content}
-          </Markdown>
+          <MarkdownPost content={post.content} />
         </article>
       </main>
       <footer className="mt-12 py-4 border-t border-gray-200 flex justify-between gap-4">
