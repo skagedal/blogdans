@@ -71,24 +71,33 @@ export default async function PostPage(props: PostPageProps) {
   }
 
   return (
-    <article>
-      <header className="mb-8">
-        <h1 className="text-3xl sm:text-4xl font-bold mb-4">{post.title}</h1>
-        <div className="text-sm text-gray-600 space-y-1">
-          <time dateTime={post.date.toISOString()}>
-            {format(new Date(post.date), "MMMM d, yyyy")}
-          </time>
-        </div>
-      </header>
+    <>
+      <main className="mx-auto max-w-3xl flex-1 p-4">
+        <article>
+          <header className="mb-8">
+            <h1 className="text-3xl sm:text-4xl font-bold mb-4">
+              {post.title}
+            </h1>
+            <div className="text-sm text-gray-600 space-y-1">
+              <time dateTime={post.date.toISOString()}>
+                {format(new Date(post.date), "MMMM d, yyyy")}
+              </time>
+            </div>
+          </header>
 
-      <Markdown
-        components={markdownComponents}
-        remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeRaw, [rehypeSanitize, schema], rehypeHighlight]}
-      >
-        {post.content}
-      </Markdown>
-
+          <Markdown
+            components={markdownComponents}
+            remarkPlugins={[remarkGfm]}
+            rehypePlugins={[
+              rehypeRaw,
+              [rehypeSanitize, schema],
+              rehypeHighlight,
+            ]}
+          >
+            {post.content}
+          </Markdown>
+        </article>
+      </main>
       <footer className="mt-12 py-4 border-t border-gray-200 flex justify-between gap-4">
         {post.previousPost ? (
           <Prev url={post.previousPost.slug} title={post.previousPost.title} />
@@ -101,6 +110,6 @@ export default async function PostPage(props: PostPageProps) {
           <div className="w-1/2 max-w-xs" />
         )}
       </footer>
-    </article>
+    </>
   );
 }

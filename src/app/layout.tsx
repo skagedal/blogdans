@@ -46,14 +46,7 @@ export default function RootLayout({
               </Link>
             </nav>
           </header>
-
-          {/* --- page content --------------------------------------------- */}
-          <main className="mx-auto max-w-3xl flex-1 p-4">{children}</main>
-
-          {/* --- footer ---------------------------------------------------- */}
-          <footer className="border-t border-slate-200 px-4 py-8 text-center text-sm text-slate-500 dark:border-slate-800">
-            © {new Date().getFullYear()} Simon Kågedal Reimer.
-          </footer>
+          {children}
         </div>
       </body>
     </html>

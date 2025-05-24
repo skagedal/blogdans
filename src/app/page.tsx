@@ -4,7 +4,10 @@ import { getAllPosts } from "@/lib/posts";
 
 export default async function BlogIndex() {
   const posts = await getAllPosts();
-  return (
+  return (<>
+              
+          <main className="mx-auto max-w-3xl flex-1 p-4">
+
     <div>
       <div className="prose prose-lg max-w-none mb-8">
         <p className="text-gray-600">
@@ -47,5 +50,12 @@ export default async function BlogIndex() {
         </div>
       </section>{" "}
     </div>
+    </main>
+
+          <footer className="border-t border-slate-200 px-4 py-8 text-center text-sm text-slate-500 dark:border-slate-800">
+            © {new Date().getFullYear()} Simon Kågedal Reimer.
+          </footer>
+            </>
+
   );
 }
