@@ -30,7 +30,6 @@ schema.attributes!.iframe = [
 
 import { markdownComponents } from "@/components/markdown-components";
 
-
 interface PostPageProps {
   params: Promise<{
     slug: string;
@@ -89,15 +88,33 @@ export default async function PostPage(props: PostPageProps) {
         {post.content}
       </Markdown>
 
-      <footer className="mt-12 pt-8 border-t border-gray-200">
-        {post.previousPost && (
-          <div>
-            Previous:{" "}
-            <a href={`/posts/${post.previousPost.slug}`} className="block mb-4">
-              {post.previousPost.title}
-            </a>
-          </div>
-        )}
+      <footer className="mt-12 pt-8 border-t border-gray-200 flex justify-between gap-4">
+        {post.previousPost ? (
+          <a
+            href={`/posts/${post.previousPost.slug}`}
+            className="flex items-center rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors px-4 py-3 w-1/2 max-w-xs mb-0 text-gray-800 no-underline min-h-[56px]"
+            style={{ justifyContent: 'flex-start' }}
+          >
+            <span className="mr-2 flex-shrink-0" aria-label="Previous post">
+              {/* Left arrow SVG */}
+              <svg width="20" height="20" fill="none" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M13 16l-5-6 5-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </span>
+            <span className="break-words whitespace-normal">{post.previousPost.title}</span>
+          </a>
+        ) : <div className="w-1/2 max-w-xs" />}
+        {post.nextPost ? (
+          <a
+            href={`/posts/${post.nextPost.slug}`}
+            className="flex items-center rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors px-4 py-3 w-1/2 max-w-xs mb-0 text-gray-800 no-underline justify-end min-h-[56px]"
+            style={{ justifyContent: 'flex-end' }}
+          >
+            <span className="break-words whitespace-normal mr-2 text-right">{post.nextPost.title}</span>
+            <span className="flex-shrink-0" aria-label="Next post">
+              {/* Right arrow SVG */}
+              <svg width="20" height="20" fill="none" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M7 4l5 6-5 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </span>
+          </a>
+        ) : <div className="w-1/2 max-w-xs" />}
       </footer>
     </article>
   );

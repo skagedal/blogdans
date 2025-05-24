@@ -136,13 +136,13 @@ _[Continue reading part two.](/posts/2023-01-02-habit-tracker-part-two-spring-bo
 [^2]: The release process of JDK 21 in the fall of 2023 made me feel a bit less confident in this choice. It took much longer for Temurin to get this milestone release out than other distributions, apparently having to do with Oracle holding back on the TCK. Don't know what the politics are here exactly. I've switched to using Zulu for my local machine. 
 [^3]: As I follow this process to update to JDK 21, I'm noticing this warning while doing `sudo apt-get update`:
     
-    ```
+    ```text
     W: https://packages.adoptium.net/artifactory/deb/dists/jammy/InRelease: Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
     ```
     
     Apparently this has to do with security recommendations. The manual provides one simple way way of replacing the above, and then one even more recommended way of doing it; I'm going with the slightly simpler one:
 
-    ```
+    ```text
     wget -qO- https://packages.adoptium.net/artifactory/api/gpg/key/public | sudo tee /etc/apt/trusted.gpg.d/adoptium.asc
     ```
 
