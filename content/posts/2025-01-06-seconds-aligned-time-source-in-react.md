@@ -9,7 +9,6 @@ I recently built a small race timer tool for the browser using [React](https://r
 
 First, let's just have a component that shows the time: 
 
-{% raw %}
 ```tsx
 function WatchFace({ date }: { date: Date }) {
   return <div style={{ textAlign: "center" }}>
@@ -17,7 +16,6 @@ function WatchFace({ date }: { date: Date }) {
   </div>;
 }
 ```
-{% endraw %}
 
 And then put that it our app:
 
@@ -64,7 +62,6 @@ But what if I told you that if I had a thousand readers of this blog post, on av
 
 To illustrate what I am talking about, let's also show the current milliseconds in our watchface:
 
-{% raw %}
 ```tsx
 function WatchFace({ date }: { date: Date }) {
   return (
@@ -75,7 +72,6 @@ function WatchFace({ date }: { date: Date }) {
   );
 }
 ```
-{% endraw %}
 
 [Here](https://codesandbox.io/p/sandbox/simple-setinterval-and-showing-milliseconds-5x5pcs?file=%2Fsrc%2FApp.tsx%3A11%2C2) it is on CodeSandbox.
 

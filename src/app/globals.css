@@ -1,1 +1,18 @@
 @import 'tailwindcss';
+
+
+pre:has(.hljs) {
+  @apply my-6 rounded-lg bg-slate-50 p-4 overflow-x-auto text-sm;
+  @import '../styles/github.css';
+}
+
+/* Optional: extra contrast for the inner <code> */
+pre:has(.hljs) code {
+  @apply block min-w-max leading-relaxed;
+}
+
+html.dark pre:has(.hljs) {
+  @apply my-6 rounded-lg bg-slate-800 p-4 overflow-x-auto text-sm;
+  @import '../styles/github-dark.css';
+
+}

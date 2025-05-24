@@ -22,13 +22,13 @@ I began thinking about how I could do a `git log` in one of my repositories and 
 
 I started with the timestamps, as it seemed simple. JavaScript's `Date` constructor prefers to get them in a [specific simplified form](https://tc39.es/ecma262/multipage/numbers-and-dates.html#sec-date-time-string-format) of ISO-8601 that looks like `YYYY-MM-DDTHH:mm:ss.sssZ`. This is unfortunately not what you get with git's `git log --date=iso8601` command; it rather gives you something like `2023-11-13 21:53:28 +0200`. This doesn't look like it's actually valid ISO-8601 [combined date and time respresentation](https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations) at all? But anyway, with just a little googling I got this:
 
-```
+```shell
 $ git log  --date=format:'%Y-%m-%dT%H:%M:%S.000Z'
 ```
 
 Which gave me output like this:
 
-```
+```text
 commit fecbcf68e012948831910264a6a180923a8deda3
 Author: Simon Kågedal Reimer <skagedal@gmail.com>
 Date:   2024-06-08T07:21:02.000Z

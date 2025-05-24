@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import { format } from "date-fns";
 import { getPost, getAllPosts } from "@/lib/posts";
 import type { Metadata } from "next";
-import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import Markdown from "react-markdown";
@@ -67,12 +66,14 @@ export default async function PostPage(props: PostPageProps) {
       </Markdown>
 
       <footer className="mt-12 pt-8 border-t border-gray-200">
-        <a
-          href="/"
-          className="text-blue-600 hover:text-blue-800 transition-colors"
-        >
-          ← Back to all posts
-        </a>
+        {post.previousPost && (
+          <div>
+            Previous:{" "}
+            <a href={`/posts/${post.previousPost.slug}`} className="block mb-4">
+              {post.previousPost.title}
+            </a>
+          </div>
+        )}
       </footer>
     </article>
   );
