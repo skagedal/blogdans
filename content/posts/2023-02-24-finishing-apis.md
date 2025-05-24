@@ -70,15 +70,11 @@ private List<HabitForDate> getHabitsForDate(Principal principal, LocalDate date)
 
 By pressing F6 with the cursor in it, we get this dialog:
 
-<figure>
-    <img src="/images/habit-tracker/move-instance-method.png" alt="Move instance method dialog from IntelliJ IDEA" width="594" height="440" />
-</figure>
+![Move instance method dialog from IntelliJ IDEA](/images/habit-tracker/move-instance-method.png)
 
 We want `habitService` to be the target, so we select that as the instance expression. We press "Refactor", and get this little dialog:
 
-<figure>
-    <img src="/images/habit-tracker/move-instance-method-problems-were-found.png" alt="Move instance method dialog from IntelliJ IDEA - problems were found" width="627" height="359" />
-</figure>
+![Move instance method dialog from IntelliJ IDEA - problems were found](/images/habit-tracker/move-instance-method-problems-were-found.png)
 
 We're ok with that as well, and press "Continue". 
 

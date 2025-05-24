@@ -12,7 +12,7 @@ So... I spin up my application in IntelliJ. It's listening on localhost's port 8
 
 But no – it just says this:
 
-> Failed to fetch.<br/>
+> Failed to fetch.
 > Possible Reasons:
 >
 > * CORS

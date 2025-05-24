@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import Markdown from "react-markdown";
+
 import { markdownComponents } from "@/components/markdown-components";
 
 interface PostPageProps {

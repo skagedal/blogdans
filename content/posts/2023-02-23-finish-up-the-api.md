@@ -17,7 +17,7 @@ I'll write some methods to call the endpoints:
 
 ```java
 public class ApiTests {
-    // ,,,
+    // ...
 
     private void achieveHabit(String username, Long habitId, String date) {
         record Request() { }
@@ -58,7 +58,7 @@ And then the test becomes:
 
 ```java
 public class ApiTests {
-    // ,,,
+    // ...
 
     @Test
     void create_habit_and_achieve_it() {
