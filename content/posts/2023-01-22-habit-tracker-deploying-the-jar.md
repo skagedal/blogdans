@@ -55,4 +55,4 @@ _[Continue reading part twenty-three.](/posts/2023-01-23-habit-tracker-running-i
 
 ### Notes
 
-[^1]: Yes, my server is running Linux – or if you're so inclined, GNU/Linux – which is not exactly "Unix", but I figure that if I write "Unix account", people will most directly understand what I mean. "Account" means so many things. Does that maek sense? 
+[^1]: Yes, my server is running Linux – or if you're so inclined, GNU/Linux – which is not exactly "Unix", but I figure that if I write "Unix account", people will most directly understand what I mean. "Account" means so many things. Does that make sense? 
