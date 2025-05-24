@@ -1,7 +1,6 @@
 import { getSite } from "@/lib/site";
 import "./globals.css";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Body } from "@/components/body";
 
 const site = getSite();

@@ -27,31 +27,31 @@ schema.attributes!.iframe = [
 ];
 
 export const markdownComponents: Components = {
-  h1: ({ node, ...props }) => (
+  h1: (props) => (
     <h1 className="mt-12 mb-6 text-4xl font-bold tracking-tight" {...props} />
   ),
-  h2: ({ node, ...props }) => (
+  h2: (props) => (
     <h2 className="mt-10 mb-5 text-3xl font-semibold" {...props} />
   ),
-  h3: ({ node, ...props }) => (
+  h3: (props) => (
     <h3
       className="mt-8 mb-4 text-2xl font-semibold tracking-tight"
       {...props}
     />
   ),
-  h4: ({ node, ...props }) => (
+  h4: (props) => (
     <h4 className="mt-8 mb-3 text-xl font-semibold tracking-tight" {...props} />
   ),
-  h5: ({ node, ...props }) => (
+  h5: (props) => (
     <h5 className="mt-6 mb-3 text-lg font-semibold tracking-tight" {...props} />
   ),
-  h6: ({ node, ...props }) => (
+  h6: (props) => (
     <h6
       className="mt-6 mb-2 text-base font-semibold uppercase tracking-widest text-slate-500 dark:text-slate-400"
       {...props}
     />
   ),
-  p: ({ node, ...props }) => (
+  p: (props) => (
     <p className="mb-4 leading-6 text-gray-800 dark:text-gray-200" {...props} />
   ),
   a: ({ href = "", children, ...props }) => (

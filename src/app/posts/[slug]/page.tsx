@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import { format } from "date-fns";
 import { getPost, getAllPosts } from "@/lib/posts";
 import type { Metadata } from "next";
-import { Next, Prev } from "@/components/prev-next";
 import { MarkdownPost } from "@/components/markdown-components";
 import { Footer } from "@/components/footer";
 
