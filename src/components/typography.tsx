@@ -1,4 +1,5 @@
 import { Link } from "lucide-react";
+import { twMerge } from "tailwind-merge";
 
 export function Paragraph({
   children,
@@ -61,7 +62,7 @@ export function H3({
 }) {
   return (
     <h3
-      className={`mt-8 mb-4 text-2xl font-semibold tracking-tight ${className}`}
+      className={twMerge("mt-8 mb-4 text-2xl font-semibold tracking-tight", className)}
       {...props}
     >
       {children}
