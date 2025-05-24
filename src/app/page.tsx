@@ -34,24 +34,13 @@ export default async function BlogIndex() {
                     {post.title}
                   </Link>
                 </h3>
-                <time className="text-sm text-gray-600" dateTime={post.date}>
+                <time className="text-sm text-gray-600" dateTime={post.date.toISOString()}>
                   {format(new Date(post.date), "MMMM d, yyyy")}
                 </time>
                 {post.summary && (
                   <p className="mt-2 text-gray-700">{post.summary}</p>
                 )}
-                {post.tags && post.tags.length > 0 && (
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {post.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
+                
               </article>
             ))
           )}

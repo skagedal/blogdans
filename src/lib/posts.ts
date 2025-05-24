@@ -5,52 +5,78 @@ import { z } from "zod";
 
 const postsDir = path.join(process.cwd(), "content", "posts");
 
-/* 1 – front-matter contract (type-safe) */
 const Front = z.object({
   title: z.string(),
-  date: z.string().optional(), // this will be overridden by the filename date
+  // Do we ever want to allow date to be set manually?
+  // date: z.string().optional(), 
   draft: z.boolean().optional().default(false),
   tags: z.array(z.string()).optional(),
   summary: z.string().optional(),
 });
-export type Frontmatter = z.infer<typeof Front> & { slug: string };
 
-/* helper to extract date from filename */
-function getDateFromSlug(slug: string): string {
-    const parts = slug.split("-");
-    // assuming filename has format YYYY-MM-DD-something...
-    if (parts.length < 3) {
-        throw new Error(`Invalid file name format: ${slug}`);
-    }
-    return `${parts[0]}-${parts[1]}-${parts[2]}`;
+export type Post = {
+  title: string;
+  date: Date ;
+  draft: boolean;
+  summary: string;
+  slug: string;
+} 
+
+export type PostComplete = Post & {
+  content: string;
 }
 
-/* 2 – helper to collect metadata for all posts */
-export async function getAllPosts(): Promise<Frontmatter[]> {
+/**
+ * Extracts the date from the slug
+ */
+function getDateFromSlug(slug: string): Date {
+  const parts = slug.split("-");
+  if (parts.length < 3) {
+    throw new Error(`Invalid file name format: ${slug}`);
+  }
+  return new Date(`${parts[0]}-${parts[1]}-${parts[2]}`);
+}
+
+/**
+ * @returns Metadata for all posts
+ */
+export async function getAllPosts(): Promise<Post[]> {
   const files = await fs.readdir(postsDir);
-  const posts: Frontmatter[] = [];
+  const posts: Post[] = [];
 
   for (const file of files) {
     if (!file.endsWith(".md")) continue;
     const slug = file.replace(/\.md$/, "");
     const raw = await fs.readFile(path.join(postsDir, file), "utf8");
     const { data } = matter(raw);
-    const meta = Front.parse(data);
-    const fileDate = getDateFromSlug(slug);
-    posts.push({ ...meta, slug, date: fileDate });
+    const { title, draft, summary} = Front.parse(data);
+    const date = getDateFromSlug(slug);
+    posts.push({ 
+      title,
+      date,
+      draft: draft || false,
+      summary: summary || "",
+      slug,
+     });
   }
 
   /* newest first, hide drafts */
   return posts
-  .filter(p => !p.draft)
-  .sort((a, b) => new Date(b.date!).getTime() - new Date(a.date!).getTime())
+    .filter((p) => !p.draft)
+    .sort((a, b) => b.date.getTime() - a.date.getTime());
 }
 
-/* 3 – helper to read one post */
 export async function getPost(slug: string) {
   const raw = await fs.readFile(path.join(postsDir, `${slug}.md`), "utf8");
   const { data, content } = matter(raw);
-  const meta = Front.parse(data);
+  const { title, draft, summary}  = Front.parse(data);
   const fileDate = getDateFromSlug(slug);
-  return { meta: { ...meta, slug, date: fileDate }, content };
+  return { 
+    title,
+    date: fileDate,
+    draft: draft || false,
+    summary: summary || "",
+    slug,
+    content,
+   };
 }
