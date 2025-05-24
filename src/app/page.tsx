@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { format } from "date-fns";
 import { getAllPosts } from "@/lib/posts";
 import { Footer } from "@/components/footer";

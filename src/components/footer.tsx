@@ -1,7 +1,6 @@
 import { Post } from "@/lib/posts";
 import { Next, Prev } from "./prev-next";
 import { SiGithub, SiBluesky } from "react-icons/si";
-import Link from "next/link";
 import { RssIcon } from "lucide-react";
 
 export function Footer({ previous, next }: { previous?: Post; next?: Post }) {
