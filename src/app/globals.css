@@ -1,18 +1,36 @@
-@import "tailwindcss";
+/* 1 — Tailwind’s base/utility layers */
+@import "tailwindcss/preflight";
+@import "tailwindcss/utilities";
 
-body {
-  background: #000000;
-  color: #ffffff;
+/* 2 — Better default typography (requires @tailwindcss/typography plugin) */
+@layer base {
+  /* font families */
+  :root {
+    --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+      "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
+      "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+      "Liberation Mono", "Courier New", monospace;
+  }
+  html {
+    font-family: var(--font-sans);
+  }
 }
 
-a {
-  color: #ffcc00;
-  text-decoration: none;
-  font-size: 1.5em;
-  margin-bottom: 20px;
+/* 3 — Prose styling for blog post body */
+@layer components {
+  .prose-custom {
+    @apply prose prose-slate dark:prose-invert
+      max-w-none
+      prose-headings:scroll-m-20
+      prose-img:rounded-xl;
+  }
 }
 
-img {
-  max-width: 90%;
-  height: auto;
+/* 4 — Small utilities that Tailwind doesn’t ship */
+@layer utilities {
+  /* subtle link underline that appears on hover only */
+  .link {
+    @apply underline-offset-2 hover:underline;
+  }
 }

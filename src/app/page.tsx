@@ -1,12 +1,21 @@
-export default function Home() {
+import Link from 'next/link'
+import { getAllPosts } from '@/lib/posts'
+
+export default async function BlogIndex() {
+  const posts = await getAllPosts()
   return (
-    <>
-      coming soon from <a href="https://skagedal.tech">skagedal.tech</a>
-      <img
-        src="/images/our-new-insect-overlords.png"
-        width="400"
-        alt="Trippy news anchor saying 'I, for one, welcome our new insect overlords'"
-      />
-    </>
-  );
+    <main className="prose mx-auto">
+      <h1>Blog</h1>
+      <ul>
+        {posts.map(p => (
+          <li key={p.slug}>
+            <Link href={`/blog/${p.slug}`}>{p.title}</Link>{' '}
+            {/* <time dateTime={p.date.toISOString()}>
+              {p.date.toLocaleDateString()}
+            </time> */}
+          </li>
+        ))}
+      </ul>
+    </main>
+  )
 }
