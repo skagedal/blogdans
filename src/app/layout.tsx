@@ -2,6 +2,7 @@ import { getSite } from "@/lib/site";
 import "./globals.css";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Body } from "@/components/body";
 
 const site = getSite();
 
@@ -28,27 +29,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className="min-h-screen bg-white text-slate-900 antialiased dark:bg-slate-900 dark:text-slate-100">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <header className="border-b border-slate-200 bg-white/60 backdrop-blur dark:border-slate-800 dark:bg-slate-900/60">
-            <nav className="mx-auto flex max-w-3xl items-baseline justify-between p-4">
-              <Link
-                href="/"
-                className="font-semibold tracking-tight hover:opacity-80"
-              >
-                skagedal.tech
-              </Link>
-              <Link
-                href="/feed.xml"
-                className="text-sm hover:underline hover:opacity-80"
-              >
-                RSS
-              </Link>
-            </nav>
-          </header>
-          {children}
-        </div>
-      </body>
+      <Body>{children}</Body>
     </html>
   );
 }
