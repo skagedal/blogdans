@@ -1,19 +1,22 @@
+import { getSite } from "@/lib/site";
 import "./globals.css";
 import type { Metadata } from "next";
 import Link from "next/link";
 
+const site = getSite();
+
 /* -- global <head> metadata --------------------------------------------- */
 export const metadata: Metadata = {
   title: {
-    default: "skagedal.tech",
-    template: "%s · My Blog",
+    default: site.name,
+    template: `%s · {site.name}`,
   },
-  description: "Thoughts on software development, technology and the future.",
+  description: site.description,
   authors: [{ name: "Simon Kågedal Reimer", url: "https://skagedal.tech" }],
-  metadataBase: new URL("https://skagedal.tech"),
+  metadataBase: new URL(site.url),
   openGraph: {
     type: "website",
-    title: "skagedal.tech",
+    title: site.name,
     url: "/",
   },
 };
