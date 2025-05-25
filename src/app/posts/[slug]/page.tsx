@@ -4,11 +4,12 @@ import { getPost, getAllPosts } from "@/lib/posts";
 import type { Metadata } from "next";
 import { MarkdownPost } from "@/components/markdown-components";
 import { Footer } from "@/components/footer";
+import z from "zod";
+import { Comments } from "@/components/comments/comments";
 
 interface PostPageProps {
-  params: Promise<{
-    slug: string;
-  }>;
+  params: Promise<any>;
+  searchParams: Promise<any>;
 }
 
 export async function generateStaticParams() {
@@ -23,7 +24,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const params = await props.params;
   const post = await getPost(params.slug);
-
+  
   if (!post) {
     return {
       title: "Post Not Found",
@@ -36,9 +37,17 @@ export async function generateMetadata(
   };
 }
 
-export default async function PostPage(props: PostPageProps) {
-  const params = await props.params;
-  const post = await getPost(params.slug);
+const query = z.object({
+  slug: z.string(),
+  version: z.enum(['next', 'current']).optional().default('current'),
+});
+
+export default async function PostPage({ params, searchParams }: PostPageProps) {
+  const { slug, version } = query.parse({
+    ...await params,
+    ...await searchParams
+  });
+  const post = await getPost(slug);
 
   if (!post) {
     notFound();
@@ -58,8 +67,8 @@ export default async function PostPage(props: PostPageProps) {
               </time>
             </div>
           </header>
-
           <MarkdownPost content={post.content} />
+          { version === 'next' && (<Comments />)} 
         </article>
       </main>
       <Footer previous={post.previous} next={post.next} />

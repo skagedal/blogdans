@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 import { getAllPosts } from "@/lib/posts";
 import { Footer } from "@/components/footer";
-import { Anchor, H2, H3, Paragraph } from "@/components/typography";
+import { Anchor, H2, H3, Paragraph } from "@/components/ui/typography";
 
 export default async function BlogIndex() {
   const posts = await getAllPosts();

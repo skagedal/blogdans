@@ -26,7 +26,7 @@ import {
   TableRow,
   TableHeaderRow,
   TableCell,
-} from "./typography";
+} from "./ui/typography";
 
 // Note: I added rehype-raw and rehype-sanitize only to allow the iframe and figure tags
 // used in some early blog posts. Would be neat if we could avoid this.
