@@ -1,2 +1,7 @@
 #!/usr/bin/bash
-docker run --rm --name blogdans --publish 9030:3000 skagedal/blogdans:latest
+docker run --rm \
+    --name blogdans \
+    --publish 9030:3000 \
+    --env AUTH_GOOGLE_ID=$(cat .secrets/google-client-id) \
+    --env AUTH_GOOGLE_SECRET=$(cat .secrets/google-client-secret) \
+    skagedal/blogdans:latest

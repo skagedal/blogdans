@@ -4,10 +4,12 @@ import { MessageSquare } from "lucide-react";
 import { Alert, AlertDescription } from "../ui/alert";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
+import { signIn } from "@/auth"
 
 export function NotLoggedIn() {
   const handleLogin = async () => {
-    window.location.href = "/oauth2/sign_in";
+    "use server";
+    await signIn("google");
   };
 
   return (
