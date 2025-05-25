@@ -8,7 +8,6 @@ import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
 import { AuthenticatedUser, User } from "@/lib/user";
 import { NotLoggedIn } from "./not-logged-in";
-import { success } from "zod/v4";
 
 interface CommentFormProps {
   user: AuthenticatedUser;
@@ -82,6 +81,7 @@ export function CommentForm({
         });
       }
     } catch (error) {
+      console.error("Error posting comment:", error);
       toast({
         title: "Error",
         description: "An unexpected error occurred.",

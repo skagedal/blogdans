@@ -7,9 +7,17 @@ import { Footer } from "@/components/footer";
 import z from "zod";
 import { Comments } from "@/components/comments/comments";
 
+const paramsSchema = z.object({
+  slug: z.string(),
+});
+
+const searchParamsSchema = z.object({
+  version: z.enum(["next", "current"]).optional().default("current"),
+});
+
 interface PostPageProps {
-  params: Promise<any>;
-  searchParams: Promise<any>;
+  params: Promise<z.infer<typeof paramsSchema>>;
+  searchParams: Promise<z.infer<typeof searchParamsSchema>>;
 }
 
 export async function generateStaticParams() {
@@ -24,7 +32,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const params = await props.params;
   const post = await getPost(params.slug);
-  
+
   if (!post) {
     return {
       title: "Post Not Found",
@@ -37,16 +45,12 @@ export async function generateMetadata(
   };
 }
 
-const query = z.object({
-  slug: z.string(),
-  version: z.enum(['next', 'current']).optional().default('current'),
-});
-
-export default async function PostPage({ params, searchParams }: PostPageProps) {
-  const { slug, version } = query.parse({
-    ...await params,
-    ...await searchParams
-  });
+export default async function PostPage({
+  params,
+  searchParams,
+}: PostPageProps) {
+  const { slug } = paramsSchema.parse(await params);
+  const { version } = searchParamsSchema.parse(await searchParams);
   const post = await getPost(slug);
 
   if (!post) {
@@ -68,7 +72,7 @@ export default async function PostPage({ params, searchParams }: PostPageProps) 
             </div>
           </header>
           <MarkdownPost content={post.content} />
-          { version === 'next' && (<Comments />)} 
+          {version === "next" && <Comments />}
         </article>
       </main>
       <Footer previous={post.previous} next={post.next} />

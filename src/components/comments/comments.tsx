@@ -1,11 +1,7 @@
 import { User } from "@/lib/user";
 import { MessageSquare } from "lucide-react";
 import { headers } from "next/headers";
-import { Card, CardContent, CardFooter } from "../ui/card";
-import { Alert, AlertDescription } from "../ui/alert";
-import { Button } from "../ui/button";
-import { NotLoggedIn } from "./not-logged-in";
-import { CommentForm, FormOrLogin } from "./comment-form";
+import { FormOrLogin } from "./comment-form";
 
 export const dynamic = "force-dynamic";
 
