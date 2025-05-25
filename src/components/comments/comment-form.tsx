@@ -94,7 +94,7 @@ export function CommentForm({
 
   return (
     <Card className="mb-8">
-      <CardHeader className="pb-0">Write a comment as {user.name}</CardHeader>
+      <CardHeader className="pb-0">Write a comment as {user.name}. {user.photo}</CardHeader>
       <form onSubmit={handleSubmit}>
         <CardContent className="p-6">
           <Textarea
