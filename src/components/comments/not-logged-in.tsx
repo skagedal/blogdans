@@ -7,7 +7,7 @@ import { Button } from "../ui/button";
 
 export function NotLoggedIn() {
   const handleLogin = async () => {
-    window.location.href = "/auth/login";
+    window.location.href = "/oauth2/sign_in";
   };
 
   return (
