@@ -4,4 +4,5 @@ docker run --rm \
     --publish 9030:3000 \
     --env AUTH_GOOGLE_ID=$(cat .secrets/google-client-id) \
     --env AUTH_GOOGLE_SECRET=$(cat .secrets/google-client-secret) \
+    --env AUTH_SECRET=$(cat .secrets/next-auth-cookie-secret) \
     skagedal/blogdans:latest

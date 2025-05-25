@@ -4,13 +4,10 @@ import { MessageSquare } from "lucide-react";
 import { Alert, AlertDescription } from "../ui/alert";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
-import { signIn } from "@/auth"
+import { handleLogin } from "@/lib/login";
 
 export function NotLoggedIn() {
-  const handleLogin = async () => {
-    "use server";
-    await signIn("google");
-  };
+
 
   return (
     <Card className="mb-8">
