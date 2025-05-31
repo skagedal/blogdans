@@ -6,7 +6,6 @@ import { MarkdownPost } from "@/components/markdown-components";
 import { Footer } from "@/components/footer";
 import z from "zod";
 import { Comments } from "@/components/comments/comments";
-import { Card } from "@/components/ui/card";
 import { DraftCard } from "@/components/draft";
 
 const paramsSchema = z.object({
