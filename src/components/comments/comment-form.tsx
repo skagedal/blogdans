@@ -22,9 +22,12 @@ async function postComment(pageId: string, commentData: { content: string }) {
   // make a promise that waits for a second and then resolves with a success object
   // This is a placeholder for the actual API call to post the comment
   console.log(`Posting comment for page ${pageId}:`, commentData);
-  return new Promise((resolve) => setTimeout(resolve, 1000)).then(() => {
-    console.log("Comment posted successfully");
-    return Promise.resolve({ success: true }); // Simulate API call
+  return await fetch(`/api/posts/${pageId}/comment`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(commentData),
   });
 }
 
@@ -117,7 +120,7 @@ export function CommentForm({
             maxLength={MAX_CHARS}
           />
           <div
-            className={`text-xs text-right ${
+            className={`text-xs mt-2 text-right ${
               isOverLimit ? "text-destructive" : "text-muted-foreground"
             }`}
           >

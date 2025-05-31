@@ -2,8 +2,10 @@ import { getSite } from "@/lib/site";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Body } from "@/components/body";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const site = getSite();
+const queryClient = new QueryClient();
 
 /* -- global <head> metadata --------------------------------------------- */
 export const metadata: Metadata = {
