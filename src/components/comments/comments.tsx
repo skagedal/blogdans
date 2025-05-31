@@ -26,7 +26,7 @@ export async function Comments() {
   const user = await getUser();
 
   return (
-    <div className="w-full max-w-3xl mx-auto py-8 px-4 sm:px-6 animate-fade-in">
+    <div className="py-8 animate-fade-in">
       <h2 className="text-2xl font-bold mb-6 flex items-center">
         <MessageSquare className="mr-2 h-5 w-5" />
         Comments
