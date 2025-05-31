@@ -64,10 +64,10 @@ export default async function PostPage({
       <main className="mx-auto max-w-3xl flex-1 p-4">
         <article>
           <header className="mb-8">
-            <h1 className="text-3xl sm:text-4xl font-bold mb-4">
+            <h1 className="text-3xl sm:text-4xl font-bold mb-2">
               {post.title}
             </h1>
-            <div className="text-sm text-gray-600 space-y-1">
+            <div className="text-sm text-muted-foreground space-y-1 mt-0">
               <time dateTime={post.date.toISOString()}>
                 {format(new Date(post.date), "MMMM d, yyyy")}
               </time>

@@ -5,9 +5,9 @@ import { RssIcon } from "lucide-react";
 
 export function Footer({ previous, next }: { previous?: Post; next?: Post }) {
   return (
-    <footer className="mt-4 py-4 items-center flex flex-col gap-4 mb-2">
+    <footer className="mt-4 py-4 items-center flex flex-col gap-4 mb-6">
       {previous || next ? (
-        <div className="flex justify-between border-t border-b border-gray-200 gap-4 w-full">
+        <div className="flex justify-between border-t border-b gap-4 w-full">
           {previous ? (
             <Prev url={previous.slug} title={previous.title} />
           ) : (
@@ -20,9 +20,9 @@ export function Footer({ previous, next }: { previous?: Post; next?: Post }) {
           )}
         </div>
       ) : (
-        <div className="w-full border-t  border-gray-200" />
+        <div className="w-full border-t" />
       )}
-      <div className="">Simon Kågedal Reimer &lt;skagedal@gmail.com&gt;</div>
+      <div className="text-muted-foreground">Simon Kågedal Reimer &lt;skagedal@gmail.com&gt;</div>
       <SocialLinks />
     </footer>
   );
@@ -30,7 +30,7 @@ export function Footer({ previous, next }: { previous?: Post; next?: Post }) {
 
 export default function SocialLinks() {
   return (
-    <nav className="flex gap-2 text-2xl">
+    <nav className="flex gap-2 text-2xl text-muted-foreground">
       <a href="https://github.com/skagedal">
         <SiGithub />
       </a>
