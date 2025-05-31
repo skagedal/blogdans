@@ -5,9 +5,10 @@ import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { useToast } from "../../hooks/use-toast";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
-import { Loader2 } from "lucide-react";
+import { Loader2, UserCircle } from "lucide-react";
 import { AuthenticatedUser, User } from "@/lib/user";
 import { NotLoggedIn } from "./not-logged-in";
+import { Avatar, AvatarImage } from "../ui/avatar";
 
 interface CommentFormProps {
   user: AuthenticatedUser;
@@ -94,7 +95,18 @@ export function CommentForm({
 
   return (
     <Card className="mb-8">
-      <CardHeader className="pb-0">Write a comment as {user.name}. {user.photo}</CardHeader>
+      <CardHeader className="pb-0">
+        <div className="flex gap-2 items-center">
+          <Avatar className="h-8 w-8">
+            {user.photo ? (
+              <AvatarImage src={user.photo} alt={user.name} />
+            ) : (
+              <UserCircle className="h-8 w-8" />
+            )}
+          </Avatar>
+          {user.name}
+        </div>
+      </CardHeader>
       <form onSubmit={handleSubmit}>
         <CardContent className="p-6">
           <Textarea
@@ -105,7 +117,7 @@ export function CommentForm({
             maxLength={MAX_CHARS}
           />
           <div
-            className={`text-xs mt-2 text-right ${
+            className={`text-xs text-right ${
               isOverLimit ? "text-destructive" : "text-muted-foreground"
             }`}
           >

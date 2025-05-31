@@ -1,26 +1,8 @@
-import { auth } from "@/auth";
-import { User } from "@/lib/user";
+import { getUser } from "@/lib/user";
 import { MessageSquare } from "lucide-react";
 import { FormOrLogin } from "./comment-form";
 
 export const dynamic = "force-dynamic";
-
-async function getUser(): Promise<User> {
-    const session = await auth();
-  if (session && session.user && session.user.email) {
-    return {
-      $case: "authenticated",
-      name: session.user.name || "Anonymous",
-      email: session.user.email,
-      id: session.user.id,
-      photo: session.user.image || undefined,
-    };
-  } else {
-    return {
-      $case: "anonymous",
-    };
-  }
-}
 
 export async function Comments() {
   const user = await getUser();
