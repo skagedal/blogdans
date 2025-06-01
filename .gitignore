@@ -3,4 +3,3 @@ next-env.d.ts
 .next
 tsconfig.tsbuildinfo
 .idea
-logs
