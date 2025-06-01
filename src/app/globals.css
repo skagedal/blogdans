@@ -24,6 +24,8 @@
   --color-card: var(--card);
 }
 
+/* TODO: Use the basic tailwind colors instead: https://tailwindcss.com/docs/colors */
+
 @layer base {
   :root {
     /* slate theme from shadcn */
