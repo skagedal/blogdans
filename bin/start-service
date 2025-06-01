@@ -7,4 +7,5 @@ docker run --rm \
     --env AUTH_SECRET=$(cat .secrets/next-auth-cookie-secret) \
     --env AUTH_TRUST_HOST=true \
     --env AUTH_URL=https://skagedal.tech/api/auth \
+    --env MIDDLEWARE=true \
     skagedal/blogdans:latest
