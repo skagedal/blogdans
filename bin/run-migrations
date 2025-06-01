@@ -4,7 +4,8 @@ docker login --username skagedal --password-stdin < .secrets/docker-hub-token
 url="postgresql://blogdans:$(cat .secrets/db-password)@localhost:5432/blogdans?sslmode=disable"
 docker run \
   --rm \
-  --it \
+  --interactive \
+  --tty \
   --network=host \
   --volume "$(pwd)/db:/db" \
   --env DATABASE_URL="${url}" \
