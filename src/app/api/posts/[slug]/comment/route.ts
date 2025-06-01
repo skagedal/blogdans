@@ -1,5 +1,4 @@
 import { postCommentSchema } from "@/lib/api/comments";
-import { request } from "http"
 import z from "zod";
 
 const paramsSchema = z.object({
