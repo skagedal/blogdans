@@ -73,6 +73,10 @@
                 run: "rsync --archive --verbose --compress --delete ./bin ./db blogdans:",
               },
               {
+                name: "Run migrations",
+                run: "ssh blogdans ./bin/run-migrations"
+              },
+              {
                 name: "Pull Docker image",
                 run: "ssh blogdans ./bin/fetch-latest",
               },
