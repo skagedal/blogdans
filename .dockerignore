@@ -1,3 +1,4 @@
 tools
 db
 .env
+.next/standalone/.env
