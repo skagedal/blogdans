@@ -19,3 +19,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - Tailwind helpers like [tailwind-merge](https://www.npmjs.com/package/tailwind-merge), [clsx](https://www.npmjs.com/package/clsx), and [class-variance-authority](https://www.npmjs.com/package/class-variance-authority) are used to simplify class management. These are used because shadcn/ui recommends them, I would like to explore further into what they do and how they work.
 - Similarly, some radix-ui components are used because shadcn. I would like to explore base-ui.com. 
 - I use Lucide for general icons. I use react-icons for social icons.
+
+## Database
+
+- I use [dbmate](https://github.com/amacneil/dbmate) to handle database migrations. I mostly have experience with Flyway from before, and wanted something more lightweight.

@@ -70,7 +70,7 @@
               },
               {
                 name: "Deploy files to server",
-                run: "rsync --archive --verbose --compress --delete ./bin blogdans:",
+                run: "rsync --archive --verbose --compress --delete ./bin ./db blogdans:",
               },
               {
                 name: "Pull Docker image",
