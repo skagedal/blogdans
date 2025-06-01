@@ -5,7 +5,6 @@ url="postgresql://blogdans:$(cat .secrets/db-password)@localhost:5432/blogdans?s
 docker run \
   --rm \
   --interactive \
-  --tty \
   --network=host \
   --volume "$(pwd)/db:/db" \
   --env DATABASE_URL="${url}" \
