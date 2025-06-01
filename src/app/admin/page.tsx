@@ -1,8 +1,11 @@
 import { H2 } from "@/components/ui/typography";
 import { getUser } from "@/lib/user";
+import { logger } from "@/logger";
 
 export default async function AdminPage() {
   const user = await getUser();
+
+  logger.info("Admin page accessed");
 
   return (
     <main className="mx-auto max-w-3xl flex-1 p-4">
