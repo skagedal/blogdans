@@ -2,7 +2,6 @@ import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
 import { logger } from "./logger";
 import { createUser } from "./db/repository"
-import { z } from "zod";
 import { googleProfileSchema, googleUserSchema } from "./lib/google-types";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
