@@ -1,20 +1,17 @@
 import { db } from "./client";
 import { randomUUID } from "crypto";
-import { GoogleProfile, GoogleUser } from "@/lib/google-types";
+import { OpenIdProfile } from "@/lib/google-types";
 import { logger } from "@/logger";
 
 // Creates a new user in the database if not existing
-export async function createUser(
-  googleUser: GoogleUser,
-  googleProfile: GoogleProfile
-): Promise<void> {
+export async function createUser(profile: OpenIdProfile): Promise<void> {
   const existing = await db
     .selectFrom("google_user")
     .selectAll()
-    .where("id", "=", googleUser.id)
+    .where("id", "=", profile.sub)
     .executeTakeFirst();
   if (existing) {
-    logger.info("Existing user", { googleUserId: googleUser.id, blogdansUserId: existing.blog_user_id });
+    logger.info("Existing user", { sub: profile.sub, userId: existing.blog_user_id });
     return;
   }
   const blogdansUserId = randomUUID();
@@ -23,21 +20,21 @@ export async function createUser(
       .insertInto("blogdans_user")
       .values({
         id: blogdansUserId,
-        name: googleProfile.name,
-        email: googleProfile.email,
-        photo: googleProfile.picture,
+        name: profile.name,
+        email: profile.email,
+        photo: profile.picture,
       })
       .execute();
     await trx
       .insertInto("google_user")
       .values({
-        id: googleUser.id,
+        id: profile.sub,
         blog_user_id: blogdansUserId,
       })
       .execute();
   });
   logger.info("Created new user", {
-    googleUser: googleUser.id,
-    blogdansUserId: blogdansUserId,
+    sub: profile.sub,
+    userId: blogdansUserId,
   });
 }

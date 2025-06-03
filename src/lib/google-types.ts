@@ -1,7 +1,11 @@
+import { sub } from "date-fns"
 import z from "zod"
 
 // This is the "profile" field in the signIn from Google
+//    https://developers.google.com/identity/openid-connect/openid-connect#obtaininguserprofileinformation
+//    https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
 export const googleProfileSchema = z.object({
+    sub: z.string(),
     at_hash: z.string(),
     email: z.string().email(),
     email_verified: z.boolean(),
@@ -11,10 +15,4 @@ export const googleProfileSchema = z.object({
     picture: z.string().url(),
 })
 
-// This is the "user" field
-export const googleUserSchema = z.object({
-    id: z.string()
-})
-
-export type GoogleProfile = z.infer<typeof googleProfileSchema>
-export type GoogleUser = z.infer<typeof googleUserSchema>
+export type OpenIdProfile = z.infer<typeof googleProfileSchema>
