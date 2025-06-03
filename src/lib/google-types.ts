@@ -2,7 +2,6 @@ import z from "zod"
 
 // This is the "profile" field in the signIn from Google
 export const googleProfileSchema = z.object({
-    id: z.string(),
     at_hash: z.string(),
     email: z.string().email(),
     email_verified: z.boolean(),
