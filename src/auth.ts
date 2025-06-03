@@ -17,7 +17,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       try {
         const googleUser = googleUserSchema.parse(user);
         const googleProfile = googleProfileSchema.parse(profile);
-        await createUser(user, profile);
+        await createUser(googleUser, googleProfile);
       } catch (error) {
         logger.error("Error creating user", { error })
         return false
