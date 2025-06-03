@@ -1,6 +1,7 @@
 import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
 import { logger } from "./logger";
+import { createUser } from "./db/repository"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [Google],
@@ -11,6 +12,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     signIn: async ({ user, account, profile }) => {
       logger.info("SignIn callback triggered", { user, account, profile });
+      try {
+        await createUser(profile)
+      } catch (error) {
+        logger.error("Error creating user", { error })
+        return false
+      }
       return true
     }
   }
