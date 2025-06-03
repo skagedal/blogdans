@@ -31,7 +31,7 @@ export async function createUser(
     await trx
       .insertInto("google_user")
       .values({
-        id: googleProfile.id,
+        id: googleUser.id,
         blog_user_id: blogdansUserId,
       })
       .execute();
