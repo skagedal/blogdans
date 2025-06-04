@@ -8,4 +8,10 @@ docker run --rm \
     --env AUTH_TRUST_HOST=true \
     --env AUTH_URL=https://skagedal.tech/api/auth \
     --env MIDDLEWARE=true \
+    --mount type=bind,source=$(pwd)/.secrets/db-password,target=/run/secrets/db-password,readonly \
+    --env DATABASE_PASSWORD_FILE=/run/secrets/db-password \
+    --env DATABASE_USER=blogdans \
+    --env DATABASE_HOST=host.docker.internal \
+    --env DATABASE_NAME=blogdans \
+    --env DATABASE_SSLMODE=disable \
     skagedal/blogdans:latest
