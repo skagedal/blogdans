@@ -6,8 +6,8 @@ import type { DB } from "./schema";
 export const db = new Kysely<DB>({
   dialect: new PostgresDialect({
     pool: new Pool({ connectionString: (() => {
-      const passwordFile = process.env.DATABASE_PASSWORD_FILE || '/run/secrets/db-password';
-      const password = fs.readFileSync(passwordFile, 'utf8').trim();
+      const passwordFile = process.env.DATABASE_PASSWORD_FILE;
+      const password = passwordFile ? fs.readFileSync(passwordFile, 'utf8').trim() : 'dummy';
       const user = process.env.DATABASE_USER as string;
       const host = process.env.DATABASE_HOST as string;
       const database = process.env.DATABASE_NAME as string;
