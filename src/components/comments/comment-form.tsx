@@ -9,6 +9,7 @@ import { Loader2, UserCircle } from "lucide-react";
 import { AuthenticatedUser, User } from "@/lib/user";
 import { NotLoggedIn } from "./not-logged-in";
 import { Avatar, AvatarImage } from "../ui/avatar";
+import { PostComment } from "@/lib/api/comments";
 
 interface CommentFormProps {
   user: AuthenticatedUser;
@@ -18,7 +19,7 @@ interface CommentFormProps {
 
 const MAX_CHARS = 1000;
 
-async function postComment(pageId: string, commentData: { content: string }) {
+async function postComment(pageId: string, commentData: PostComment) {
   // make a promise that waits for a second and then resolves with a success object
   // This is a placeholder for the actual API call to post the comment
   console.log(`Posting comment for page ${pageId}:`, commentData);
@@ -63,8 +64,8 @@ export function CommentForm({
 
     setIsSubmitting(true);
 
-    const commentData = {
-      content: content.trim(),
+    const commentData: PostComment = {
+      comment: content.trim(),
     };
 
     try {
