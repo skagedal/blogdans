@@ -21,6 +21,7 @@ export const metadata: Metadata = {
   },
 };
 
+
 export default function RootLayout({
   children,
 }: {
@@ -28,7 +29,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <Body>{children}</Body>
+      <Body>
+        {children}
+      </Body>
     </html>
   );
 }

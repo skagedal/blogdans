@@ -10,6 +10,8 @@ import { AuthenticatedUser, User } from "@/lib/user";
 import { NotLoggedIn } from "./not-logged-in";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { PostComment } from "@/lib/api/comments";
+import { useTRPC } from "@/lib/trpc/client";
+import { useQuery } from "@tanstack/react-query";
 
 interface CommentFormProps {
   user: AuthenticatedUser;
@@ -51,6 +53,9 @@ export function CommentForm({
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const trpc = useTRPC();
+
+  const messages = useQuery(trpc.post.getAll.queryOptions());
 
   const remainingChars = MAX_CHARS - content.length;
   const isOverLimit = remainingChars < 0;
@@ -129,6 +134,7 @@ export function CommentForm({
           </div>
         </CardContent>
         <CardFooter className="flex justify-between px-6 pb-6 pt-0">
+          <pre><code>{JSON.stringify(messages, null, 2)}</code></pre>
           <p className="text-xs text-muted-foreground">
             Comments are moderated and will appear after approval.
           </p>
