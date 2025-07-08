@@ -15,6 +15,6 @@ docker run --rm \
     --env DATABASE_HOST=host.docker.internal \
     --env DATABASE_NAME=blogdans \
     --env DATABASE_SSLMODE=disable \
-    --mount type=bind,source=$(pwd)/.secrets/slack-webhook-url,target=/run/secrets/slack-webhook-url,readonly \
-    --env SLACK_WEBHOOK_URL_FILE=/run/secrets/slack-webhook-url \
+    --mount type=bind,source=$(pwd)/.secrets/slack-webhook-uri,target=/run/secrets/slack-webhook-uri,readonly \
+    --env SLACK_WEBHOOK_URL_FILE=/run/secrets/slack-webhook-uri \
     skagedal/blogdans:latest
