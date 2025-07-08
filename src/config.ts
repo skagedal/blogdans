@@ -42,5 +42,5 @@ function environmentDatabaseUrl() {
 
 export const config: Config = {
   databaseUrl: environmentDatabaseUrl(),
-  slackWebhookUrl: env.SLACK_WEBHOOK_URL,
+  slackWebhookUrl: readSecret('SLACK_WEBHOOK_URI'),
 };
