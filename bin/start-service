@@ -8,13 +8,13 @@ docker run --rm \
     --env AUTH_TRUST_HOST=true \
     --env AUTH_URL=https://skagedal.tech/api/auth \
     --env MIDDLEWARE=true \
-    --mount type=bind,source=$(pwd)/.secrets/db-password,target=/run/secrets/db-password,readonly \
+    --mount type=bind,source=$(pwd)/.secrets/db-password,target=/app/db-password,readonly \
     --env DATABASE_URL=postgres://localhost:5432/dummy \
-    --env DATABASE_PASSWORD_FILE=/run/secrets/db-password \
+    --env DATABASE_PASSWORD_FILE=/app/db-password \
     --env DATABASE_USER=blogdans \
     --env DATABASE_HOST=host.docker.internal \
     --env DATABASE_NAME=blogdans \
     --env DATABASE_SSLMODE=disable \
-    --mount type=bind,source=$(pwd)/.secrets/slack-webhook-uri,target=/run/secrets/slack-webhook-uri,readonly \
-    --env SLACK_WEBHOOK_URI_FILE=/run/secrets/slack-webhook-uri \
+    --mount type=bind,source=$(pwd)/.secrets/slack-webhook-uri,target=/app/slack-webhook-uri,readonly \
+    --env SLACK_WEBHOOK_URI_FILE=/app/slack-webhook-uri \
     skagedal/blogdans:latest

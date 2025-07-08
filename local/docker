@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+
+# ---
+# Some helpers
+
+red() { tput setaf 1; echo -n "$@"; tput sgr0; }
+green() { tput setaf 2; echo -n "$@"; tput sgr0; }
+yellow() { tput setaf 3; echo -n "$@"; tput sgr0; }
+
+loginfo() {
+  echo "$(green "＞ INFO: ") $1" >&2
+}
+
+logerror() {
+  echo "$(red "❌ ERROR:") $1" >&2
+}
+
+show_help() {
+  loginfo "Usage: $0 [OPTIONS] <target-stage>"
+  loginfo
+  loginfo "Available stages:"
+  for i in $(grep -i "^FROM.*AS" main.Dockerfile | awk '{print $NF}'); do
+    loginfo "  - $i"
+  done
+  loginfo
+  loginfo "Options:"
+  loginfo "  --help, -h          Show this help message"
+}
+
+# ---
+# Main script 
+
+POSITIONAL_ARGS=()
+APP=blogdans
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -h|--help)
+      show_help
+      exit 0
+      ;;
+    -*|--*)
+      logerror "Unknown option $1"
+      show_help
+      exit 1
+      ;;
+    *)
+      POSITIONAL_ARGS+=("$1") # save positional arg
+      shift # past argument
+      ;;
+  esac
+done
+
+set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
+
+TARGET="$1"
+
+if [ -z "$TARGET" ]; then
+  logerror "No target stage specified."
+  show_help
+  exit 1
+fi
+
+pretty_target="$(green "$TARGET")"
+
+loginfo "Building the $pretty_target Docker stage."
+
+# Build the specified stage
+docker buildx build \
+  --target="$TARGET" \
+  --tag "${APP}-${TARGET}" \
+  --file ./main.Dockerfile \
+  --secret type=env,id=npm_token,src=CODEARTIFACT_NPM_TOKEN \
+  --build-arg TEST_CACHE_BUST=${TEST_CACHE_BUST} \
+  .
+if [ $? -ne 0 ]; then
+  logerror
+  logerror "Failed to build the Docker image for the $pretty_target stage."
+  logerror "Inspect the output using:"
+  logerror
+  logerror "  docker buildx history logs 2>&1 | less -r"
+  exit 1
+fi
+loginfo "Successfully built the Docker image for the $pretty_target stage."
+if [ "$TARGET" = "app" ]; then
+  loginfo
+  loginfo "You can now run the image with:"
+  loginfo "  docker run -it --rm -p 3000:3000 ${APP}-app"
+fi
+loginfo
+loginfo "You can shell into the image for inspection with:"
+loginfo "  docker run -it --rm ${APP}-${TARGET} /bin/bash"
