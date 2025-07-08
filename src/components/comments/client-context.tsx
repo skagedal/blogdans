@@ -28,6 +28,12 @@ function getQueryClient() {
   }
 }
 
+function getBaseUrl() {
+  if (typeof window !== 'undefined')
+    return '';
+  return `http://localhost:${process.env.PORT ?? 3000}`;
+}
+
 /**
  * Wrap the top-level client component in this context
  */
@@ -37,7 +43,7 @@ export function ClientContext({ children }: { children: React.ReactNode }) {
     createTRPCClient<AppRouter>({
       links: [
         httpBatchLink({
-          url: "http://localhost:3000/api/trpc",
+          url: `${getBaseUrl()}/api/trpc`,
           transformer: SuperJSON,
         }),
       ],
