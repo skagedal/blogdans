@@ -1,0 +1,27 @@
+{
+  name: "blogdans",
+  services: {
+    app: {
+      build: {
+        context: ".",
+        dockerfile: "main.Dockerfile"
+      },
+      ports: [
+        "3000:3000"
+      ],
+      environment: {
+        MOCK_USER: "true",
+        DATABASE_URL: "postgresql://blogdans:secret@database:5432/blogdans"
+      }
+    },
+    database: {
+      image: "postgres:16",
+      shm_size: "128mb",
+      environment: {
+        POSTGRES_USER: "blogdans",
+        POSTGRES_PASSWORD: "secret",
+        POSTGRES_DB: "blogdans"
+      }
+    }
+  }
+}

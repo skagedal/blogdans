@@ -70,8 +70,6 @@ docker buildx build \
   --target="$TARGET" \
   --tag "${APP}-${TARGET}" \
   --file ./main.Dockerfile \
-  --secret type=env,id=npm_token,src=CODEARTIFACT_NPM_TOKEN \
-  --build-arg TEST_CACHE_BUST=${TEST_CACHE_BUST} \
   .
 if [ $? -ne 0 ]; then
   logerror
