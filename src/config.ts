@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 
 type Config = {
   databaseUrl: string;
+  slackWebhookUrl?: string;
 };
 
 function environmentDatabaseUrl() {
@@ -23,4 +24,5 @@ function environmentDatabaseUrl() {
 
 export const config: Config = {
   databaseUrl: environmentDatabaseUrl(),
+  slackWebhookUrl: env.SLACK_WEBHOOK_URL,
 };

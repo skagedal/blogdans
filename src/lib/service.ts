@@ -1,4 +1,5 @@
 import { db as globalDb } from "@/db/client";
+import { reporter } from "./reporter";
 
 export class Service {
   db = globalDb;
@@ -17,7 +18,7 @@ export class Service {
         .execute();
       return { };
     } catch (error) {
-      console.error(`Failed to insert comment for post ${postId}:`, error);
+      reporter.error(`Failed to insert comment for post ${postId}: ${error}`);
       throw new Error("Failed to post comment", { cause: error });
     }
   }

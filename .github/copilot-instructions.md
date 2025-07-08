@@ -1,0 +1,1 @@
+- Use the winston logger for logging from the backend, never console.log or console.error.

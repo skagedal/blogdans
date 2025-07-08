@@ -15,4 +15,5 @@ docker run --rm \
     --env DATABASE_HOST=host.docker.internal \
     --env DATABASE_NAME=blogdans \
     --env DATABASE_SSLMODE=disable \
+    --env SLACK_WEBHOOK_URL=$(cat .secrets/slack-webhook-url) \
     skagedal/blogdans:latest
