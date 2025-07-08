@@ -9,9 +9,8 @@ import { Loader2, UserCircle } from "lucide-react";
 import { AuthenticatedUser, User } from "@/lib/user";
 import { NotLoggedIn } from "./not-logged-in";
 import { Avatar, AvatarImage } from "../ui/avatar";
-import { PostComment } from "@/lib/api/comments";
 import { useTRPC } from "@/lib/trpc/client";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 interface CommentFormProps {
   user: AuthenticatedUser;
@@ -20,19 +19,6 @@ interface CommentFormProps {
 }
 
 const MAX_CHARS = 1000;
-
-async function postComment(pageId: string, commentData: PostComment) {
-  // make a promise that waits for a second and then resolves with a success object
-  // This is a placeholder for the actual API call to post the comment
-  console.log(`Posting comment for page ${pageId}:`, commentData);
-  return await fetch(`/api/posts/${pageId}/comment`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(commentData),
-  });
-}
 
 export function FormOrLogin({ pageId, user }: { pageId: string; user: User }) {
   switch (user.$case) {
@@ -51,11 +37,10 @@ export function CommentForm({
   onCommentPosted,
 }: CommentFormProps) {
   const [content, setContent] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const trpc = useTRPC();
 
-  const messages = useQuery(trpc.post.getAll.queryOptions());
+  const { mutateAsync: submitComment, isPending: isSubmitting } = useMutation(trpc.post.submitComment.mutationOptions());
 
   const remainingChars = MAX_CHARS - content.length;
   const isOverLimit = remainingChars < 0;
@@ -63,18 +48,10 @@ export function CommentForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (isOverLimit || content.trim() === "" || isSubmitting) {
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    const commentData: PostComment = {
-      comment: content.trim(),
-    };
+    const comment = content.trim();
 
     try {
-      const result = await postComment(pageId, commentData);
+      const result = await submitComment({ pageId, comment });
 
       if (result) {
         setContent("");
@@ -97,9 +74,7 @@ export function CommentForm({
         description: "An unexpected error occurred.",
         variant: "destructive",
       });
-    } finally {
-      setIsSubmitting(false);
-    }
+    } 
   };
 
   return (
@@ -134,7 +109,6 @@ export function CommentForm({
           </div>
         </CardContent>
         <CardFooter className="flex justify-between px-6 pb-6 pt-0">
-          <pre><code>{JSON.stringify(messages, null, 2)}</code></pre>
           <p className="text-xs text-muted-foreground">
             Comments are moderated and will appear after approval.
           </p>

@@ -5,7 +5,11 @@ import { ClientContext } from "./client-context";
 
 export const dynamic = "force-dynamic";
 
-export async function Comments() {
+type Props = {
+  pageId: string;
+}
+
+export async function Comments({ pageId }: Props) {
   const user = await getUser();
 
   return (
@@ -15,7 +19,7 @@ export async function Comments() {
         Comments
       </h2>
       <ClientContext>
-        <FormOrLogin pageId="test" user={user} />
+        <FormOrLogin pageId={pageId} user={user} />
       </ClientContext>
       
       <div className="text-center py-8 text-muted-foreground">
