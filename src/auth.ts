@@ -4,9 +4,11 @@ import { logger } from "./logger";
 import { createUser } from "./db/repository"
 import { googleProfileSchema } from "./lib/google-types";
 
+const isMockMode = process.env.MOCK_USER === "true";
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  providers: [Google],
-  callbacks: {
+  providers: isMockMode ? [] : [Google],
+  callbacks: isMockMode ? {} : {
     jwt: async ({ token, user, account, profile }) => {
       logger.info("JWT callback triggered", { token, user, account, profile });
       return token

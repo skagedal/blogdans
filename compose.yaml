@@ -11,6 +11,8 @@
       ],
       environment: {
         MOCK_USER: "true",
+        AUTH_SECRET: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+        AUTH_TRUST_HOST: "true",
         DATABASE_URL: "postgresql://blogdans:secret@database:5432/blogdans?sslmode=disable"
       }
     },
