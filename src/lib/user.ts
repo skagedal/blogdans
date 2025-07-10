@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { MOCK_USER_ID } from "./create-mock-user";
 
 export type AuthenticatedUser = {
   $case: "authenticated";
@@ -36,7 +37,7 @@ async function getMockUser(): Promise<User> {
     $case: "authenticated",
     name: "Mock User",
     email: "test@example.com",
-    id: "mock-id",
+    id: MOCK_USER_ID,
     photo: "https://picsum.photos/id/237/200/200"
   };
 }
