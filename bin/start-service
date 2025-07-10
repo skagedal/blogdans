@@ -2,6 +2,7 @@
 docker run --rm \
     --name blogdans \
     --publish 9030:3000 \
+    --add-host skagedal-tech-internal:host-gateway \
     --env AUTH_GOOGLE_ID=$(cat .secrets/google-client-id) \
     --env AUTH_GOOGLE_SECRET=$(cat .secrets/google-client-secret) \
     --env AUTH_SECRET=$(cat .secrets/next-auth-cookie-secret) \
@@ -11,7 +12,7 @@ docker run --rm \
     --mount type=bind,source=$(pwd)/.secrets/db-password,target=/app/db-password,readonly \
     --env DATABASE_PASSWORD_FILE=/app/db-password \
     --env DATABASE_USER=blogdans \
-    --env DATABASE_HOST=host.docker.internal \
+    --env DATABASE_HOST=skagedal-tech-internal \
     --env DATABASE_NAME=blogdans \
     --env DATABASE_SSLMODE=disable \
     --mount type=bind,source=$(pwd)/.secrets/slack-webhook-uri,target=/app/slack-webhook-uri,readonly \
