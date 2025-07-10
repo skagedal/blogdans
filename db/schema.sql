@@ -79,11 +79,33 @@ CREATE TABLE public.post (
 
 
 --
+-- Name: roles; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.roles (
+    role text NOT NULL
+);
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.schema_migrations (
     version character varying NOT NULL
+);
+
+
+--
+-- Name: user_roles; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_roles (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    user_id uuid NOT NULL,
+    role text NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -120,11 +142,34 @@ ALTER TABLE ONLY public.post
 
 
 --
+-- Name: roles roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.roles
+    ADD CONSTRAINT roles_pkey PRIMARY KEY (role);
+
+
+--
 -- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: user_roles user_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_roles
+    ADD CONSTRAINT user_roles_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: idx_user_roles_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_user_roles_user_id ON public.user_roles USING btree (user_id);
 
 
 --
@@ -156,6 +201,13 @@ CREATE TRIGGER post_updated_at_trigger BEFORE UPDATE ON public.post FOR EACH ROW
 
 
 --
+-- Name: user_roles user_roles_updated_at_trigger; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER user_roles_updated_at_trigger BEFORE UPDATE ON public.user_roles FOR EACH ROW EXECUTE FUNCTION public.updated_at_trigger();
+
+
+--
 -- Name: comment comment_author_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -172,6 +224,22 @@ ALTER TABLE ONLY public.comment
 
 
 --
+-- Name: user_roles user_roles_role_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_roles
+    ADD CONSTRAINT user_roles_role_fkey FOREIGN KEY (role) REFERENCES public.roles(role);
+
+
+--
+-- Name: user_roles user_roles_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_roles
+    ADD CONSTRAINT user_roles_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.blogdans_user(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -181,4 +249,5 @@ ALTER TABLE ONLY public.comment
 --
 
 INSERT INTO public.schema_migrations (version) VALUES
-    ('20250601073353');
+    ('20250601073353'),
+    ('20250710092143');

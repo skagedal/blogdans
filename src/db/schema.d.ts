@@ -43,9 +43,23 @@ export interface Post {
   updated_at: Generated<Timestamp | null>;
 }
 
+export interface Roles {
+  role: string;
+}
+
+export interface UserRoles {
+  created_at: Generated<Timestamp | null>;
+  id: Generated<string>;
+  role: string;
+  updated_at: Generated<Timestamp | null>;
+  user_id: string;
+}
+
 export interface DB {
   blogdans_user: BlogdansUser;
   comment: Comment;
   google_user: GoogleUser;
   post: Post;
+  roles: Roles;
+  user_roles: UserRoles;
 }

@@ -79,13 +79,29 @@ export class Service {
         .offset(offset)
         .execute();
 
+      // Get roles for each user
+      const usersWithRoles = await Promise.all(
+        users.map(async (user) => {
+          const userRoles = await this.db
+            .selectFrom("user_roles")
+            .select("role")
+            .where("user_id", "=", user.id)
+            .execute();
+          
+          return {
+            ...user,
+            roles: userRoles.map(r => r.role)
+          };
+        })
+      );
+
       const total = await this.db
         .selectFrom("blogdans_user")
         .select(({ fn }) => fn.count<number>("id").as("count"))
         .executeTakeFirstOrThrow();
 
       return {
-        users,
+        users: usersWithRoles,
         total: total.count,
         page,
         limit,
@@ -148,13 +164,29 @@ export class Service {
         throw new Error("User not found");
       }
 
+      // Get user roles
+      const userRoles = await this.db
+        .selectFrom("user_roles")
+        .select("role")
+        .where("user_id", "=", result.id)
+        .execute();
+
+      // Convert roles to permissions
+      const permissions = new Set<Permission>();
+      for (const userRole of userRoles) {
+        if (userRole.role === "admin") {
+          permissions.add("admin:read");
+          permissions.add("admin:write");
+        }
+      }
+
       return {
         $case: "authenticated",
         email: result.email,
         name: result.name,
         id: result.id,
         photo: result.photo,
-        permissions: new Set<Permission>(),
+        permissions,
       };
     } catch (error) {
       reporter.error(`Failed to get blog user from Google ID ${googleId}: ${error}`);
