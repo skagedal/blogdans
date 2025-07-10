@@ -1,7 +1,6 @@
 import { db as globalDb } from "@/db/client";
 import { reporter } from "./reporter";
-import { MOCK_USER_ID } from "./create-mock-user";
-import { getSession, User } from "./user";
+import { getSession, Permission, User } from "./user";
 
 export class Service {
   db = globalDb;
@@ -155,6 +154,7 @@ export class Service {
         name: result.name,
         id: result.id,
         photo: result.photo,
+        permissions: new Set<Permission>(),
       };
     } catch (error) {
       reporter.error(`Failed to get blog user from Google ID ${googleId}: ${error}`);

@@ -1,7 +1,6 @@
-import { router, publicProcedure, protectedProcedure } from '../server';
+import { router, protectedProcedure } from '../server';
 import { postCommentSchema } from '@/lib/api/comments';
 import { Service } from '@/lib/service';
-import { TRPCError } from '@trpc/server';
 
 const service = new Service();
 

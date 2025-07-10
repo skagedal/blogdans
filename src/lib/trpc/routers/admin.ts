@@ -1,4 +1,4 @@
-import { router, publicProcedure, protectedProcedure } from '../server';
+import { router, protectedProcedure } from '../server';
 import { z } from 'zod';
 import { Service } from '@/lib/service';
 import { TRPCError } from '@trpc/server';

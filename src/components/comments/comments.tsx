@@ -1,4 +1,3 @@
-import { getSession } from "@/lib/user";
 import { MessageSquare } from "lucide-react";
 import { FormOrLogin } from "./comment-form";
 import { ClientContext } from "./client-context";
