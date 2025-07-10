@@ -1,8 +1,27 @@
-import { initTRPC } from '@trpc/server';
-import superjson from 'superjson';
-import { ZodError } from 'zod';
+import { initTRPC } from "@trpc/server";
+import superjson from "superjson";
+import { ZodError } from "zod";
+import { auth } from "@/auth";
+import { Service } from "../service";
+import { User } from "../user";
 
-const t = initTRPC.create({
+interface TRPCContext {
+  user: User;
+}
+
+const service = new Service();
+
+async function createContext(): Promise<TRPCContext> {
+  const user = await service.getCurrentUser();
+
+  return {
+    user,
+  };
+}
+
+export type Context = Awaited<ReturnType<typeof createContext>>;
+
+const t = initTRPC.context<Context>().create({
   transformer: superjson,
   errorFormatter({ shape, error }) {
     return {
@@ -18,5 +37,12 @@ const t = initTRPC.create({
 
 export const router = t.router;
 export const publicProcedure = t.procedure;
+export const protectedProcedure = publicProcedure.use(async ({ ctx, next }) => {
+  if (ctx.user.$case === "anonymous") {
+    throw new Error("You must be logged in to access this resource");
+  }
+  return next({ ctx: { ...ctx, isAuthenticated: true, user: ctx.user } });
+});
 export const middleware = t.middleware;
+export { createContext };
 

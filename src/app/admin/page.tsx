@@ -1,23 +1,12 @@
-import { H2 } from "@/components/ui/typography";
-import { getUser } from "@/lib/user";
-import { logger } from "@/logger";
+import { ClientContext } from "@/components/comments/client-context";
+import { AdminPageClient } from "./admin-client";
 
-export default async function AdminPage() {
-  const user = await getUser();
+export const dynamic = "force-dynamic";
 
-  logger.info("Admin page accessed");
-
+export default function AdminPage() {
   return (
-    <main className="mx-auto max-w-3xl flex-1 p-4">
-      <div>
-        <section>
-            <H2>Self</H2>
-            <pre><code>{JSON.stringify(user,null,2)}</code></pre>
-        </section>
-        <section>
-          <H2>Users</H2>
-        </section>
-      </div>
-    </main>
+    <ClientContext>
+      <AdminPageClient />
+    </ClientContext>
   );
 }

@@ -1,23 +1,20 @@
-import { db } from "@/db/client";
+import { Service } from "./service";
 import { logger } from "@/logger";
 
 export const MOCK_USER_ID = "00000000-0000-4000-8000-000000000001";
-const MOCK_GOOGLE_USER_ID = "mock-google-id";
+export const MOCK_GOOGLE_USER_ID = "mock-google-id";
 
 export async function createMockUser(): Promise<void> {
   try {
-    const existing = await db
-      .selectFrom("blogdans_user")
-      .selectAll()
-      .where("id", "=", MOCK_USER_ID)
-      .executeTakeFirst();
+    const service = new Service();
+    const existing = await service.getBlogUser(MOCK_USER_ID);
     
     if (existing) {
       logger.info("Mock user already exists", { userId: MOCK_USER_ID });
       return;
     }
 
-    await db.transaction().execute(async (trx) => {
+    await service.transaction(async (trx) => {
       await trx
         .insertInto("blogdans_user")
         .values({

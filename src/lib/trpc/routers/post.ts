@@ -1,14 +1,15 @@
-import { router, publicProcedure } from '../server';
+import { router, publicProcedure, protectedProcedure } from '../server';
 import { postCommentSchema } from '@/lib/api/comments';
 import { Service } from '@/lib/service';
+import { TRPCError } from '@trpc/server';
 
 const service = new Service();
 
 export const postRouter = router({
-  submitComment: publicProcedure
+  submitComment: protectedProcedure
     .input(postCommentSchema)
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       console.log(`trpc Submitting comment for page ${input.pageId}:`, input.comment);
-      return await service.insertComment(input.pageId, '6ab27c8a-a4d0-4bfb-ace1-2344b51d96b3', input.comment);
+      return await service.insertComment(input.pageId, ctx.user.id, input.comment);
     }),
 });

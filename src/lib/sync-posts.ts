@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import matter from "gray-matter";
 import { z } from "zod";
-import { db } from "@/db/client";
+import { Service } from "./service";
 import { logger } from "@/logger";
 
 const postsDir = path.join(process.cwd(), "content", "posts");
@@ -22,6 +22,7 @@ export async function syncPostsToDatabase(): Promise<void> {
   try {
     logger.info("Starting post synchronization to database");
     
+    const service = new Service();
     const files = await fs.readdir(postsDir);
     const postSlugs: string[] = [];
 
@@ -40,12 +41,8 @@ export async function syncPostsToDatabase(): Promise<void> {
         
         postSlugs.push(slug);
         
-        // Insert or update the post record
-        await db
-          .insertInto("post")
-          .values({ id: slug })
-          .onConflict((oc) => oc.column("id").doNothing())
-          .execute();
+        // Insert or update the post record via service
+        await service.syncPostToDatabase(slug);
           
       } catch (error) {
         logger.error(`Error processing post file ${file}:`, error);

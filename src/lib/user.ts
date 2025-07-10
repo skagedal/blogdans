@@ -1,28 +1,46 @@
 import { auth } from "@/auth";
-import { MOCK_USER_ID } from "./create-mock-user";
+import { MOCK_GOOGLE_USER_ID } from "./create-mock-user";
+
+export type Namespace = 'admin';
+export type Action = 'read' | 'write';
+export type Permission = `${Namespace}:${Action}`;
 
 export type AuthenticatedUser = {
   $case: "authenticated";
   email: string;
   name: string;
-  id: string | undefined;
+  id: string; // This is the blogdans_user.id
   photo: string | undefined;
+  permissions: Set<Permission>;
 };
 
 export type AnonymousUser = {
   $case: "anonymous";
 };
 
-export type User = AuthenticatedUser | AnonymousUser;
+// Not sure what to call this, but it represents an authenticated user which we have not yet fetched from the database.
+export type AuthenticatedSession = {
+  $case: "session";
+  email: string;
+  name: string;
+  googleId: string;
+  photo: string | undefined;
+}
 
-async function getRealUser(): Promise<User> {
+export type User = AuthenticatedUser | AnonymousUser;
+export type Session = AuthenticatedSession | AnonymousUser;
+
+async function getRealSession(): Promise<Session> {
   const session = await auth();
   if (session && session.user && session.user.email) {
+    if (!session.user.id) {
+      throw new Error("User ID is missing in session");
+    }
     return {
-      $case: "authenticated",
-      name: session.user.name || "Anonymous",
+      $case: "session",
       email: session.user.email,
-      id: session.user.id,
+      name: session.user.name || "Anonymous",
+      googleId: session.user.id,
       photo: session.user.image || undefined,
     };
   } else {
@@ -32,15 +50,15 @@ async function getRealUser(): Promise<User> {
   }
 }
 
-async function getMockUser(): Promise<User> {
+async function getMockSession(): Promise<Session> {
   return {
-    $case: "authenticated",
+    $case: "session",
     name: "Mock User",
     email: "test@example.com",
-    id: MOCK_USER_ID,
+    googleId: MOCK_GOOGLE_USER_ID,
     photo: "https://picsum.photos/id/237/200/200"
   };
 }
 
-export const getUser =
-  process.env.MOCK_USER === "true" ? getMockUser : getRealUser;
+export const getSession =
+  process.env.MOCK_USER === "true" ? getMockSession : getRealSession;
