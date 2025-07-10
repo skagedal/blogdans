@@ -1,5 +1,6 @@
-import { getAllPosts } from "@/lib/posts";
+import { getAllPosts, getPost } from "@/lib/posts";
 import { getSite } from "@/lib/site";
+import { markdownToHtml } from "@/lib/markdown-to-html";
 
 const site = getSite();
 
@@ -15,21 +16,26 @@ function escapeXml(str: string): string {
 export async function GET() {
   const posts = await getAllPosts();
 
-  const items = posts
-    .filter((p) => !p.draft)
-    .sort((a, b) => b.date.getTime() - a.date.getTime())
-    .slice(0, 10)
-    .map((post) => {
-      const url = `${site.url}/posts/${escapeXml(post.slug)}/`;
-      return `
+  const items = await Promise.all(
+    posts
+      .filter((p) => !p.draft)
+      .sort((a, b) => b.date.getTime() - a.date.getTime())
+      .slice(0, 10)
+      .map(async (post) => {
+        const url = `${site.url}/posts/${escapeXml(post.slug)}/`;
+        const fullPost = await getPost(post.slug);
+        const htmlContent = await markdownToHtml(fullPost.content);
+        
+        return `
         <item>
             <title>${escapeXml(post.title)}</title>
             <link>${url}</link>
-            <description>${escapeXml(post.summary)}</description>
+            <description><![CDATA[${htmlContent}]]></description>
             <pubDate>${post.date.toUTCString()}</pubDate>
             <guid isPermaLink="true">${url}</guid>
         </item>`;
-    });
+      })
+  );
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
 <channel>
