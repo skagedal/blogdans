@@ -11,7 +11,7 @@
       ],
       environment: {
         MOCK_USER: "true",
-        DATABASE_URL: "postgresql://blogdans:secret@database:5432/blogdans"
+        DATABASE_URL: "postgresql://blogdans:secret@database:5432/blogdans?sslmode=disable"
       }
     },
     database: {
@@ -22,6 +22,23 @@
         POSTGRES_PASSWORD: "secret",
         POSTGRES_DB: "blogdans"
       }
+    },
+    migrations: {
+      image: "ghcr.io/amacneil/dbmate:latest",
+      depends_on: ["database"],
+      environment: {
+        DATABASE_URL: "postgresql://blogdans:secret@database:5432/blogdans?sslmode=disable"
+      },
+      command: [
+        "up",
+      ],
+      volumes: [
+        {
+          type: "bind",
+          source: "./db",
+          target: "/db"
+        }
+      ]
     }
   }
 }
