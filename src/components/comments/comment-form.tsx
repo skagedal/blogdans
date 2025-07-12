@@ -11,6 +11,7 @@ import { NotLoggedIn } from "./not-logged-in";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { useTRPC } from "@/lib/trpc/client";
 import { useMutation } from "@tanstack/react-query";
+import { handleLogout } from "@/lib/login";
 
 interface CommentFormProps {
   user: BlogdansUser;
@@ -127,6 +128,9 @@ export function CommentForm({
           </Button>
         </CardFooter>
       </form>
+      <Button onClick={async () => await handleLogout()} className="mt-4">
+        Log out
+      </Button>
     </Card>
   );
 }

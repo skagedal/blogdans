@@ -9,8 +9,6 @@ import { blogdansUserSchema } from "./lib/user";
 
 const isMockMode = process.env.MOCK_USER === "true";
 
-const service = new Service();
-
 function createLocalProvider() {
   return CredentialsProvider({
     name: "Local",
@@ -28,6 +26,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: isMockMode ? [createLocalProvider()] : [Google],
   callbacks: {
     jwt: async ({ token, user, account, profile }) => {
+      const service = new Service();
+
       logger.info("JWT callback triggered", { token, user, account, profile });
       if (!account) {
         return token;
