@@ -3,6 +3,7 @@
 import { H2 } from "@/components/ui/typography";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { ErrorDisplay } from "@/components/ui/error-display";
 import { useTRPC } from "@/lib/trpc/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
@@ -15,11 +16,11 @@ export function AdminPageClient() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: pendingComments, isLoading: commentsLoading } = useQuery(
+  const { data: pendingComments, isLoading: commentsLoading, error: commentsError } = useQuery(
     trpc.admin.getPendingComments.queryOptions()
   );
 
-  const { data: usersData, isLoading: usersLoading } = useQuery(
+  const { data: usersData, isLoading: usersLoading, error: usersError } = useQuery(
     trpc.admin.getUsers.queryOptions({ page: currentPage, limit: 20 })
   );
 
@@ -39,10 +40,10 @@ export function AdminPageClient() {
         description: "The comment has been approved and is now visible.",
       });
       queryClient.invalidateQueries(trpc.admin.getPendingComments.queryOptions());
-    } catch {
+    } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to approve comment.",
+        description: error instanceof Error ? error.message : "Failed to approve comment.",
         variant: "destructive",
       });
     }
@@ -56,10 +57,10 @@ export function AdminPageClient() {
         description: "The comment has been permanently deleted.",
       });
       queryClient.invalidateQueries(trpc.admin.getPendingComments.queryOptions());
-    } catch {
+    } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to delete comment.",
+        description: error instanceof Error ? error.message : "Failed to delete comment.",
         variant: "destructive",
       });
     }
@@ -70,7 +71,12 @@ export function AdminPageClient() {
       <div className="space-y-8">
         <section>
           <H2>Pending Comments</H2>
-          {commentsLoading ? (
+          {commentsError ? (
+            <ErrorDisplay 
+              error={commentsError} 
+              title="Failed to load pending comments"
+            />
+          ) : commentsLoading ? (
             <div className="flex items-center justify-center p-8">
               <Loader2 className="h-8 w-8 animate-spin" />
             </div>
@@ -134,7 +140,12 @@ export function AdminPageClient() {
 
         <section>
           <H2>Users</H2>
-          {usersLoading ? (
+          {usersError ? (
+            <ErrorDisplay 
+              error={usersError} 
+              title="Failed to load users"
+            />
+          ) : usersLoading ? (
             <div className="flex items-center justify-center p-8">
               <Loader2 className="h-8 w-8 animate-spin" />
             </div>
@@ -192,11 +203,10 @@ export function AdminPageClient() {
               )}
             </div>
           ) : (
-            <Card>
-              <CardContent className="p-8 text-center">
-                <p className="text-muted-foreground">Failed to load users</p>
-              </CardContent>
-            </Card>
+            <ErrorDisplay 
+              error="No user data available"
+              title="Failed to load users"
+            />
           )}
         </section>
       </div>

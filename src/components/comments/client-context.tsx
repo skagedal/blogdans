@@ -9,7 +9,22 @@ import SuperJSON from "superjson";
 
 function makeQueryClient() {
   return new QueryClient({
-    defaultOptions: {},
+    defaultOptions: {
+      queries: {
+        retry: (failureCount, error) => {
+          console.log('Error:', error)
+          // Don't retry 4xx errors
+          if (error && typeof error === 'object' && 'status' in error) {
+            const status = error.status as number;
+            if (status >= 400 && status < 500) {
+              return false;
+            }
+          }
+          // Don't retry if we've already tried 3 times
+          return failureCount < 3;
+        },
+      },
+    },
   });
 }
 
