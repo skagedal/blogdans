@@ -3,25 +3,51 @@ import { resolve } from 'path'
 
 export default defineConfig({
   test: {
-    setupFiles: ['./vitest.setup.ts'],
-    browser: {
-      enabled: true,
-      provider: 'playwright',
-      instances: [
-        {
-          browser: 'chromium',
+    projects: [
+      // Browser tests
+      {
+        test: {
+          name: 'browser',
+          setupFiles: ['./vitest.setup.ts'],
+          browser: {
+            enabled: true,
+            provider: 'playwright',
+            instances: [
+              {
+                browser: 'chromium',
+              },
+            ],
+            headless: true,
+          },
+          globals: true,
+          include: ['**/*.browser.test.{ts,tsx}'],
         },
-      ],
-      headless: true,
-    },
-    globals: true,
-  },
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, './src'),
-    },
-  },
-  esbuild: {
-    jsx: 'automatic',
+        resolve: {
+          alias: {
+            '@': resolve(__dirname, './src'),
+          },
+        },
+        esbuild: {
+          jsx: 'automatic',
+        },
+      },
+      // Node.js tests
+      {
+        test: {
+          name: 'node',
+          environment: 'node',
+          globals: true,
+          include: ['**/*.node.test.ts'],
+        },
+        resolve: {
+          alias: {
+            '@': resolve(__dirname, './src'),
+          },
+        },
+        esbuild: {
+          jsx: 'automatic',
+        },
+      },
+    ],
   },
 })
