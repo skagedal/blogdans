@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { MOCK_GOOGLE_USER_ID } from "./create-mock-user";
+import { logger } from "@/logger";
 
 export type Namespace = 'admin';
 export type Action = 'read' | 'write';
@@ -32,6 +33,7 @@ export type Session = AuthenticatedSession | AnonymousUser;
 
 async function getRealSession(): Promise<Session> {
   const session = await auth();
+  logger.info("getRealSession", { session });
   if (session && session.user && session.user.email) {
     if (!session.user.id) {
       throw new Error("User ID is missing in session");
