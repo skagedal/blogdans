@@ -6,14 +6,14 @@ import { useToast } from "../../hooks/use-toast";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import { Loader2, UserCircle } from "lucide-react";
-import { AuthenticatedUser, User } from "@/lib/user";
+import { BlogdansUser, User } from "@/lib/user";
 import { NotLoggedIn } from "./not-logged-in";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { useTRPC } from "@/lib/trpc/client";
 import { useMutation } from "@tanstack/react-query";
 
 interface CommentFormProps {
-  user: AuthenticatedUser;
+  user: BlogdansUser;
   pageId: string;
   onCommentPosted: () => void;
 }
@@ -24,7 +24,7 @@ export function FormOrLogin({ pageId, user }: { pageId: string; user: User }) {
   switch (user.$case) {
     case "authenticated":
       return (
-        <CommentForm pageId={pageId} user={user} onCommentPosted={() => {}} />
+        <CommentForm pageId={pageId} user={user.info} onCommentPosted={() => {}} />
       );
     case "anonymous":
       return <NotLoggedIn />;

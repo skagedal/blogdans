@@ -2,12 +2,13 @@ import { router, protectedProcedure } from '../server';
 import { z } from 'zod';
 import { Service } from '@/lib/service';
 import { TRPCError } from '@trpc/server';
+import { getPermissions } from '@/lib/user';
 
 const service = new Service();
 
 const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
-  if (!ctx.user.permissions.has('admin:write')) {
-    throw new TRPCError({ code: 'UNAUTHORIZED', message: `User ${ctx.user.id} is not authorized to perform this action` });
+  if (!getPermissions(ctx.user).has('admin:write')) {
+    throw new TRPCError({ code: 'UNAUTHORIZED', message: `User ${ctx.user.info.id} is not authorized to perform this action` });
   }
   return next({
     ctx,

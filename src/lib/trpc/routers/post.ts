@@ -9,6 +9,6 @@ export const postRouter = router({
     .input(postCommentSchema)
     .mutation(async ({ input, ctx }) => {
       console.log(`trpc Submitting comment for page ${input.pageId}:`, input.comment);
-      return await service.insertComment(input.pageId, ctx.user.id, input.comment);
+      return await service.insertComment(input.pageId, ctx.user.info.id, input.comment);
     }),
 });

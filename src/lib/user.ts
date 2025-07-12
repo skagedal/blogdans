@@ -1,64 +1,53 @@
+import z from "zod";
 import { auth } from "@/auth";
-import { MOCK_GOOGLE_USER_ID } from "./create-mock-user";
 
+export const blogdansRole = z.enum(['admin']);
+
+export const blogdansUserSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  email: z.string().email(),
+  photo: z.string().url(),
+  roles: z.array(blogdansRole),
+});
+
+export type BlogdansUser = z.infer<typeof blogdansUserSchema>;
+export type BlogdansRole = z.infer<typeof blogdansRole>;
 export type Namespace = 'admin';
 export type Action = 'read' | 'write';
 export type Permission = `${Namespace}:${Action}`;
 
 export type AuthenticatedUser = {
   $case: "authenticated";
-  email: string;
-  name: string;
-  id: string; // This is the blogdans_user.id
-  photo: string | undefined;
-  permissions: Set<Permission>;
+  info: BlogdansUser;
 };
 
 export type AnonymousUser = {
   $case: "anonymous";
 };
 
-// Not sure what to call this, but it represents an authenticated user which we have not yet fetched from the database.
-export type AuthenticatedSession = {
-  $case: "session";
-  email: string;
-  name: string;
-  googleId: string;
-  photo: string | undefined;
+export type User = AuthenticatedUser | AnonymousUser;
+
+export function getPermissions(user: User): Set<Permission> {
+  if (user.$case === "authenticated") {
+    const permissions = new Set<Permission>();
+    if (user.info.roles.includes("admin")) {
+      permissions.add("admin:read");
+      permissions.add("admin:write");
+    }
+    return permissions;
+  }
+  return new Set();
 }
 
-export type User = AuthenticatedUser | AnonymousUser;
-export type Session = AuthenticatedSession | AnonymousUser;
-
-async function getRealSession(): Promise<Session> {
+export async function getUser(): Promise<User> {
   const session = await auth();
-  if (session && session.user && session.user.email) {
-    if (!session.user.id) {
-      throw new Error("User ID is missing in session");
-    }
+  if (session && 'blogUser' in session) {
     return {
-      $case: "session",
-      email: session.user.email,
-      name: session.user.name || "Anonymous",
-      googleId: session.user.id,
-      photo: session.user.image || undefined,
-    };
-  } else {
-    return {
-      $case: "anonymous",
+      $case: "authenticated",
+      info: session.blogUser as BlogdansUser,
     };
   }
+  return { $case: "anonymous" };
 }
 
-async function getMockSession(): Promise<Session> {
-  return {
-    $case: "session",
-    name: "Mock User",
-    email: "test@example.com",
-    googleId: MOCK_GOOGLE_USER_ID,
-    photo: "https://picsum.photos/id/237/200/200"
-  };
-}
-
-export const getSession =
-  process.env.MOCK_USER === "true" ? getMockSession : getRealSession;

@@ -1,6 +1,8 @@
 import { db as globalDb } from "@/db/client";
 import { reporter } from "./reporter";
-import { getSession, Permission, User } from "./user";
+import { blogdansRole, BlogdansRole, BlogdansUser } from "./user";
+import { sql } from "kysely";
+import { logger } from "@/logger";
 
 export class Service {
   db = globalDb;
@@ -126,99 +128,59 @@ export class Service {
     }
   }
 
-  async getCurrentUser(): Promise<User> {
-    const session = await getSession();
-    switch (session.$case) {
-      case "session":
-        return this.getBlogUserFromGoogleId(session.googleId);
-      case "anonymous":
-        return { $case: "anonymous" };
-      default:
-        throw new Error("Unknown user case");
+  async getOrCreateGoogleLink(googleId: string): Promise<string> {
+    const inserted = await this.db.insertInto("google_user"
+      ).values({ 
+        id: googleId, 
+        blog_user_id: sql`gen_random_uuid()`
+      })
+      .returning("blog_user_id")
+      .onConflict((oc) => oc.column("id").doNothing())
+      .execute();
+    
+    if (inserted[0]) {
+      return inserted[0].blog_user_id;
     }
+
+    // If the insert didn't happen, it means the user already exists
+    const existing = await this.db
+      .selectFrom("google_user")
+      .select("blog_user_id")
+      .where("id", "=", googleId)
+      .executeTakeFirst();
+
+    if (!existing) {
+      throw new Error(`Google user ${googleId} not found`);
+    }
+    return existing.blog_user_id;
   }
 
-  async getBlogUser(userId: string) {
-    try {
-      return await this.db
-        .selectFrom("blogdans_user")
-        .selectAll()
-        .where("id", "=", userId)
-        .executeTakeFirst();
-    } catch (error) {
-      reporter.error(`Failed to get blog user ${userId}: ${error}`);
-      throw new Error("Failed to get blog user", { cause: error });
+  async getOrCreateBlogUser(blogdansUser: Omit<BlogdansUser, 'roles'>): Promise<BlogdansUser> {
+    const {id, name, email, photo} = blogdansUser;
+    const inserted = await this.db
+      .insertInto("blogdans_user")
+      .values({ id, name, email, photo })
+      .onConflict((oc) => oc.column("id").doNothing())
+      .execute();
+
+    if (inserted.length === 0) {
+      logger.info(`Blog user ${id} already exists, returning existing user`);
+      return {...blogdansUser, roles: await this.getRoles(id)};
     }
+    if (inserted.length === 1) {
+      reporter.info(`Created new blog user ${id}`);
+      return {...blogdansUser, roles: await this.getRoles(id)};
+    }
+    throw new Error(`Unexpected number of inserted blog users: ${inserted.length}`);
   }
 
-  async getBlogUserFromGoogleId(googleId: string): Promise<User> {
-    try {
-      const result = await this.db
-        .selectFrom("google_user")
-        .innerJoin("blogdans_user", "google_user.blog_user_id", "blogdans_user.id")
-        .selectAll("blogdans_user")
-        .where("google_user.id", "=", googleId)
-        .executeTakeFirst();
+  private async getRoles(id: string): Promise<BlogdansRole[]> {
+    const roles = await this.db
+      .selectFrom("user_roles")
+      .select("role")
+      .where("user_id", "=", id)
+      .execute();
 
-      if (!result) {
-        throw new Error("User not found");
-      }
-
-      // Get user roles
-      const userRoles = await this.db
-        .selectFrom("user_roles")
-        .select("role")
-        .where("user_id", "=", result.id)
-        .execute();
-
-      // Convert roles to permissions
-      const permissions = new Set<Permission>();
-      for (const userRole of userRoles) {
-        if (userRole.role === "admin") {
-          permissions.add("admin:read");
-          permissions.add("admin:write");
-        }
-      }
-
-      return {
-        $case: "authenticated",
-        email: result.email,
-        name: result.name,
-        id: result.id,
-        photo: result.photo,
-        permissions,
-      };
-    } catch (error) {
-      reporter.error(`Failed to get blog user from Google ID ${googleId}: ${error}`);
-      throw new Error("Failed to get blog user from Google ID", { cause: error });
-    }
-  }
-
-  async createBlogUser(id: string, name: string, email: string, photo: string) {
-    try {
-      await this.db
-        .insertInto("blogdans_user")
-        .values({ id, name, email, photo })
-        .execute();
-    } catch (error) {
-      reporter.error(`Failed to create blog user ${id}: ${error}`);
-      throw new Error("Failed to create blog user", { cause: error });
-    }
-  }
-
-  async createGoogleUser(id: string, blogUserId: string) {
-    try {
-      await this.db
-        .insertInto("google_user")
-        .values({ id, blog_user_id: blogUserId })
-        .execute();
-    } catch (error) {
-      reporter.error(`Failed to create google user ${id}: ${error}`);
-      throw new Error("Failed to create google user", { cause: error });
-    }
-  }
-
-  async transaction<T>(callback: (trx: typeof this.db) => Promise<T>): Promise<T> {
-    return await this.db.transaction().execute(callback);
+    return roles.flatMap(role => blogdansRole.parse(role.role));
   }
 }

@@ -1,20 +1,15 @@
 import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
-import { Service } from "../service";
-import { User } from "../user";
+import { getUser, User } from "../user";
 
 interface TRPCContext {
   user: User;
 }
 
-const service = new Service();
-
 async function createContext(): Promise<TRPCContext> {
-  const user = await service.getCurrentUser();
-
   return {
-    user,
+    user: await getUser(),
   };
 }
 

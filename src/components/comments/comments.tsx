@@ -1,7 +1,7 @@
 import { MessageSquare } from "lucide-react";
 import { FormOrLogin } from "./comment-form";
 import { ClientContext } from "./client-context";
-import { Service } from "@/lib/service";
+import { getUser } from "@/lib/user";
 
 export const dynamic = "force-dynamic";
 
@@ -9,10 +9,9 @@ type Props = {
   pageId: string;
 }
 
-const service = new Service();
-
 export async function Comments({ pageId }: Props) {
-  const user = await service.getCurrentUser();
+  const user = await getUser();
+  console.log('User:', user);
 
   return (
     <div className="py-8 animate-fade-in">
