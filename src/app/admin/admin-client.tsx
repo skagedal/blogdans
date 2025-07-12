@@ -24,6 +24,10 @@ export function AdminPageClient() {
     trpc.admin.getUsers.queryOptions({ page: currentPage, limit: 20 })
   );
 
+  const { data: countData, isLoading: countLoading } = useQuery(
+    trpc.test.numberOfPosts.queryOptions()
+  );
+
   const { mutateAsync: approveComment, isPending: isApproving } = useMutation(
     trpc.admin.approveComment.mutationOptions()
   );
@@ -70,6 +74,18 @@ export function AdminPageClient() {
     <main className="mx-auto max-w-6xl flex-1 p-4">
       <div className="space-y-8">
         <section>
+          <h2>Count data</h2>
+          {countLoading ? (
+            <div className="flex items-center justify-center p-8">
+              <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+          ) : (
+            <Card>
+              <CardContent className="p-6">
+                <p className="text-lg font-semibold">Number of posts: {countData?.count}</p>
+              </CardContent>
+            </Card>
+          )}
           <H2>Pending Comments</H2>
           {commentsError ? (
             <ErrorDisplay 
