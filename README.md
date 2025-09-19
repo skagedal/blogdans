@@ -4,11 +4,10 @@ This is the software that powers my blog, [skagedal.tech](https://skagedal.tech)
 
 ## Development
 
-First, spin up the database:
+Start the local infrastructure (database + migrations):
 
 ```shell
-docker compose up --detach --build database
-docker compose up migrations
+./local/start-infra
 ```
 
 Then run the development server:

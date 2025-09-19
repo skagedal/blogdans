@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Start database and run migrations automatically
+echo "🚀 Starting database and running migrations..."
+docker compose up --detach database
+
+echo "⏳ Waiting for database to be healthy..."
+docker compose up migrations
+
+echo "✅ Database is ready with migrations applied!"
+echo "📊 Database status:"
+docker compose ps database
+
+echo ""
+echo "💡 You can now run 'pnpm dev' to start the development server"

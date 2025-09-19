@@ -19,15 +19,29 @@
     database: {
       image: "postgres:16",
       shm_size: "128mb",
+      ports: [
+        "5433:5432"
+      ],
       environment: {
         POSTGRES_USER: "blogdans",
         POSTGRES_PASSWORD: "secret",
         POSTGRES_DB: "blogdans"
+      },
+      healthcheck: {
+        test: ["CMD-SHELL", "pg_isready -U blogdans -d blogdans"],
+        interval: "5s",
+        timeout: "3s",
+        retries: 5,
+        start_period: "10s"
       }
     },
     migrations: {
       image: "ghcr.io/amacneil/dbmate:latest",
-      depends_on: ["database"],
+      depends_on: {
+        database: {
+          condition: "service_healthy"
+        }
+      },
       environment: {
         DATABASE_URL: "postgresql://blogdans:secret@database:5432/blogdans?sslmode=disable"
       },
