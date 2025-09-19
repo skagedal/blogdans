@@ -55,10 +55,11 @@ describe("service tests using real db", () => {
         stdio: "pipe",
         encoding: "utf8",
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const execError = error as { stdout?: string; stderr?: string; message?: string };
       console.error(
         "dbmate failed:",
-        error.stdout || error.stderr || error.message
+        execError.stdout || execError.stderr || execError.message
       );
       throw error;
     }
