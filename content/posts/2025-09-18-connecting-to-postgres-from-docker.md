@@ -10,7 +10,7 @@ So far, I've been hosting various software on this Ubuntu Virtual Private Server
 But I've recently started to use Docker instead. The software that now runs this blog, a Next.js application that I've meant to write
 a few words about, is running this way. 
 
-I ran into problems when I tried to connect to the PostgreSQL database, which runs as a normal Ubuntu service, from within a Docker container. I found out that I both needed to configure PostgreSQL differently, to listen to a different interface, and also that I needed to open up the firewall a bit. Here are my notes on the troubleshooting process.
+I [ran into problems](https://github.com/skagedal/blogdans/issues/6) when I tried to connect to the PostgreSQL database, which runs as a normal Ubuntu service, from within a Docker container. I found out that I both needed to configure PostgreSQL differently, to listen to a different interface, and also that I needed to open up the firewall a bit. Here are my notes on the troubleshooting process.
 
 So, the application just failed to connect, getting a timeout error. To simplify things, I tried instead to connect using the `psql` tool. Directly from the host, I can make connections to it using both Unix sockets and IP. Below, the prompt `host $` means I'm running directly on the host machine, while `docker $` means I'm inside a Docker container.
 
@@ -49,11 +49,53 @@ But it still didn't work. I turned on some [logging](https://www.postgresql.org/
 It seems like there was something I was missing on a core networking level, nothing to do with PostgreSQL. I decided to simplify the problem a bit further. I found a docker image, [https://github.com/jonlabelle/docker-network-tools](docker-network-tools) by Jon Labelle, that would allow me to have a shell in a Docker container with some basic networking tools.
 
 ```shell
-docker run --rm -it jonlabelle/network-tools
+host $ docker run --rm -it --add-host myhost:host-gateway jonlabelle/network-tools
+[network-tools]$ ping myhost
+PING myhost (172.17.0.1) 56(84) bytes of data.
+64 bytes from myhost (172.17.0.1): icmp_seq=1 ttl=64 time=0.112 ms
+64 bytes from myhost (172.17.0.1): icmp_seq=2 ttl=64 time=0.078 ms
+^C
+--- myhost ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1046ms
+rtt min/avg/max/mdev = 0.078/0.095/0.112/0.017 ms
 ```
 
+Allright, so at least I can reach the host using ping. This uses the ICMP protocol, which isn't using built on TCP (or UDP) – there is no port that a "ping" server is listening to on the host. What's a minimal TCP service I can run on the host to test if I can reach it from inside the container? [Netcat](https://en.wikipedia.org/wiki/Netcat) (or `nc`) is a good choice. I can start up a "server" on the host like this:
 
-Look:
+```shell
+host $ nc -l 6666
+```
+
+In another shell, I can confirm that it is listening:
+
+```shell
+host $ sudo netstat -ntlp | grep nc
+tcp        0      0 0.0.0.0:6666            0.0.0.0:*               LISTEN      38294/nc
+```
+
+And I can also connect to it:
+```
+host $ nc 127.0.0.1 6666
+hello
+```
+
+This starts up a "chat"-like connection to the server, so the "hello" turns up on the server side. Nice. But what if I try to connect from inside the container? 
+
+```shell
+host $ docker run --rm -it --add-host myhost:host-gateway jonlabelle/network-tools
+[network-tools]$ nc myhost 6666
+```
+
+This just hangs forever. A small session with ChatGPT gave me the right clue, however:
+
+> If you run into issues, check:
+> 
+> * Host firewall rules (e.g., `ufw`) and that Docker’s iptables integration isn’t blocking.
+> * That nc variant/syntax matches your distro (`nc -l -p 6666` vs `nc -l 6666`).
+
+Firewall! I do have a firewall. This hadn't entered my mind, probably because my mental model for Docker and networking has been a bit incomplete; I've been basically thinking about it as still running "on the same machine". Which is of course true, hardware-wise, but not the right way to think of it from a networking perspective. My host is really getting a connection from a Different Machine, networking-wise, and the firewall is doing its job, blocking it. 
+
+
 
 ```bash
 psql -h localhost -U postgres
