@@ -45,7 +45,7 @@ describe('service tests using real db', () => {
         ...process.env,
         DATABASE_URL: dbmateConnectionString,
         DBMATE_MIGRATIONS_DIR: path.join(dbDir, 'migrations'),
-        DBMATE_SCHEMA_FILE: path.join(dbDir, 'schema.sql')
+        DBMATE_NO_DUMP_SCHEMA: 'true'
       },
       stdio: 'inherit'
     });
