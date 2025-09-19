@@ -1,3 +1,8 @@
+\restrict SOtRkKbpc1urfF6QFRtXrwtfNEVTmnUfzFTVDOJyv994AaVThnExr9At3VRdlYd
+
+-- Dumped from database version 16.3 (Debian 16.3-1.pgdg120+1)
+-- Dumped by pg_dump version 17.6
+
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
@@ -242,6 +247,8 @@ ALTER TABLE ONLY public.user_roles
 --
 -- PostgreSQL database dump complete
 --
+
+\unrestrict SOtRkKbpc1urfF6QFRtXrwtfNEVTmnUfzFTVDOJyv994AaVThnExr9At3VRdlYd
 
 
 --

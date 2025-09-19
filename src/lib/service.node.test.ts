@@ -4,6 +4,8 @@ import { PostgreSqlContainer, type StartedPostgreSqlContainer } from '@testconta
 import { DB } from '@/db/schema';
 import { Pool } from 'pg';
 import { sql } from "kysely";
+import { execSync } from 'child_process';
+import path from 'path';
 
 describe('service tests using real db', () => {
   let container: StartedPostgreSqlContainer;
@@ -20,13 +22,31 @@ describe('service tests using real db', () => {
 
     // Create database connection
     const connectionString = container.getConnectionUri();
+
     db = new Kysely<DB>({
       dialect: new PostgresDialect({
         pool: new Pool({ connectionString }),
       }),
     });
 
-    // TODO: Run migrations – figure out how to run dbmate in a nice way
+    // Run migrations using dbmate
+    const dbmatePath = path.join(process.cwd(), 'node_modules/.bin/dbmate');
+    const dbDir = path.join(process.cwd(), 'db');
+    
+    // Add sslmode=disable to the connection string for dbmate
+    const dbmateConnectionString = connectionString.includes('?') 
+      ? `${connectionString}&sslmode=disable`
+      : `${connectionString}?sslmode=disable`;
+    
+    execSync(`${dbmatePath} up`, {
+      env: {
+        ...process.env,
+        DATABASE_URL: dbmateConnectionString,
+        DBMATE_MIGRATIONS_DIR: path.join(dbDir, 'migrations'),
+        DBMATE_SCHEMA_FILE: path.join(dbDir, 'schema.sql')
+      },
+      stdio: 'inherit'
+    });
     
     // Create service instance with test database
     // service = new Service(db);
@@ -40,10 +60,10 @@ describe('service tests using real db', () => {
   beforeEach(async () => {
     // Clean up test data before each test
 
-    // await db.deleteFrom('comment').execute();
-    // await db.deleteFrom('google_user').execute();
-    // await db.deleteFrom('blogdans_user').execute();
-    // await db.deleteFrom('post').execute();
+    await db.deleteFrom('comment').execute();
+    await db.deleteFrom('google_user').execute();
+    await db.deleteFrom('blogdans_user').execute();
+    await db.deleteFrom('post').execute();
   });
 
   it('can perform some database operations', async () => {    
