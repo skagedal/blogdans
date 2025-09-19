@@ -6,10 +6,12 @@ import { Pool } from 'pg';
 import { sql } from "kysely";
 import { execSync } from 'child_process';
 import path from 'path';
+import { Service } from './service';
 
 describe('service tests using real db', () => {
   let container: StartedPostgreSqlContainer;
   let db: Kysely<DB>;
+  let service: Service;
 
   beforeAll(async () => {
     // Start PostgreSQL container with reuse enabled
@@ -49,7 +51,7 @@ describe('service tests using real db', () => {
     });
     
     // Create service instance with test database
-    // service = new Service(db);
+    service = new Service(db);
   }, 30000);
 
   afterAll(async () => {

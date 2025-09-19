@@ -1,6 +1,6 @@
 import type { DB } from "@/db/schema";
 import { reporter } from "./reporter";
-import { blogdansRole, BlogdansRole, BlogdansUser } from "./user";
+import { blogdansRole, BlogdansRole, BlogdansUser } from "./user-types";
 import { sql, type Kysely } from "kysely";
 import { logger } from "@/logger";
 

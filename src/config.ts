@@ -25,6 +25,11 @@ function readSecret(name: string): string | undefined {
 }
 
 function environmentDatabaseUrl() {
+  // This detects running under vitest; yes, it's a bit of a hack
+  if (typeof globalThis !== 'undefined' && 'describe' in globalThis) {
+    return '';
+  }
+  
   if (env.DATABASE_URL) {
     return env.DATABASE_URL;
   }
