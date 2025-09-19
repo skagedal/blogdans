@@ -4,7 +4,14 @@ This is the software that powers my blog, [skagedal.tech](https://skagedal.tech)
 
 ## Development
 
-First, run the development server:
+First, spin up the database:
+
+```shell
+docker compose up --detach --build database
+docker compose up migrations
+```
+
+Then run the development server:
 
 ```shell
 pnpm dev
