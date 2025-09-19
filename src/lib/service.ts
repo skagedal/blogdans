@@ -100,12 +100,15 @@ export class Service {
         .select(({ fn }) => fn.count<number>("id").as("count"))
         .executeTakeFirstOrThrow();
 
+      // Convert count to number since PostgreSQL returns bigint as string
+      const totalCount = Number(total.count);
+
       return {
         users: usersWithRoles,
-        total: total.count,
+        total: totalCount,
         page,
         limit,
-        totalPages: Math.ceil(total.count / limit)
+        totalPages: Math.ceil(totalCount / limit)
       };
     } catch (error) {
       reporter.error(`Failed to get users: ${error}`);
