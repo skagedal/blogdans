@@ -1,8 +1,9 @@
 import { router, protectedProcedure } from '../server';
 import { postCommentSchema } from '@/lib/api/comments';
 import { Service } from '@/lib/service';
+import { db } from '@/db/client';
 
-const service = new Service();
+const service = new Service(db);
 
 export const postRouter = router({
   submitComment: protectedProcedure

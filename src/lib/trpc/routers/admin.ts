@@ -3,8 +3,9 @@ import { z } from 'zod';
 import { Service } from '@/lib/service';
 import { TRPCError } from '@trpc/server';
 import { getPermissions } from '@/lib/user';
+import { db } from '@/db/client';
 
-const service = new Service();
+const service = new Service(db);
 
 const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
   if (!getPermissions(ctx.user).has('admin:write')) {

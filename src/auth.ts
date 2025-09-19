@@ -6,6 +6,7 @@ import { googleProfileSchema } from "./lib/google-types";
 import { getLocalUser } from "./lib/local-user";
 import { Service } from "./lib/service";
 import { blogdansUserSchema } from "./lib/user";
+import { db } from "./db/client";
 
 const isMockMode = process.env.MOCK_USER === "true";
 
@@ -26,7 +27,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: isMockMode ? [createLocalProvider()] : [Google],
   callbacks: {
     jwt: async ({ token, user, account, profile }) => {
-      const service = new Service();
+      const service = new Service(db);
 
       logger.info("JWT callback triggered", { token, user, account, profile });
       if (!account) {

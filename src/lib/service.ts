@@ -1,13 +1,11 @@
-import { db as globalDb } from "@/db/client";
+import type { DB } from "@/db/schema";
 import { reporter } from "./reporter";
 import { blogdansRole, BlogdansRole, BlogdansUser } from "./user";
-import { sql } from "kysely";
+import { sql, type Kysely } from "kysely";
 import { logger } from "@/logger";
 
 export class Service {
-  db = globalDb;
-
-  constructor() {}
+  constructor(private db: Kysely<DB>) {}
 
   async insertComment(postId: string, authorId: string, content: string) {
     try {

@@ -4,6 +4,7 @@ import matter from "gray-matter";
 import { z } from "zod";
 import { Service } from "./service";
 import { logger } from "@/logger";
+import { db } from "@/db/client";
 
 const postsDir = path.join(process.cwd(), "content", "posts");
 
@@ -22,7 +23,7 @@ export async function syncPostsToDatabase(): Promise<void> {
   try {
     logger.info("Starting post synchronization to database");
     
-    const service = new Service();
+    const service = new Service(db);
     const files = await fs.readdir(postsDir);
     const postSlugs: string[] = [];
 
