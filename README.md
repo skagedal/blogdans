@@ -10,6 +10,8 @@ Start the local infrastructure (database + migrations):
 ./local/start-infra
 ```
 
+The database will listen on port 5433. 
+
 Then run the development server:
 
 ```shell
