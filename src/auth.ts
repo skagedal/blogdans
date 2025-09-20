@@ -31,6 +31,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       logger.info("JWT callback triggered", { token, user, account, profile });
       if (!account) {
+        logger.info("Returning existing token as no account is present");
         return token;
       }
       if (account.provider === "credentials") {
