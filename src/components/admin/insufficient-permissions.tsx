@@ -11,7 +11,7 @@ export function InsufficientPermissions() {
         <Alert variant="destructive">
           <ShieldX className="h-4 w-4" />
           <AlertDescription>
-            You are logged in, but you don't have the necessary privileges to access this page. 
+            You are logged in, but you don&apos;t have the necessary privileges to access this page. 
             Please contact an administrator if you believe you should have access.
           </AlertDescription>
         </Alert>

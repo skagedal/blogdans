@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "db": "kysely-codegen --out-file src/db/schema.d.ts",
     "test": "vitest",
     "test:run": "vitest run"
