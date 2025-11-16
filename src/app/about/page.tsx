@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic"; // ensure this page is never statically generated
+
 import { db } from "@/db/client";
 import { sql } from "kysely";
 import { markdownComponents } from "@/components/markdown-components";
@@ -9,14 +11,10 @@ const countSchema = z.object({
 });
 
 async function fetchPostCount() {
-  if (process.env.NEXT_RUNTIME === "nodejs") {
-    const result = await db.executeQuery(
-      sql`SELECT COUNT(*) AS count FROM post`.compile(db)
-    );
-    return countSchema.parse(result.rows[0]).count;
-  } else {
-    return "0";
-  }
+  const result = await db.executeQuery(
+    sql`SELECT COUNT(*) AS count FROM post`.compile(db)
+  );
+  return countSchema.parse(result.rows[0]).count;
 }
 
 export default async function AboutPage() {
