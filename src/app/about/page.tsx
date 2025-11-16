@@ -8,18 +8,26 @@ const countSchema = z.object({
   count: z.string(),
 });
 
+async function fetchPostCount() {
+  if (process.env.NEXT_RUNTIME === "nodejs") {
+    const result = await db.executeQuery(
+      sql`SELECT COUNT(*) AS count FROM post`.compile(db)
+    );
+    return countSchema.parse(result.rows[0]).count;
+  } else {
+    return "0";
+  }
+}
+
 export default async function AboutPage() {
-  const result = await db.executeQuery(
-    sql`SELECT COUNT(*) AS count FROM post`.compile(db)
-  );
-  const row = countSchema.parse(result.rows[0]);
-  
+  const result = await fetchPostCount();
+
   return (
     <article>
       <Markdown components={markdownComponents}>
         {`
 # Markdown Example
-There are currently **${row.count}** posts in the database.
+There are currently **${result}** posts in the database.
 `}
       </Markdown>
     </article>
