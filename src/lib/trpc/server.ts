@@ -1,15 +1,34 @@
-import { initTRPC } from "@trpc/server";
+import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 import { getUser, User } from "../user";
+import { getPermissions, Permission } from "../user-types";
+
+interface PermissionChecker {
+  check(permission: Permission): void;
+}
 
 interface TRPCContext {
   user: User;
+  permission: PermissionChecker;
 }
 
 async function createContext(): Promise<TRPCContext> {
+  const user = await getUser();
+  const permissions = getPermissions(user);
+
   return {
-    user: await getUser(),
+    user,
+    permission: {
+      check(permission: Permission) {
+        if (!permissions.has(permission)) {
+          throw new TRPCError({
+            code: 'UNAUTHORIZED',
+            message: `User does not have permission: ${permission}`,
+          });
+        }
+      },
+    },
   };
 }
 

@@ -10,6 +10,7 @@ export const postRouter = router({
   submitComment: protectedProcedure
     .input(postCommentSchema)
     .mutation(async ({ input, ctx }) => {
+      ctx.permission.check('comment:write');
       console.log(`trpc Submitting comment for page ${input.pageId}:`, input.comment);
       return await service.insertComment(input.pageId, ctx.user.info.id, input.comment);
     }),
