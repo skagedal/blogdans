@@ -61,7 +61,8 @@ Supports flexible configuration:
 
 ## Development Notes
 
-- **Type generation**: Run `pnpm db` after schema changes to update TypeScript types
+- **Type checking**: Run `pnpm tsc` to check that types are correct
+- **Type generation**: Run `pnpm db` after database schema changes to update TypeScript types
 - **Content**: Add new posts to `/content/posts/` following the date-slug naming convention
 - **Styling**: Uses shadcn/ui components with Tailwind CSS helpers (tailwind-merge, clsx, class-variance-authority)
 - **Icons**: Lucide React for general icons, react-icons for social media

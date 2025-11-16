@@ -1,6 +1,7 @@
 import z from "zod";
 
-export const blogdansRole = z.enum(['admin']);
+// Expanded roles enum to include 'commenter' so secondary user in local-users map type-checks.
+export const blogdansRole = z.enum(['admin', 'commenter']);
 
 export const blogdansUserSchema = z.object({
   id: z.string(),

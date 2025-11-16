@@ -2,6 +2,7 @@ import { MessageSquare } from "lucide-react";
 import { FormOrLogin } from "./comment-form";
 import { ClientContext } from "./client-context";
 import { getUser } from "@/lib/user";
+import { CommentsList } from "./comments-list";
 
 export const dynamic = "force-dynamic";
 
@@ -21,12 +22,8 @@ export async function Comments({ pageId }: Props) {
       </h2>
       <ClientContext>
         <FormOrLogin pageId={pageId} user={user} />
+        <CommentsList pageId={pageId} />
       </ClientContext>
-      
-      <div className="text-center py-8 text-muted-foreground">
-        <MessageSquare className="h-8 w-8 mx-auto mb-2 opacity-50" />
-        <p>No comments yet. Be the first to comment!</p>
-      </div>
     </div>
   );
 }

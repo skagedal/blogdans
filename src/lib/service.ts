@@ -40,6 +40,23 @@ export class Service {
     }
   }
 
+  async getApprovedComments(postId: string) {
+    try {
+      return await this.db
+        .selectFrom("comment")
+        .innerJoin("blogdans_user", "comment.author_id", "blogdans_user.id")
+        .selectAll("comment")
+        .select(["blogdans_user.name as author_name", "blogdans_user.photo as author_photo"])
+        .where("comment.post_id", "=", postId)
+        .where("comment.approved_at", "is not", null)
+        .orderBy("comment.created_at", "asc")
+        .execute();
+    } catch (error) {
+      reporter.error(`Failed to get approved comments for post ${postId}: ${error}`);
+      throw new Error("Failed to get approved comments", { cause: error });
+    }
+  }
+
   async approveComment(commentId: string) {
     try {
       await this.db
