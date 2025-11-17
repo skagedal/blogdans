@@ -5,12 +5,19 @@ import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { useToast } from "../../hooks/use-toast";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
-import { Loader2, UserCircle } from "lucide-react";
+import { Loader2, LogOut, UserCircle } from "lucide-react";
 import { BlogdansUser, User } from "@/lib/user";
 import { NotLoggedIn } from "./not-logged-in";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { useTRPC } from "@/lib/trpc/client";
 import { useMutation } from "@tanstack/react-query";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 import { handleLogout } from "@/lib/login";
 
 interface CommentFormProps {
@@ -82,13 +89,44 @@ export function CommentForm({
     <Card className="mb-8">
       <CardHeader className="pb-0">
         <div className="flex gap-2 items-center">
-          <Avatar className="h-8 w-8">
-            {user.photo ? (
-              <AvatarImage src={user.photo} alt={user.name} />
-            ) : (
-              <UserCircle className="h-8 w-8" />
-            )}
-          </Avatar>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-ring">
+                <Avatar className="h-8 w-8 cursor-pointer">
+                  {user.photo ? (
+                    <AvatarImage src={user.photo} alt={user.name} />
+                  ) : (
+                    <UserCircle className="h-8 w-8" />
+                  )}
+                </Avatar>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-56">
+              <div className="flex items-center gap-2 px-2 py-1.5">
+                <Avatar className="h-8 w-8">
+                  {user.photo ? (
+                    <AvatarImage src={user.photo} alt={user.name} />
+                  ) : (
+                    <UserCircle className="h-8 w-8" />
+                  )}
+                </Avatar>
+                <div className="flex flex-col space-y-1">
+                  <p className="text-sm font-medium leading-none">{user.name}</p>
+                  <p className="text-xs leading-none text-muted-foreground">
+                    {user.email}
+                  </p>
+                </div>
+              </div>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={async () => await handleLogout()}
+                className="cursor-pointer"
+              >
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Log out</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           {user.name}
         </div>
       </CardHeader>
@@ -128,9 +166,6 @@ export function CommentForm({
           </Button>
         </CardFooter>
       </form>
-      <Button onClick={async () => await handleLogout()} className="mt-4">
-        Log out
-      </Button>
     </Card>
   );
 }
