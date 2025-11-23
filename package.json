@@ -57,8 +57,9 @@
     "@types/pg": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
-    "@vitest/browser": "^3",
-    "@vitest/ui": "^3",
+    "@vitest/browser": "latest",
+    "@vitest/browser-playwright": "^4.0.13",
+    "@vitest/ui": "latest",
     "dbmate": "latest",
     "eslint": "latest",
     "eslint-config-next": "latest",
@@ -69,8 +70,8 @@
     "testcontainers": "latest",
     "typescript": "latest",
     "uuid": "latest",
-    "vitest": "^3",
-    "vitest-browser-react": "^1"
+    "vitest": "latest",
+    "vitest-browser-react": "latest"
   },
   "packageManager": "pnpm@10.23.0+sha512.21c4e5698002ade97e4efe8b8b4a89a8de3c85a37919f957e7a0f30f38fbc5bbdd05980ffe29179b2fb6e6e691242e098d945d1601772cad0fef5fb6411e2a4b"
 }

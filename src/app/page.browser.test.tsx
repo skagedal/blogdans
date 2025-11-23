@@ -20,21 +20,21 @@ vi.mock('@/components/footer', () => ({
 }))
 
 test('renders the index page', async () => {
-  const screen = render(await BlogIndex())
-  
+  const screen = await render(await BlogIndex())
+
   // Check that the main content is rendered
-  expect(screen.getByRole('main')).toBeInTheDocument()
-  
+  await expect.element(screen.getByRole('main')).toBeVisible()
+
   // Check that the personal introduction is rendered
-  expect(screen.getByText(/My name is Simon Kågedal Reimer/)).toBeInTheDocument()
-  
+  await expect.element(screen.getByText(/My name is Simon Kågedal Reimer/)).toBeVisible()
+
   // Check that the Posts section is rendered
-  expect(screen.getByRole('heading', { name: 'Posts' })).toBeInTheDocument()
-  
+  await expect.element(screen.getByRole('heading', { name: 'Posts' })).toBeVisible()
+
   // Check that the mocked post is rendered
-  expect(screen.getByRole('link', { name: 'Test Post' })).toBeInTheDocument()
-  expect(screen.getByText('This is a test post summary')).toBeInTheDocument()
-  
+  await expect.element(screen.getByRole('link', { name: 'Test Post' })).toBeVisible()
+  await expect.element(screen.getByText('This is a test post summary')).toBeVisible()
+
   // Check that the footer is rendered
-  expect(screen.getByTestId('footer')).toBeInTheDocument()
+  await expect.element(screen.getByTestId('footer')).toBeVisible()
 })
