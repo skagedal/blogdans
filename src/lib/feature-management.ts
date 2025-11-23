@@ -20,7 +20,8 @@ export async function getFeatures(searchParams: FeatureManagementSearchParams) {
   const parsedSearchParams = searchParamsSchema.parse(searchParams);
   const actingVersion = parsedSearchParams.version || parsedProcessEnv.BLOGDANS_VERSION || "current";
   const features: Features = {
-    showComments: actingVersion === "next",
+    // Feature flag enabled for everyone at 2025-11-23
+    showComments: actingVersion === "next" || actingVersion === "current", 
   };
 
   return features;
