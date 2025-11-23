@@ -24,10 +24,6 @@ export function AdminPageClient() {
     trpc.admin.getUsers.queryOptions({ page: currentPage, limit: 20 })
   );
 
-  const { data: countData, isLoading: countLoading } = useQuery(
-    trpc.test.numberOfPosts.queryOptions()
-  );
-
   const { mutateAsync: approveComment, isPending: isApproving } = useMutation(
     trpc.admin.approveComment.mutationOptions()
   );

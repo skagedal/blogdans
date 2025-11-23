@@ -7,18 +7,15 @@ import { Footer } from "@/components/footer";
 import z from "zod";
 import { Comments } from "@/components/comments/comments";
 import { DraftCard } from "@/components/draft";
+import { FeatureManagementSearchParams, getFeatures } from "@/lib/feature-management";
 
 const paramsSchema = z.object({
   slug: z.string(),
 });
 
-const searchParamsSchema = z.object({
-  version: z.enum(["next", "current"]).optional().default("current"),
-});
-
 interface PostPageProps {
   params: Promise<z.infer<typeof paramsSchema>>;
-  searchParams: Promise<z.infer<typeof searchParamsSchema>>;
+  searchParams: Promise<FeatureManagementSearchParams>;
 }
 
 export async function generateStaticParams() {
@@ -51,7 +48,7 @@ export default async function PostPage({
   searchParams,
 }: PostPageProps) {
   const { slug } = paramsSchema.parse(await params);
-  const { version } = searchParamsSchema.parse(await searchParams);
+  const { showComments } = await getFeatures(await searchParams);
   const post = await getPost(slug);
 
   if (!post) {
@@ -74,7 +71,7 @@ export default async function PostPage({
           </header>
           {post.draft && <DraftCard />}
           <MarkdownPost content={post.content} />
-          {version === "next" && <Comments pageId={slug} />}
+          {showComments && <Comments pageId={slug} />}
         </article>
       </main>
       <Footer previous={post.previous} next={post.next} />
