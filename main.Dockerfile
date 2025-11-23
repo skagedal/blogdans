@@ -1,4 +1,4 @@
-FROM node:22.15.1-slim AS base
+FROM node:25.2.1-slim AS base
 
 FROM base AS build
 
