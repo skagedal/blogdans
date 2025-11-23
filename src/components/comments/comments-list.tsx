@@ -53,11 +53,9 @@ export function CommentsList({ pageId }: CommentsListProps) {
                 <div className="flex-1">
                   <div className="flex items-baseline gap-2 mb-2">
                     <span className="font-semibold">{comment.author_name}</span>
-                    {comment.created_at && (
-                      <span className="text-xs text-muted-foreground">
-                        {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
-                      </span>
-                    )}
+                    <span className="text-xs text-muted-foreground">
+                      {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
+                    </span>
                   </div>
                   {isPending ? (
                     <div className="mb-2">

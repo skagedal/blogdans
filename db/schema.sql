@@ -1,3 +1,8 @@
+\restrict 4wSnBt7YVQb7hFY5HfnW2Q0EOrJVWqNmFS2S1qrc8NAD9iGgm6z0paRIDNxYyMh
+
+-- Dumped from database version 16.10 (Debian 16.10-1.pgdg13+1)
+-- Dumped by pg_dump version 18.1
+
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
@@ -35,8 +40,8 @@ CREATE TABLE public.blogdans_user (
     name text NOT NULL,
     email text NOT NULL,
     photo text NOT NULL,
-    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
-    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 
@@ -49,8 +54,8 @@ CREATE TABLE public.comment (
     post_id text NOT NULL,
     author_id uuid NOT NULL,
     content text NOT NULL,
-    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
-    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     approved_at timestamp with time zone
 );
 
@@ -62,8 +67,8 @@ CREATE TABLE public.comment (
 CREATE TABLE public.google_user (
     id text NOT NULL,
     blog_user_id uuid NOT NULL,
-    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
-    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 
@@ -73,8 +78,8 @@ CREATE TABLE public.google_user (
 
 CREATE TABLE public.post (
     id text NOT NULL,
-    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
-    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 
@@ -104,8 +109,8 @@ CREATE TABLE public.user_roles (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     user_id uuid NOT NULL,
     role text NOT NULL,
-    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
-    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 
@@ -243,6 +248,8 @@ ALTER TABLE ONLY public.user_roles
 -- PostgreSQL database dump complete
 --
 
+\unrestrict 4wSnBt7YVQb7hFY5HfnW2Q0EOrJVWqNmFS2S1qrc8NAD9iGgm6z0paRIDNxYyMh
+
 
 --
 -- Dbmate schema migrations
@@ -250,4 +257,5 @@ ALTER TABLE ONLY public.user_roles
 
 INSERT INTO public.schema_migrations (version) VALUES
     ('20250601073353'),
-    ('20250710092143');
+    ('20250710092143'),
+    ('20251123141230');

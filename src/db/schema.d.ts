@@ -12,35 +12,35 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
 export interface BlogdansUser {
-  created_at: Generated<Timestamp | null>;
+  created_at: Generated<Timestamp>;
   email: string;
   id: string;
   name: string;
   photo: string;
-  updated_at: Generated<Timestamp | null>;
+  updated_at: Generated<Timestamp>;
 }
 
 export interface Comment {
   approved_at: Timestamp | null;
   author_id: string;
   content: string;
-  created_at: Generated<Timestamp | null>;
+  created_at: Generated<Timestamp>;
   id: Generated<string>;
   post_id: string;
-  updated_at: Generated<Timestamp | null>;
+  updated_at: Generated<Timestamp>;
 }
 
 export interface GoogleUser {
   blog_user_id: string;
-  created_at: Generated<Timestamp | null>;
+  created_at: Generated<Timestamp>;
   id: string;
-  updated_at: Generated<Timestamp | null>;
+  updated_at: Generated<Timestamp>;
 }
 
 export interface Post {
-  created_at: Generated<Timestamp | null>;
+  created_at: Generated<Timestamp>;
   id: string;
-  updated_at: Generated<Timestamp | null>;
+  updated_at: Generated<Timestamp>;
 }
 
 export interface Roles {
@@ -48,10 +48,10 @@ export interface Roles {
 }
 
 export interface UserRoles {
-  created_at: Generated<Timestamp | null>;
+  created_at: Generated<Timestamp>;
   id: Generated<string>;
   role: string;
-  updated_at: Generated<Timestamp | null>;
+  updated_at: Generated<Timestamp>;
   user_id: string;
 }
 

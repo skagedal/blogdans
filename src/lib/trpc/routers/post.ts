@@ -27,10 +27,8 @@ export const postRouter = router({
         // Combine and sort by created_at
         const allComments = [...approvedComments, ...pendingComments];
         allComments.sort((a, b) => {
-          // TODO: There is no reason created_at should be nullable, should fix that in the 
-          // migrations
-          const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
-          const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+          const dateA = new Date(a.created_at).getTime();
+          const dateB = new Date(b.created_at).getTime();
           return dateA - dateB;
         });
 
