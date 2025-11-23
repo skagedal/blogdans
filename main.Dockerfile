@@ -5,7 +5,7 @@ FROM base AS build
 WORKDIR /build
 
 # UPGRADE_POINT
-RUN npm install -g pnpm@10.12.1
+RUN npm install -g pnpm@10.23.0
 
 COPY ./package.json ./
 COPY ./pnpm-lock.yaml ./
