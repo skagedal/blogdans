@@ -2,9 +2,15 @@ import { config } from "@/config";
 import { logger } from "@/logger";
 import { IncomingWebhook } from "@slack/webhook";
 
+export type RichInfoField = {
+  label: string;
+  value: string;
+};
+
 export type Reporter = {
   info: (message: string) => Promise<object>;
   error: (message: string) => Promise<object>;
+  richInfo: (params: { title: string; fields: RichInfoField[] }) => Promise<object>;
 };
 
 function createWinstonReporter() {
@@ -15,6 +21,11 @@ function createWinstonReporter() {
     },
     error: (message: string) => {
       logger.error(message);
+      return Promise.resolve({});
+    },
+    richInfo: (params: { title: string; fields: RichInfoField[] }) => {
+      const fieldsStr = params.fields.map(f => `${f.label}: ${f.value}`).join(', ');
+      logger.info(`${params.title} - ${fieldsStr}`);
       return Promise.resolve({});
     },
   };
@@ -36,6 +47,28 @@ function createReporter(): Reporter {
         await winstonReporter.error(message);
         return webhook.send({
           text: `Error: ${message}`,
+        });
+      },
+      richInfo: async (params: { title: string; fields: RichInfoField[] }) => {
+        await winstonReporter.richInfo(params);
+        return webhook.send({
+          text: params.title,
+          blocks: [
+            {
+              type: "header",
+              text: {
+                type: "plain_text",
+                text: params.title
+              }
+            },
+            {
+              type: "section",
+              fields: params.fields.map(field => ({
+                type: "plain_text" as const,
+                text: `${field.label}:\n${field.value}`
+              }))
+            }
+          ]
         });
       },
     };

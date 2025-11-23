@@ -9,6 +9,18 @@ export class Service {
 
   async insertComment(postId: string, authorId: string, content: string) {
     try {
+      // Get author name before inserting comment
+      const author = await this.db
+        .selectFrom("blogdans_user")
+        .select("name")
+        .where("id", "=", authorId)
+        .executeTakeFirst();
+
+      if (!author) {
+        throw new Error(`Author with id ${authorId} not found`);
+      }
+
+      // Insert the comment
       await this.db
         .insertInto("comment")
         .values({
@@ -17,6 +29,21 @@ export class Service {
           content: content,
         })
         .execute();
+
+      // Send Slack notification
+      const truncatedContent = content.length > 200
+        ? content.substring(0, 200) + '...'
+        : content;
+
+      await reporter.richInfo({
+        title: "💬 New Comment Awaiting Approval",
+        fields: [
+          { label: "Post", value: postId },
+          { label: "Author", value: author.name },
+          { label: "Comment", value: truncatedContent }
+        ]
+      });
+
       return { };
     } catch (error) {
       reporter.error(`Failed to insert comment for post ${postId}: ${error}`);
