@@ -73,19 +73,7 @@ export function AdminPageClient() {
   return (
     <main className="mx-auto max-w-6xl flex-1 p-4">
       <div className="space-y-8">
-        <section>
-          <h2>Count data</h2>
-          {countLoading ? (
-            <div className="flex items-center justify-center p-8">
-              <Loader2 className="h-8 w-8 animate-spin" />
-            </div>
-          ) : (
-            <Card>
-              <CardContent className="p-6">
-                <p className="text-lg font-semibold">Number of posts: {countData?.count}</p>
-              </CardContent>
-            </Card>
-          )}
+        <section>        
           <H2>Pending Comments</H2>
           {commentsError ? (
             <ErrorDisplay 
