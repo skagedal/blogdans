@@ -9,53 +9,53 @@ importers:
   .:
     dependencies:
       '@radix-ui/react-avatar':
-        specifier: ^1.1.11
+        specifier: latest
         version: 1.1.11(@types/react-dom@19.2.3(@types/react@19.2.6))(@types/react@19.2.6)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@radix-ui/react-dropdown-menu':
-        specifier: ^2.1.16
+        specifier: latest
         version: 2.1.16(@types/react-dom@19.2.3(@types/react@19.2.6))(@types/react@19.2.6)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@radix-ui/react-slot':
-        specifier: ^1.2.4
+        specifier: latest
         version: 1.2.4(@types/react@19.2.6)(react@19.2.0)
       '@radix-ui/react-toast':
-        specifier: ^1.2.15
+        specifier: latest
         version: 1.2.15(@types/react-dom@19.2.3(@types/react@19.2.6))(@types/react@19.2.6)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@slack/webhook':
-        specifier: ^7.0.6
+        specifier: latest
         version: 7.0.6
       '@tanstack/react-query':
-        specifier: ^5.90.10
+        specifier: latest
         version: 5.90.10(react@19.2.0)
       '@trpc/client':
-        specifier: ^11.7.2
+        specifier: latest
         version: 11.7.2(@trpc/server@11.7.2(typescript@5.9.3))(typescript@5.9.3)
       '@trpc/next':
-        specifier: ^11.7.2
+        specifier: latest
         version: 11.7.2(@tanstack/react-query@5.90.10(react@19.2.0))(@trpc/client@11.7.2(@trpc/server@11.7.2(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.7.2(typescript@5.9.3))(next@16.0.3(@babel/core@7.28.5)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
       '@trpc/server':
-        specifier: ^11.7.2
+        specifier: latest
         version: 11.7.2(typescript@5.9.3)
       '@trpc/tanstack-react-query':
-        specifier: ^11.7.2
+        specifier: latest
         version: 11.7.2(@tanstack/react-query@5.90.10(react@19.2.0))(@trpc/client@11.7.2(@trpc/server@11.7.2(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.7.2(typescript@5.9.3))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
       class-variance-authority:
-        specifier: ^0.7.1
+        specifier: latest
         version: 0.7.1
       clsx:
-        specifier: ^2.1.1
+        specifier: latest
         version: 2.1.1
       date-fns:
-        specifier: ^4.1.0
+        specifier: latest
         version: 4.1.0
       gray-matter:
-        specifier: ^4.0.3
+        specifier: latest
         version: 4.0.3
       kysely:
-        specifier: ^0.28.8
+        specifier: latest
         version: 0.28.8
       lucide-react:
-        specifier: ^0.511.0
-        version: 0.511.0(react@19.2.0)
+        specifier: latest
+        version: 0.554.0(react@19.2.0)
       next:
         specifier: latest
         version: 16.0.3(@babel/core@7.28.5)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -63,77 +63,77 @@ importers:
         specifier: 5.0.0-beta.30
         version: 5.0.0-beta.30(next@16.0.3(@babel/core@7.28.5)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)
       pg:
-        specifier: ^8.16.3
+        specifier: latest
         version: 8.16.3
       react:
-        specifier: ^19.2.0
+        specifier: latest
         version: 19.2.0
       react-dom:
-        specifier: ^19.2.0
+        specifier: latest
         version: 19.2.0(react@19.2.0)
       react-icons:
-        specifier: ^5.5.0
+        specifier: latest
         version: 5.5.0(react@19.2.0)
       react-markdown:
-        specifier: ^10.1.0
+        specifier: latest
         version: 10.1.0(@types/react@19.2.6)(react@19.2.0)
       rehype-highlight:
-        specifier: ^7.0.2
+        specifier: latest
         version: 7.0.2
       rehype-raw:
-        specifier: ^7.0.0
+        specifier: latest
         version: 7.0.0
       rehype-sanitize:
-        specifier: ^6.0.0
+        specifier: latest
         version: 6.0.0
       rehype-stringify:
-        specifier: ^10.0.1
+        specifier: latest
         version: 10.0.1
       remark-gfm:
-        specifier: ^4.0.1
+        specifier: latest
         version: 4.0.1
       remark-parse:
-        specifier: ^11.0.0
+        specifier: latest
         version: 11.0.0
       remark-rehype:
-        specifier: ^11.1.2
+        specifier: latest
         version: 11.1.2
       superjson:
-        specifier: ^2.2.5
+        specifier: latest
         version: 2.2.5
       tailwind-merge:
-        specifier: ^3.4.0
+        specifier: latest
         version: 3.4.0
       unified:
-        specifier: ^11.0.5
+        specifier: latest
         version: 11.0.5
       winston:
-        specifier: ^3.18.3
+        specifier: latest
         version: 3.18.3
       zod:
-        specifier: ^3.25.76
-        version: 3.25.76
+        specifier: latest
+        version: 4.1.12
     devDependencies:
       '@tailwindcss/postcss':
-        specifier: ^4.1.17
+        specifier: latest
         version: 4.1.17
       '@tailwindcss/typography':
-        specifier: ^0.5.19
+        specifier: latest
         version: 0.5.19(tailwindcss@4.1.17)
       '@testcontainers/postgresql':
-        specifier: ^11.8.1
+        specifier: latest
         version: 11.8.1
       '@types/node':
         specifier: latest
         version: 24.10.1
       '@types/pg':
-        specifier: ^8.15.6
+        specifier: latest
         version: 8.15.6
       '@types/react':
-        specifier: ^19.2.6
+        specifier: latest
         version: 19.2.6
       '@types/react-dom':
-        specifier: ^19.2.3
+        specifier: latest
         version: 19.2.3(@types/react@19.2.6)
       '@vitest/browser':
         specifier: ^3
@@ -142,31 +142,31 @@ importers:
         specifier: ^3
         version: 3.2.4(vitest@3.2.4)
       dbmate:
-        specifier: ^2.28.0
+        specifier: latest
         version: 2.28.0
       eslint:
-        specifier: ^9.39.1
+        specifier: latest
         version: 9.39.1(jiti@2.6.1)
       eslint-config-next:
         specifier: latest
         version: 16.0.3(@typescript-eslint/parser@8.47.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3)
       kysely-codegen:
-        specifier: ^0.18.5
-        version: 0.18.5(kysely@0.28.8)(pg@8.16.3)(typescript@5.9.3)
+        specifier: latest
+        version: 0.19.0(kysely@0.28.8)(pg@8.16.3)(typescript@5.9.3)
       playwright:
-        specifier: ^1.56.1
+        specifier: latest
         version: 1.56.1
       postcss:
-        specifier: ^8.5.6
+        specifier: latest
         version: 8.5.6
       tailwindcss:
-        specifier: ^4.1.17
+        specifier: latest
         version: 4.1.17
       testcontainers:
-        specifier: ^11.8.1
+        specifier: latest
         version: 11.8.1
       typescript:
-        specifier: ^5.9.3
+        specifier: latest
         version: 5.9.3
       uuid:
         specifier: latest
@@ -2246,6 +2246,10 @@ packages:
     resolution: {integrity: sha512-uBq4egWHTcTt33a72vpSG0z3HnPuIl6NqYcTrKEg2azoEyl2hpW0zqlxysq2pK9HlDIHyHyakeYaYnSAwd8bow==}
     engines: {node: '>=12'}
 
+  dotenv@17.2.3:
+    resolution: {integrity: sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w==}
+    engines: {node: '>=12'}
+
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
     engines: {node: '>= 0.4'}
@@ -3012,14 +3016,14 @@ packages:
   kuler@2.0.0:
     resolution: {integrity: sha512-Xq9nH7KlWZmXAtodXDDRE7vs6DU1gTU8zYDHDiWLSip45Egwq3plLHzPn27NgvzL2r1LMPC1vdqh98sQxtqj4A==}
 
-  kysely-codegen@0.18.5:
-    resolution: {integrity: sha512-bj6DMsXcKo0PrrXUk/fdjFgNC6Pwq+HPBCqhNGuD57gwUJZdci2s2OqhNneQeYpAIWGot7/481WdzTyXrClY2Q==}
+  kysely-codegen@0.19.0:
+    resolution: {integrity: sha512-ZpdQQnpfY0kh45CA6yPA9vdFsBE+b06Fx7QVcbL5rX//yjbA0yYGZGhnH7GTd4P4BY/HIv5uAfuOD83JVZf95w==}
     engines: {node: '>=20.0.0'}
     hasBin: true
     peerDependencies:
       '@libsql/kysely-libsql': '>=0.3.0 <0.5.0'
       '@tediousjs/connection-string': '>=0.5.0 <0.6.0'
-      better-sqlite3: '>=7.6.2 <8.0.0'
+      better-sqlite3: '>=7.6.2 <13.0.0'
       kysely: '>=0.27.0 <1.0.0'
       kysely-bun-sqlite: '>=0.3.2 <1.0.0'
       kysely-bun-worker: '>=1.2.0 <2.0.0'
@@ -3182,8 +3186,8 @@ packages:
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
 
-  lucide-react@0.511.0:
-    resolution: {integrity: sha512-VK5a2ydJ7xm8GvBeKLS9mu1pVK6ucef9780JVUjw6bAjJL/QXnd4Y0p7SPeOUMC27YhzNCZvm5d/QX0Tp3rc0w==}
+  lucide-react@0.554.0:
+    resolution: {integrity: sha512-St+z29uthEJVx0Is7ellNkgTEhaeSoA42I7JjOCBCrc5X6LYMGSv0P/2uS5HDLTExP5tpiqRD2PyUEOS6s9UXA==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -4486,8 +4490,8 @@ packages:
     peerDependencies:
       zod: ^3.25.0 || ^4.0.0
 
-  zod@3.25.76:
-    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+  zod@4.1.12:
+    resolution: {integrity: sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -6418,6 +6422,8 @@ snapshots:
 
   dotenv@16.6.1: {}
 
+  dotenv@17.2.3: {}
+
   dunder-proto@1.0.1:
     dependencies:
       call-bind-apply-helpers: 1.0.2
@@ -6699,8 +6705,8 @@ snapshots:
       '@babel/parser': 7.28.5
       eslint: 9.39.1(jiti@2.6.1)
       hermes-parser: 0.25.1
-      zod: 3.25.76
-      zod-validation-error: 4.0.2(zod@3.25.76)
+      zod: 4.1.12
+      zod-validation-error: 4.0.2(zod@4.1.12)
     transitivePeerDependencies:
       - supports-color
 
@@ -7395,18 +7401,18 @@ snapshots:
 
   kuler@2.0.0: {}
 
-  kysely-codegen@0.18.5(kysely@0.28.8)(pg@8.16.3)(typescript@5.9.3):
+  kysely-codegen@0.19.0(kysely@0.28.8)(pg@8.16.3)(typescript@5.9.3):
     dependencies:
       chalk: 4.1.2
       cosmiconfig: 9.0.0(typescript@5.9.3)
-      dotenv: 16.6.1
+      dotenv: 17.2.3
       dotenv-expand: 12.0.3
       git-diff: 2.0.6
       kysely: 0.28.8
       micromatch: 4.0.8
       minimist: 1.2.8
       pluralize: 8.0.0
-      zod: 3.25.76
+      zod: 4.1.12
     optionalDependencies:
       pg: 8.16.3
     transitivePeerDependencies:
@@ -7523,7 +7529,7 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
-  lucide-react@0.511.0(react@19.2.0):
+  lucide-react@0.554.0(react@19.2.0):
     dependencies:
       react: 19.2.0
 
@@ -9268,10 +9274,10 @@ snapshots:
       compress-commons: 6.0.2
       readable-stream: 4.7.0
 
-  zod-validation-error@4.0.2(zod@3.25.76):
+  zod-validation-error@4.0.2(zod@4.1.12):
     dependencies:
-      zod: 3.25.76
+      zod: 4.1.12
 
-  zod@3.25.76: {}
+  zod@4.1.12: {}
 
   zwitch@2.0.4: {}
