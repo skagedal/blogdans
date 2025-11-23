@@ -10,7 +10,7 @@ import { BlogdansUser, User } from "@/lib/user";
 import { NotLoggedIn } from "./not-logged-in";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { useTRPC } from "@/lib/trpc/client";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -47,6 +47,7 @@ export function CommentForm({
   const [content, setContent] = useState("");
   const { toast } = useToast();
   const trpc = useTRPC();
+  const queryClient = useQueryClient();
 
   const { mutateAsync: submitComment, isPending: isSubmitting } = useMutation(trpc.post.submitComment.mutationOptions());
 
@@ -67,6 +68,12 @@ export function CommentForm({
           title: "Comment submitted",
           description: "Your comment is awaiting moderation.",
         });
+
+        // Invalidate the comments query to refresh the list
+        await queryClient.invalidateQueries({
+          queryKey: trpc.post.getComments.queryKey({ postId: pageId })
+        });
+
         onCommentPosted();
       } else {
         toast({
