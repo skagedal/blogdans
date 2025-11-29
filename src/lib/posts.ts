@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import matter from "gray-matter";
 import { z } from "zod";
+import { config } from "@/config";
 
 const postsDir = path.join(process.cwd(), "content", "posts");
 
@@ -62,9 +63,9 @@ export async function getAllPosts(): Promise<Post[]> {
     });
   }
 
-  /* newest first, hide drafts */
+  /* newest first, hide drafts unless SHOW_DRAFTS is enabled */
   return posts
-    .filter((p) => !p.draft)
+    .filter((p) => config.showDrafts || !p.draft)
     .sort((a, b) => b.date.getTime() - a.date.getTime());
 }
 

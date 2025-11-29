@@ -33,6 +33,20 @@ psql -h localhost -p 5433 -U blogdans -d blogdans -c "INSERT INTO user_roles (us
 
 You'll have to delete your browser cookie (in Chrome: F12, Application tab, go to Cookies and clear). Then log in again.
 
+## Configuration
+
+The application is configured via environment variables:
+
+### `SHOW_DRAFTS`
+
+When set to `true`, draft posts will be displayed in the blog index with a "Draft" badge. By default, draft posts are hidden from the index.
+
+```bash
+SHOW_DRAFTS=true pnpm dev
+```
+
+Posts are marked as drafts using the `draft: true` frontmatter in the markdown files.
+
 ## Library choices
 
 - To render Markdown, I use [react-markdown](https://github.com/remarkjs/react-markdown). In the future, I might dive deeper into this jungle of [remark](https://github.com/remarkjs/remark),  [react-remark](https://github.com/remarkjs/react-remark) and [rehype-react](https://github.com/rehypejs/rehype-react). I use remark-gfm to support the syntax I use from previous Jekyll setup. I don't use Next's mdx integration because I want more control over the rendering, but I might want to add some kind of MDX support later.

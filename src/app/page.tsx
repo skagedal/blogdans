@@ -28,6 +28,11 @@ export default async function BlogIndex() {
                     >
                       {post.title}
                     </Anchor>
+                    {post.draft && (
+                      <span className="ml-2 text-sm font-normal text-gray-500 border border-gray-400 px-2 py-0.5 rounded">
+                        Draft
+                      </span>
+                    )}
                   </H3>
                   <time
                     className="text-sm text-gray-600 m-0"

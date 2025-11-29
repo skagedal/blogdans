@@ -9,6 +9,7 @@ type Config = {
   databaseUrl: string;
   slackWebhookUrl?: string;
   featureVersion: z.infer<typeof featureVersion> | undefined;
+  showDrafts: boolean;
 };
 
 function readSecret(name: string): string | undefined {
@@ -66,4 +67,5 @@ export const config: Config = {
   databaseUrl: environmentDatabaseUrl(),
   slackWebhookUrl: readSecret('SLACK_WEBHOOK_URI'),
   featureVersion: environmentFeatureVersion(),
+  showDrafts: env.SHOW_DRAFTS === 'true',
 };
