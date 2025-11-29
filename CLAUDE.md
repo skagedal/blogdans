@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 # Development
-pnpm dev              # Start development server with Turbopack
+pnpm dev              # Start development server 
 pnpm build            # Build for production
 pnpm start            # Start production server
 pnpm lint             # Run ESLint
@@ -19,7 +19,7 @@ dbmate new <name>     # Create new migration
 
 ## Architecture Overview
 
-This is a Next.js 15 blog application for skagedal.tech with App Router, featuring:
+This is a Next.js blog application for skagedal.tech with App Router, featuring:
 
 ### Content System
 - **Markdown blog posts** stored in `/content/posts/` with frontmatter
@@ -58,6 +58,10 @@ Supports flexible configuration:
 - API endpoint at `/src/app/api/posts/[slug]/comment/route.ts`
 - Moderation workflow (comments need approval to display)
 - Login required to comment
+
+## Configuration
+- App is configured via environment variables, read in `/src/config.ts`
+- New features under development should be toggled with feature flags in config
 
 ## Development Notes
 

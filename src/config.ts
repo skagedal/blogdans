@@ -1,10 +1,14 @@
 import { env } from "node:process";
 import { readFileSync } from "node:fs";
 import { logger } from "./logger";
+import z from "zod";
+
+const featureVersion = z.enum(["next", "current"]);
 
 type Config = {
   databaseUrl: string;
   slackWebhookUrl?: string;
+  featureVersion: z.infer<typeof featureVersion> | undefined;
 };
 
 function readSecret(name: string): string | undefined {
@@ -45,7 +49,21 @@ function environmentDatabaseUrl() {
   return `postgresql://${user}:${password}@${host}:5432/${database}?sslmode=${sslmode}`;
 }
 
+function environmentFeatureVersion(): z.infer<typeof featureVersion> | undefined {
+  const versionEnv = env.BLOGDANS_VERSION;
+  if (!versionEnv) {
+    return undefined;
+  }
+  const result = featureVersion.safeParse(versionEnv);
+  if (!result.success) {
+    logger.warn(`Invalid BLOGDANS_VERSION: ${versionEnv}. Must be "next" or "current".`);
+    return undefined;
+  }
+  return result.data;
+}
+
 export const config: Config = {
   databaseUrl: environmentDatabaseUrl(),
   slackWebhookUrl: readSecret('SLACK_WEBHOOK_URI'),
+  featureVersion: environmentFeatureVersion(),
 };
