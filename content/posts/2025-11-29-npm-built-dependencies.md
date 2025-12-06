@@ -3,6 +3,7 @@ layout: post
 title: "Lifecycle script permissions in pnpm"
 summary: 'In this post I investigate "ignored build scripts" warnings in pnpm, explain what this refers to, and suggest strategies for dealing with them.'
 ---
+<!-- This was actually published on 2025-12-06 but I don't want to change the slug after already posting on social media. -->
 
 If you are using the `pnpm` package manager for Node.js projects, chances are that you have seen a warning about "ignored build scripts" when you run `pnpm install`, or other commands that install packages, such as `pnpm add`. What do these warnings mean? And how are you supposed to act on them? 
 
@@ -322,6 +323,8 @@ Personally, I'd probably go with something between strategy 2 and 3 – default 
 It's also worth mentioning that `pnpm` has [other mechanisms](https://pnpm.io/supply-chain-security) mitigate this kind of supply chain attack, such as setting a "minimum release age" for packages – also known as [dependency cooldowns](https://blog.yossarian.net/2025/11/21/We-should-all-be-using-dependency-cooldowns). If you trust that the ecosystem will discover and deal with compromised packages within a certain time frame, you can set this to some value above that, and then you might choose a less restrictive strategy for dealing with build scripts.
 
 ---
+
+_This post was published on December 6, 2025._
 
 [^terminology]: I find `pnpm`'s terminology here to be a bit all over the place. In some places in the UI, it talks about "build scripts", sometimes it just talks about "builds" or "built dependencies". In the [documentation](https://pnpm.io/supply-chain-security) it specifically just mentions the `postinstall` script. But this functionality – as I udnerstand it – covers the whole range of lifecycle scripts during installs, and while these are probably mostly there to perform "build" actions, it would be more clear if it consistently used terminology like "allow lifecycle scripts during install", and clarify which these are.
 
