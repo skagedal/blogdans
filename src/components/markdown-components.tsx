@@ -33,6 +33,9 @@ import {
 const schema = structuredClone(defaultSchema);
 schema.tagNames!.push("iframe");
 schema.tagNames!.push("figure");
+// Disable clobberPrefix - remark-gfm already adds user-content- prefix to footnote IDs,
+// and having rehype-sanitize add it again breaks footnote anchor links.
+schema.clobberPrefix = "";
 schema.attributes!.iframe = [
   // keep the usual <iframe> attributes
   "src",
