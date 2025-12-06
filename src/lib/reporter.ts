@@ -74,7 +74,7 @@ function createReporter(): Reporter {
     };
   }
 
-  logger.warn("Slack webhook URL is not configured");
+  logger.info("No Slack reporting will be done, webhook URL is not configured.");
   return winstonReporter;
 }
 

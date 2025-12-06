@@ -12,13 +12,18 @@ type Config = {
   showDrafts: boolean;
 };
 
-function readSecret(name: string): string | undefined {
+/**
+ * Secrets are read either from environment variables or from files whose paths
+ * are specified in environment variables with a _FILE suffix.
+ *
+ * It is the caller's responsibility to log appropriate messages if secrets are missing.
+ */
+function readSecretIfAvailable(name: string): string | undefined {
   if (env[name]) {
     return env[name].trim();
   }
   const filePath = env[`${name}_FILE`];
   if (!filePath) {
-    logger.warn(`Neither ${name} nor ${name}_FILE is set.`);
     return undefined;
   }
   try {
@@ -38,7 +43,7 @@ function environmentDatabaseUrl() {
   if (env.DATABASE_URL) {
     return env.DATABASE_URL;
   }
-  const password = readSecret("DATABASE_PASSWORD");
+  const password = readSecretIfAvailable("DATABASE_PASSWORD");
   if (!password) {
     throw new Error("Database password must be configured");
   }
@@ -65,7 +70,7 @@ function environmentFeatureVersion(): z.infer<typeof featureVersion> | undefined
 
 export const config: Config = {
   databaseUrl: environmentDatabaseUrl(),
-  slackWebhookUrl: readSecret('SLACK_WEBHOOK_URI'),
+  slackWebhookUrl: readSecretIfAvailable('SLACK_WEBHOOK_URI'),
   featureVersion: environmentFeatureVersion(),
   showDrafts: env.SHOW_DRAFTS === 'true',
 };
