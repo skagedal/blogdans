@@ -11,9 +11,9 @@ Dealing with these can require digging down in implementation details of things 
 
 ## A little example project
 
-Let's say my purpose in life is to sell fruit on the Internet. I have implemented a web store as a full-stack Node.js service, using React or whatever for the UI parts. On the server side, I'm storing my fruit catalog, my customers and their orders in a PostgreSQL database. 
+Let's say I want to sell fruit on the Internet. I have implemented a web store as a full-stack Node.js service, using React or whatever for the UI parts. On the server side, I'm storing my fruit catalog, my customers and their orders in a PostgreSQL database. 
 
-I would like very much to write some nice automated tests that reassure me that this server-side functionality is working correctly, so people get the fruits they have ordered. I will add my favorite testing framework, `vitest`, and `testcontainers`, the library that lets you easliy run dependencies such as PostgreSQL for tests:
+I would like to write some nice automated tests that reassure me that this server-side functionality is working correctly, so people get the fruits they have ordered. I will add my favorite testing framework, `vitest`, and `testcontainers`, the library that lets you easliy run dependencies such as PostgreSQL for tests:
 
 ```shell
 ❯ pnpm add vitest testcontainers @testcontainers/postgresql
@@ -38,7 +38,7 @@ Done in 1.7s using pnpm v10.23.0
 
 Wait, what are these things? cpu-features? esbuild? protobufj? ssh2? I just want to write some tests for my fruit store! 
 
-Running that mentioned command – `pnpm approve-builds` – does indeed give you the opportunity to interactively select which of these dependencies should be allowed to run scripts.
+Running the command mentioned in the message (`pnpm approve-builds`) does indeed give you the opportunity to interactively select which of these dependencies should be allowed to run scripts, and which should not.
 
 But it doesn't give me much guidance as to what choice to make here, what trade-offs are involved. Why would I want to build these packages? Why would I _not_ want to build them?
 
@@ -46,7 +46,7 @@ If you were using good old' `npm` instead, you wouldn't get this warning. Instea
 
 ## Lifecycle scripts in npm packages
 
-If you've read this far into this blog post, you've probably used package.json run scripts before. They're the scripts that you can put in a `scripts` section in your `package.json`. For example, let's add this maintenance action to our `package.json`:
+You might have used package.json run scripts before. They're the scripts that you can put in a `scripts` section in your `package.json`. For example, let's add this maintenance action to our `package.json`:
 
 ```json
 { 
@@ -194,67 +194,131 @@ Sometimes when you start digging, it's hard to stop. But I have other things to 
 
 So what about `protobufjs` and `esbuild`? At this point in my investigation I turned to Claude. In both of these cases, it seems that neither of them _need_ to perform their build step. In the case of `esbuild` – which is a dependency of `vitest`[^bundlers] – it will download prebuilt binaries for your platform if possible. In the case of `protobufjs`, it seems to fall back to a pure JavaScript implementation if the native code build fails. And as a dependency of `testcontainers` it seems it is only used for some optional functionality around gRPC communication with Testcontainers' own Testcontainers Cloud service, which I'm not using.
 
-I asked Claude about `esbuild` and 
-https://claude.ai/chat/3786ad35-e94c-4242-8e88-e136e08fa2cd
+I'm guessing that it is somewhat common for run scripts like these to not be strictly needed, like in these two cases, even if the functionality of those packages are in the end needed to build or test your fruit store. I was curious to know if it was indeed the case for all of these four packages. I did a brief little test for `cpu-features`. I created an empty directory and typed:
 
-Clues in testcontainers docs:
-- [portforwarding when exposing host ports to container](https://node.testcontainers.org/features/networking/)
-- [dockerode is the underlying Docker client](https://node.testcontainers.org/features/wait-strategies/)
-- 
----
-
-This is pnpm 10.23.0.
-
-pnpm help approve-builds gives some more info:
-```
-Approve dependencies for running scripts during installation
+```shell
+pnpm add cpu-features
 ```
 
-What do others do (npm, yarn)? They just run the thing.
+This creates a `package.json` with the latest version of `cpu-features` as a dependency, installs it, and prints the warning about not running the build scripts. This module has a very simple API - it just exports a default function which returns an object with CPU feature information. So this one-liner should do:
 
-What would the use case be for running things during installation? 
-
-Let's look at these ones. 
-
-## cpu-features
-
-It has an `install` script that looks like this:
-
-```
-"install": "node buildcheck.js > buildcheck.gypi && node-gyp rebuild",
+```shell
+node -p "require('cpu-features')()"
 ```
 
+But it fails:
 
+```text
+node:internal/modules/cjs/loader:1423
+  throw err;
+  ^
 
-## Strategies
+Error: Cannot find module '../build/Release/cpufeatures.node'
+Require stack:
+- /Users/simon/tmp/cpu-features/node_modules/.pnpm/cpu-features@0.0.10/node_modules/cpu-features/lib/index.js
+- /Users/simon/tmp/cpu-features/[eval]
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1420:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)
+    at Module._load (node:internal/modules/cjs/loader:1226:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.require (node:internal/modules/cjs/loader:1503:12)
+    at require (node:internal/modules/helpers:152:16)
+    at Object.<anonymous> (/Users/simon/tmp/cpu-features/node_modules/.pnpm/cpu-features@0.0.10/node_modules/cpu-features/lib/index.js:3:17)
+    at Module._compile (node:internal/modules/cjs/loader:1760:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/Users/simon/tmp/cpu-features/node_modules/.pnpm/cpu-features@0.0.10/node_modules/cpu-features/lib/index.js',
+    '/Users/simon/tmp/cpu-features/[eval]'
+  ]
+}
 
-### 1. Do nothing
+Node.js v25.2.1
+```
 
-### 2. Turn the damn thing off
+"Cannot find module '../build/Release/cpufeatures.node'" – sounds exactly like what we would expect if the build step hadn't been run. Let's approve the build step:
 
-### 3. Deny (unless)
+```shell
+❯ pnpm approve-builds
+✔ Choose which packages to build (Press <space> to select, <a> to toggle all, <i> to invert selection) · cpu-features
 
-### 4. Approve (unless)
+✔ The next packages will now be built: cpu-features.
+Do you approve? (y/N) · true
+node_modules/.pnpm/cpu-features@0.0.10/node_modules/cpu-features: Running install script, done in 3s
+```
 
-## Suggested improvements to pnpm
+That was me selecting `cpu-features` and then typing 'y' to approve. And now, let's try again:
 
-I love that `pnpm` is taking supply chain security seriously. I wish `npm` and `yarn` would do the same.
+```shell
+❯ node -p "require('cpu-features')()"
+{
+  arch: 'aarch64',
+  implementer: 16777228,
+  variant: 2,
+  part: -634136515,
+  revision: 4,
+  flags: {
+    fp: true,
+    aes: true,
+    pmull: true,
+    sha1: true,
+    crc32: true,
+    atomics: true,
+    fphp: true,
+    jscvt: true,
+    fcma: true,
+    lrcpc: true,
+    sha3: true,
+    sha512: true,
+    asimdfhm: true,
+    ssbs: true,
+    sb: true,
+    i8mm: true,
+    bf16: true,
+    bti: true,
+    ecv: true
+  }
+}
+```
 
-I do have some suggestions for improvements to the developer experience around this. First off, I find the terminology
-inconsistent and confusing. Sometimes it's "ignored build scripts", sometimes "approve builds", sometimes "allow to run scripts".
+See, now it works, and returns some interesting CPU information. This little exercise was here just to confirm that, yeah, sometimes these scripts do necessary things. You're welcome.
 
-- The warning presented during install
-- The `pnpm approve-builds` command says "Choose which packages to build"
-- The `ignoredBuiltDependencies` setting in `pnpm-workspace.yaml`
-- The documentation on https://pnpm.io/supply-chain-security 
+## Strategies to take
 
+Okay, enough exploration. 
 
-## Recommendations for the ecosystem
+What should you, the developer of the fruit store, do when you see these warnings about ignored build scripts? Here are some possible strategies:
 
-- DX improvements to pnpm
-- Library authors – explain why or why or not your dependencies need to get build
+### 1. Turn the damn thing off.
 
+Make `pnpm` behave like `npm` and `yarn`, and just run all build scripts without question. All your dependencies will work the way the authors intended them to. But you might be opening up yourself and others to supply chain attacks.
 
+(TODO: how to turn off. discuss alternatives.)
+
+### 2. Approve after cursory investigation.
+
+If you're generally leaning towards option 1 (screw supply chain security, just make sure things work), it may be a better option to explicitly allow the dependencies to run their build scripts, after a brief investigation. You don't have to as deep as I did here, it can be just like "allright, `cpu-features` is a package that hasn't been updated recently, looks legit, it probably needs to build towards native code, let's approve it". 
+
+The benefit of that over option 1 is that if one day the `leftpad` package somewhere deep down in your dependency tree gets compromised and tries to run some evil code during installation, you will not be affected, and you might smell something fishy when `pnpm` warns you. 
+
+### 3. Default to deny
+
+Just deny all the things unless you find out that you actually need them. 
+
+This may affect your build performance negatively. Maybe some part of your build is using the `protobufjs` thing above, and instead of the fast native code path, it falls back to a slower JavaScript implementation. Maybe some cipher suites are not optimal because `cpu-features` wasn't built. 
+
+Or maybe it will affect your build performance postively! If `cpu-features` isn't used at all, you save the time it would take to build it.
+
+### 4. Do nothing
+
+Just let `pnpm` keep ignoring these build scripts, and let it keep printing warnings about ignoring them. Not such a bad strategy – if some day a developer on the team gets stuck with an error because something something cpu-features, that developer may go like "aha! that thing that keeps being warned about must be the problem, let's approve it".
+
+But warnings in builds tend to build up over time, masking more important warnings that you should be paying attention to. 
+
+## Conclusion
+
+I'd probably do something between strategy 2 and 3. You do you. 
 
 ## Footnotes
 
