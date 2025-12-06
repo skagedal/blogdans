@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Run script permissions in pnpm"
-summary: ""
+summary: 'In which I investigate "ignored build scripts" warnings in pnpm, and suggest strategies for dealing with them.'
 draft: true
 ---
 
@@ -9,9 +9,9 @@ If you are using the `pnpm` package manager for Node.js projects, chances are th
 
 Dealing with these can require digging down in implementation details of things you wish would just work. In this post, I'll do some digging and present some strategies. 
 
-## A little example project
+## The problem
 
-Let's say I want to sell fruit on the Internet. I have implemented a web store as a full-stack Node.js service, using React or whatever for the UI parts. On the server side, I'm storing my fruit catalog, my customers and their orders in a PostgreSQL database. 
+Let's say I want to sell fruit on the Internet. I have implemented a web store as a full-stack Node.js service, using React for the UI parts. On the server side, I'm storing my fruit catalog, my customers and their orders in a PostgreSQL database. 
 
 I would like to write some nice automated tests that reassure me that this server-side functionality is working correctly, so people get the fruits they have ordered. I will add my favorite testing framework, `vitest`, and `testcontainers`, the library that lets you easliy run dependencies such as PostgreSQL for tests:
 
@@ -36,7 +36,7 @@ dependencies:
 Done in 1.7s using pnpm v10.23.0
 ```
 
-Wait, what are these things? cpu-features? esbuild? protobufj? ssh2? I just want to write some tests for my fruit store! 
+What's this warnign about? What are these things? cpu-features? esbuild? protobufj? ssh2? I just want to write some tests for my fruit store! 
 
 Running the command mentioned in the message (`pnpm approve-builds`) does indeed give you the opportunity to interactively select which of these dependencies should be allowed to run scripts, and which should not.
 
