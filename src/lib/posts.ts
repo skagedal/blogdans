@@ -8,8 +8,7 @@ const postsDir = path.join(process.cwd(), "content", "posts");
 
 const Front = z.object({
   title: z.string(),
-  // Do we ever want to allow date to be set manually?
-  // date: z.string().optional(),
+  date: z.coerce.date().optional(),
   draft: z.boolean().optional().default(false),
   tags: z.array(z.string()).optional(),
   summary: z.string().optional(),
@@ -52,8 +51,8 @@ export async function getAllPosts(): Promise<Post[]> {
     const slug = file.replace(/\.md$/, "");
     const raw = await fs.readFile(path.join(postsDir, file), "utf8");
     const { data } = matter(raw);
-    const { title, draft, summary } = Front.parse(data);
-    const date = getDateFromSlug(slug);
+    const { title, date: frontmatterDate, draft, summary } = Front.parse(data);
+    const date = frontmatterDate ?? getDateFromSlug(slug);
     posts.push({
       title,
       date,
@@ -72,13 +71,13 @@ export async function getAllPosts(): Promise<Post[]> {
 export async function getPost(slug: string): Promise<PostComplete> {
   const raw = await fs.readFile(path.join(postsDir, `${slug}.md`), "utf8");
   const { data, content } = matter(raw);
-  const { title, draft, summary } = Front.parse(data);
-  const fileDate = getDateFromSlug(slug);
+  const { title, date: frontmatterDate, draft, summary } = Front.parse(data);
+  const date = frontmatterDate ?? getDateFromSlug(slug);
 
   // Build the current post
   const currentPost: PostComplete = {
     title,
-    date: fileDate,
+    date,
     draft: draft || false,
     summary: summary || "",
     slug,
