@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Run script permissions in pnpm"
-summary: 'In which I investigate "ignored build scripts" warnings in pnpm, and suggest strategies for dealing with them.'
+summary: 'In this post I investigate "ignored build scripts" warnings in pnpm, explain what this refers to, and suggest strategies for dealing with them.'
 draft: true
 ---
 
@@ -94,7 +94,7 @@ Done in 496ms using pnpm v10.23.0
 
 So there's that warning. Now we can run `pnpm approve-builds`, and as we approve the `fruit-inventory` to be built (the terminology here is a bit all over the place), it immediately does so and we get to hear that friendly macOS voice quoting [a Greek fruit stand owner from the 1920s](https://en.wikipedia.org/wiki/Yes!_We_Have_No_Bananas). 
 
-So, what is the purpose of these scripts? Some packages aren't ready for use after the package manager has fetched their contents from the NPM registry. Something needs to happen on the build machine as well – typically, I think, to build some natively executable code. 
+So, what is the purpose of these scripts? Some packages aren't ready for use after the package manager has fetched their contents from the NPM registry. Something needs to happen on the build machine as well – for example, to build some natively executable code. 
 
 ## Supply chain security
 
