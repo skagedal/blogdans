@@ -5,15 +5,15 @@ summary: 'In which I investigate "ignored build scripts" warnings in pnpm, and s
 draft: true
 ---
 
-If you are using the `pnpm` package manager for Node.js projects, chances are that you have seen a warning about "ignored build scripts" when you run `pnpm install`, or other commands that installs packages, such as `pnpm add`. What do these warnings mean? And how are you supposed to act on them? 
+If you are using the `pnpm` package manager for Node.js projects, chances are that you have seen a warning about "ignored build scripts" when you run `pnpm install`, or other commands that install packages, such as `pnpm add`. What do these warnings mean? And how are you supposed to act on them? 
 
-Dealing with these can require digging down in implementation details of things you wish would just work. In this post, I'll do some digging and present some strategies. 
+Dealing with these can require digging into implementation details of things you wish would just work. In this post, I'll do some digging and present some strategies. 
 
 ## The problem
 
 Let's say I want to sell fruit on the Internet. I have implemented a web store as a full-stack Node.js service, using React for the UI parts. On the server side, I'm storing my fruit catalog, my customers and their orders in a PostgreSQL database. 
 
-I would like to write some nice automated tests that reassure me that this server-side functionality is working correctly, so people get the fruits they have ordered. I will add my favorite testing framework, `vitest`, and `testcontainers`, the library that lets you easliy run dependencies such as PostgreSQL for tests:
+I would like to write some nice automated tests that reassure me that this server-side functionality is working correctly, so people get the fruits they have ordered. I will add my favorite testing framework, `vitest`, and `testcontainers`, the library that lets you spin up services like PostgreSQL in containers for testing:
 
 ```shell
 ❯ pnpm add vitest testcontainers @testcontainers/postgresql
@@ -36,13 +36,13 @@ dependencies:
 Done in 1.7s using pnpm v10.23.0
 ```
 
-What's this warnign about? What are these things? cpu-features? esbuild? protobufj? ssh2? I just want to write some tests for my fruit store! 
+What's this warning about? What are these things? cpu-features? esbuild? protobufjs? ssh2? I just want to write some tests for my fruit store! 
 
 Running the command mentioned in the message (`pnpm approve-builds`) does indeed give you the opportunity to interactively select which of these dependencies should be allowed to run scripts, and which should not.
 
 But it doesn't give me much guidance as to what choice to make here, what trade-offs are involved. Why would I want to build these packages? Why would I _not_ want to build them?
 
-If you were using good old' `npm` instead, you wouldn't get this warning. Instead, these "run scripts" would just be run, without question. So what are these run scripts, and why does `pnpm` by default ignore them? 
+If you were using good old `npm` instead, you wouldn't get this warning. Instead, these "run scripts" would just be run, without question. So what are these run scripts, and why does `pnpm` by default ignore them? 
 
 ## Lifecycle scripts in npm packages
 
@@ -56,9 +56,9 @@ You might have used package.json run scripts before. They're the scripts that yo
 }
 ```
 
-We can then run `pnpm run fruit-inventory` and hear loud and clear (provided that our machine has a `say` command, such as is the case on macOS machines) that we have no bananas.
+We can then run `pnpm run fruit-inventory` and hear loud and clear (provided that our machine has a `say` command, as macOS does) that we have no bananas.
 
-But all such scripts are not created equal. Some of them, so called [life cycle scripts](https://docs.npmjs.com/cli/v11/using-npm/scripts#life-cycle-operation-order), have special meaning. When packages are installed as dependencies by `npm`, their life cycle scripts are run at certain points during the installation.
+But all such scripts are not created equal. Some of them, so-called [lifecycle scripts](https://docs.npmjs.com/cli/v11/using-npm/scripts#life-cycle-operation-order), have special meaning. When packages are installed as dependencies by `npm`, their lifecycle scripts are run at certain points during the installation.
 
 To test how this works, let's create our own little dependency. Let's say it's a separate package that manages our inventory. We don't have to publish it anywhere, we can just create a directory `/tmp/fruit-inventory` and put a `package.json` looking like this in there:
 
@@ -94,17 +94,17 @@ Done in 496ms using pnpm v10.23.0
 
 So there's that warning. Now we can run `pnpm approve-builds`, and as we approve the `fruit-inventory` to be built (the terminology here is a bit all over the place), it immediately does so and we get to hear that friendly macOS voice quoting [a Greek fruit stand owner from the 1920s](https://en.wikipedia.org/wiki/Yes!_We_Have_No_Bananas). 
 
-So, what is the purpose of these scripts? Some packages aren't ready for use after the package manager having just fetched their contents from the NPM registry. Something needs to happen on the build machine as well – typically, I think, to build some natively executable code. 
+So, what is the purpose of these scripts? Some packages aren't ready for use after the package manager has fetched their contents from the NPM registry. Something needs to happen on the build machine as well – typically, I think, to build some natively executable code. 
 
 ## Supply chain security
 
 Well, that sounds useful! Why would pnpm stop that from happening?
 
-They do this to [mitigate supply chain attacks](https://pnpm.io/supply-chain-security). Sometimes[^shai] the credentials of `npm` package authors get compromised by bad people, who will then be able to execute arbitrary code on machines that install these packages. There have apparently been several examples of attackers using the `postinstall` lifecycle hook for this. 
+They do this to [mitigate supply chain attacks](https://pnpm.io/supply-chain-security). Sometimes[^shai] the credentials of `npm` package authors get compromised by malicious actors, who will then be able to execute arbitrary code on machines that install these packages. There have apparently been several examples of attackers using the `postinstall` lifecycle hook for this. 
 
-Of course, even without this life cycle scripting stuff, we could be in trouble after installing some compromised dependencies. Let's say, for example, that this `cpu-features` package that my fruit store ends up installing, is compromised. The moment we actually _use_ that functionality, calling into the API exposed by that library, we could be in trouble. 
+Of course, even without this lifecycle scripting stuff, we could be in trouble after installing some compromised dependencies. Let's say, for example, that this `cpu-features` package that my fruit store ends up installing, is compromised. The moment we actually _use_ that functionality, calling into the API exposed by that library, we could be in trouble. 
 
-Chances are, however, that a lot of these little npm packages that get transitively installed in your typical Node.js project, never end up actually being called upon, or only do so in some very specific situations. Putting the evil code inside these life cycle script that run on every machine that just happens to _install_ the package thus increases the blast radius considerably. 
+Chances are, however, that a lot of these little npm packages that get transitively installed in your typical Node.js project, never end up actually being called upon, or only do so in some very specific situations. Putting the evil code inside these lifecycle scripts that run on every machine that just happens to _install_ the package thus increases the blast radius considerably. 
 
 So I think `pnpm` is doing the right thing here. Still, it leaves the developer in a tricky situation. Getting back to the fruit store development team, what should they do? How will they know whether we actually need to fully build these particular dependencies? Will we be able to test our fruit store functionality?
 
@@ -159,11 +159,11 @@ ignoredBuiltDependencies:
   - ssh2
 ```
 
-Then will never be bothered by the run scripts of these libraries again!
+You'll never be bothered by the run scripts of these libraries again!
 
 ## Digging deeper
 
-Or _will_ we? I'm not 100% happy! I'm very bad at being pragmatic about these things. There's a gnawing feeling that tells me that some day, we'll try to make use of some feature of testcontainers or vitest and it will just fail. "Why doesn't this thing just wooork", we will complain, "we're doing just like it says in the manual!" But unbeknownst to that future us, current us is to blame for just going in and removing a thing we didn't fully understand – school book example of [Chesterton's Fence](https://thoughtbot.com/blog/chestertons-fence), no?
+Or _will_ we? I'm not 100% happy! I'm very bad at being pragmatic about these things. I have a gnawing feeling that someday, we'll try to make use of some feature of testcontainers or vitest and it will just fail. "Why doesn't this thing just wooork", we will complain, "we're doing just like it says in the manual!" But unbeknownst to that future us, current us is to blame for just going in and removing a thing we didn't fully understand – textbook example of [Chesterton's Fence](https://thoughtbot.com/blog/chestertons-fence), no?
 
 It wouldn't suck to do at least a little investigation. Let's take a look at `cpu-features`.
 
@@ -182,7 +182,7 @@ testcontainers 11.8.1
     └── cpu-features 0.0.10
 ```
 
-So `cpu-features` is there because `ssh2` might need it, and `ssh2` is there because testcontainers, through two other dependencies, wants it somehow. But what _is_ it, and what are  the build scripts that it wants to execute?
+So `cpu-features` is there because `ssh2` might need it, and `ssh2` is there because testcontainers, through two other dependencies, wants it somehow. But what _is_ it, and what are the build scripts that it wants to execute?
 
 That's something I wish `pnpm` would help me out with a bit more. But with a little digging, I can find the `package.json` of `cpu-features` installed at `node_modules/.pnpm/cpu-features@0.0.10/node_modules/cpu-features/package.json`.
 
@@ -190,9 +190,9 @@ Indeed, this module needs to build some native code (using [node-gyp](https://gi
 
 And [ssh2](https://www.npmjs.com/package/ssh2) wants this as an "optional package dependency" – it "will be automatically built and used if possible", and this addon "is currently used to help generate an optimal default cipher list". I think we can sleep happily with `cpu-features` being disabled; worst case, a suboptimal cipher suite will be used when testcontainers is for some reason or another opening up some ssh connections. But why and when is it doing that?
 
-Sometimes when you start digging, it's hard to stop. But I have other things to do. What it looks to me, though, is that this stuff would be required if you were connecting to the Docker server through TCP with TLS; also known as a ssh connection. In my case, both on my local development machine (using OrbStack) and on the CI, it just connects to the Docker server using a Unix socket. So this will not be a problem.
+Sometimes when you start digging, it's hard to stop. But I have other things to do. What it looks to me, though, is that this stuff would be required if you were connecting to the Docker server through TCP with TLS. In my case, both on my local development machine (using OrbStack) and on the CI, it just connects to the Docker server using a Unix socket. So this will not be a problem.
 
-So what about `protobufjs` and `esbuild`? At this point in my investigation I turned to Claude. In both of these cases, it seems that neither of them _need_ to perform their build step. In the case of `esbuild` – which is a dependency of `vitest`[^bundlers] – it will download prebuilt binaries for your platform if possible. In the case of `protobufjs`, it seems to fall back to a pure JavaScript implementation if the native code build fails. And as a dependency of `testcontainers` it seems it is only used for some optional functionality around gRPC communication with Testcontainers' own Testcontainers Cloud service, which I'm not using.
+So what about `protobufjs` and `esbuild`? At this point in my investigation I turned to Claude. In both of these cases, it seems that neither of them _needs_ to perform their build step. In the case of `esbuild` – which is a dependency of `vitest`[^bundlers] – it will download prebuilt binaries for your platform if possible. In the case of `protobufjs`, it seems to fall back to a pure JavaScript implementation if the native code build fails. And as a dependency of `testcontainers` it seems it is only used for some optional functionality around gRPC communication with Testcontainers' own Testcontainers Cloud service, which I'm not using.
 
 I'm guessing that it is somewhat common for run scripts like these to not be strictly needed, like in these two cases, even if the functionality of those packages are in the end needed to build or test your fruit store. I was curious to know if it was indeed the case for all of these four packages. I did a brief little test for `cpu-features`. I created an empty directory and typed:
 
@@ -282,7 +282,7 @@ That was me selecting `cpu-features` and then typing 'y' to approve. And now, le
 }
 ```
 
-See, now it works, and returns some interesting CPU information. This little exercise was here just to confirm that, yeah, sometimes these scripts do necessary things. You're welcome.
+See, now it works, and returns some interesting CPU information. This little exercise was here just to confirm that, yeah, sometimes these scripts do necessary things. 🤷‍♂️
 
 ## Strategies to take
 
@@ -292,15 +292,15 @@ What should you, the developer of the fruit store, do when you see these warning
 
 ### 1. Turn the damn thing off.
 
-Make `pnpm` behave like `npm` and `yarn`, and just run all build scripts without question. All your dependencies will work the way the authors intended them to. But you might be opening up yourself and others to supply chain attacks.
+Make `pnpm` behave like `npm` and `yarn`, and just run all build scripts – current and future – without question. This can be done with the [`dangerouslyAllowAllBuilds`](https://pnpm.io/settings#dangerouslyallowallbuilds) setting in your `pnpm-workspace.yaml`.
 
-(TODO: how to turn off. discuss alternatives.)
+All your dependencies will work the way the authors intended them to. But you might be opening up yourself and others to supply chain attacks.
 
 ### 2. Approve after cursory investigation.
 
-If you're generally leaning towards option 1 (screw supply chain security, just make sure things work), it may be a better option to explicitly allow the dependencies to run their build scripts, after a brief investigation. You don't have to as deep as I did here, it can be just like "allright, `cpu-features` is a package that hasn't been updated recently, looks legit, it probably needs to build towards native code, let's approve it". 
+If you're generally leaning towards option 1 (screw supply chain security, just make sure things work), it may be a better option to explicitly allow the dependencies to run their build scripts, after a brief investigation. You don't have to go as deep as I did here, it can be just like "alright, `cpu-features` is a package that hasn't been updated recently, looks legit, it probably needs to build towards native code, let's approve it". 
 
-The benefit of that over option 1 is that if one day the `leftpad` package somewhere deep down in your dependency tree gets compromised and tries to run some evil code during installation, you will not be affected, and you might smell something fishy when `pnpm` warns you. 
+The benefit of that over option 1 is that if one day the [`left-pad`](https://en.wikipedia.org/wiki/Npm_left-pad_incident) package somewhere deep down in your dependency tree gets compromised and tries to run some evil code during installation, you will not be affected, and you might smell something fishy when `pnpm` warns you. 
 
 ### 3. Default to deny
 
@@ -308,22 +308,22 @@ Just deny all the things unless you find out that you actually need them.
 
 This may affect your build performance negatively. Maybe some part of your build is using the `protobufjs` thing above, and instead of the fast native code path, it falls back to a slower JavaScript implementation. Maybe some cipher suites are not optimal because `cpu-features` wasn't built. 
 
-Or maybe it will affect your build performance postively! If `cpu-features` isn't used at all, you save the time it would take to build it.
+Or maybe it will affect your build performance positively! If `cpu-features` isn't used at all, you save the time it would take to build it.
 
 ### 4. Do nothing
 
-Just let `pnpm` keep ignoring these build scripts, and let it keep printing warnings about ignoring them. Not such a bad strategy – if some day a developer on the team gets stuck with an error because something something cpu-features, that developer may go like "aha! that thing that keeps being warned about must be the problem, let's approve it".
+Just let `pnpm` keep ignoring these build scripts, and let it keep printing warnings about ignoring them. This might not be such a bad strategy – if some day a developer on the team gets stuck with an error because something something cpu-features, that developer may go like "aha! that thing that keeps being warned about must be the problem, let's approve it".
 
-But warnings in builds tend to build up over time, masking more important warnings that you should be paying attention to. 
+But warnings tend to accumulate over time, masking more important warnings that you should be paying attention to. I'd prefer keeping it clean.
 
 ## Conclusion
 
-I'd probably do something between strategy 2 and 3. You do you. 
+Personally, I'd probably go with something between strategy 2 and 3 – default to deny, but take five minutes to investigate. If a package looks legitimate and it seems useful for it to run its build script, approve.
+
+It's also worth mentioning that `pnpm` has [other mechanisms](https://pnpm.io/supply-chain-security) mitigate this kind of supply chain attack, such as setting a "minimum release age" for packages – also known as [dependency cooldowns](https://blog.yossarian.net/2025/11/21/We-should-all-be-using-dependency-cooldowns). If you trust that the ecosystem will discover and deal with compromised packages within a certain time frame, you can set this to some value above that, and then you might choose a less restrictive strategy for dealing with build scripts.
 
 ## Footnotes
 
-`npm` has some oddities. Let's say you have a run script called `pretty`, maybe to format your source code files, and a script called `tty`, maybe to start a shell to somewhere, or whatever. Run `npm run tty`. It will run the "pre"-tty script as well. Pretty unexpected. `pnpm` has wisely not inherited this behavior (only for specified lifecycle scripts)
+[^shai]: In November 2025, the worm "Sha1-Hulud: The Second Coming" was discovered by Gitlab. I find this stuff rather fascinating, read more about it in [this blog post](https://about.gitlab.com/blog/gitlab-discovers-widespread-npm-supply-chain-attack/).
 
-[^shai]: In november 2025, the worm "Sha1-Hulud: The Second Coming" was discovered by Gitlab. I find this stuff rather fascinating, read more about it in [this blog post](https://about.gitlab.com/blog/gitlab-discovers-widespread-npm-supply-chain-attack/).
-
-[^bundlers]: The number of bundlers and build tools in the JavaScript ecosystem is a bit overwhelming. In the software that runs this blog, I am running Next.js for the service and vitest for tests. Next.js uses `turbopack` and, I think, `webpack` in some situations.  `vitest` is built on `vite` which uses `rollup` and, apparently, also `esbuild` for some things. Then there's `parcel` and `rspack` and I don't even know. 
+[^bundlers]: The number of bundlers and build tools in the JavaScript ecosystem is a bit overwhelming. In the software that runs this blog, I am running Next.js for the service and vitest for tests. Next.js uses `turbopack` and, I think, `webpack` in some situations. `vitest` is built on `vite` which uses `rollup` and, apparently, also `esbuild` for some things. Then there's `parcel` and `rspack` and I don't even know. 
