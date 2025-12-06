@@ -1,8 +1,7 @@
 ---
 layout: post
-title: "Run script permissions in pnpm"
+title: "Lifecycle script permissions in pnpm"
 summary: 'In this post I investigate "ignored build scripts" warnings in pnpm, explain what this refers to, and suggest strategies for dealing with them.'
-draft: true
 ---
 
 If you are using the `pnpm` package manager for Node.js projects, chances are that you have seen a warning about "ignored build scripts" when you run `pnpm install`, or other commands that install packages, such as `pnpm add`. What do these warnings mean? And how are you supposed to act on them? 
@@ -92,7 +91,7 @@ dependencies:
 Done in 496ms using pnpm v10.23.0
 ```
 
-So there's that warning. Now we can run `pnpm approve-builds`, and as we approve the `fruit-inventory` to be built (the terminology here is a bit all over the place), it immediately does so and we get to hear that friendly macOS voice quoting [a Greek fruit stand owner from the 1920s](https://en.wikipedia.org/wiki/Yes!_We_Have_No_Bananas). 
+So there's that warning. Now we can run `pnpm approve-builds`, and as we approve the `fruit-inventory` to be built[^terminology], it immediately does so and we get to hear that friendly macOS voice quoting [a Greek fruit stand owner from the 1920s](https://en.wikipedia.org/wiki/Yes!_We_Have_No_Bananas). 
 
 So, what is the purpose of these scripts? Some packages aren't ready for use after the package manager has fetched their contents from the NPM registry. Something needs to happen on the build machine as well – for example, to build some natively executable code. 
 
@@ -322,7 +321,9 @@ Personally, I'd probably go with something between strategy 2 and 3 – default 
 
 It's also worth mentioning that `pnpm` has [other mechanisms](https://pnpm.io/supply-chain-security) mitigate this kind of supply chain attack, such as setting a "minimum release age" for packages – also known as [dependency cooldowns](https://blog.yossarian.net/2025/11/21/We-should-all-be-using-dependency-cooldowns). If you trust that the ecosystem will discover and deal with compromised packages within a certain time frame, you can set this to some value above that, and then you might choose a less restrictive strategy for dealing with build scripts.
 
-## Footnotes
+---
+
+[^terminology]: I find `pnpm`'s terminology here to be a bit all over the place. In some places in the UI, it talks about "build scripts", sometimes it just talks about "builds" or "built dependencies". In the [documentation](https://pnpm.io/supply-chain-security) it specifically just mentions the `postinstall` script. But this functionality – as I udnerstand it – covers the whole range of lifecycle scripts during installs, and while these are probably mostly there to perform "build" actions, it would be more clear if it consistently used terminology like "allow lifecycle scripts during install", and clarify which these are.
 
 [^shai]: In November 2025, the worm "Sha1-Hulud: The Second Coming" was discovered by Gitlab. I find this stuff rather fascinating, read more about it in [this blog post](https://about.gitlab.com/blog/gitlab-discovers-widespread-npm-supply-chain-attack/).
 
