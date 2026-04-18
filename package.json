@@ -61,7 +61,7 @@
     "@vitest/browser-playwright": "latest",
     "@vitest/ui": "latest",
     "dbmate": "latest",
-    "eslint": "latest",
+    "eslint": "^9",
     "eslint-config-next": "latest",
     "kysely-codegen": "latest",
     "playwright": "latest",
