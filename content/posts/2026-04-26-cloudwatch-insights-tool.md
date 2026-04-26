@@ -1,37 +1,29 @@
 ---
 layout: post
-title: "A tool for fetching logs from CloudWatch Insights"
+title: "Small tools, shared with agents: a CloudWatch Insights example"
 date: 2026-04-26
 draft: true
-summary: "A small CLI tool for running CloudWatch Insights queries from the service repository, using per-service templates and storing results locally."
+summary: "On building small CLI tools for myself — and now for my agents too. Walks through a recent one for querying CloudWatch Insights, and how I use Claude to analyze the logs it pulls down."
 ---
 
-I've always enjoyed making small tools for myself to improve daily life as a software developer. Most of the time they are cli tools, since the command line is where I live my life.
+I've always enjoyed making small tools for myself to improve daily life as a software developer. Most of the time they are CLI tools, since the command line is where I live my life.
 
-With the advent of agentic coding, this tendency of mine has multiplied in several ways. Of course, I'm writing even more tools now. Agents are _really_ good at writing small, self-contained tools. I will often do it from the Claude app on the phone.
+With the advent of agentic coding, this tendency of mine has multiplied. Of course, I'm writing more tools now — agents are _really_ good at writing small, self-contained tools, and I will often kick one off from the Claude app on the phone.
 
-But also because agents love to use CLI tools as much as I do. So I don't just write the tools for my own direct use, I also use them indirectly through skills in Claude Code. I don't see much reason for MCP when they can rather just invoke the same tools I use myself, makes it easier also to follow what they're doing.
+And it has multiplied because agents love to use CLI tools as much as I do. So I don't just build them for my own direct use; I also use them indirectly, through skills in Claude Code. I don't see much reason for MCP when the agent can just invoke the same tools I use myself — same artifacts, same logs, easier to follow what it's doing.
 
-One recent tool I've added to my belt is to access logs from cloudwatch-insights. There are of course existing such tools, but I want one which is adapted to my workflows.
+One recent addition to my belt is a tool for fetching logs from CloudWatch Insights. There are existing tools for this, but I want one that fits my workflows.
 
-Often when I do tools like this that integrate towards some service, I let the raw integration be handled by some existing cli command, like `gh` for Github. This way my tool doesn't need to handle authentication or other such details.
+When I build these integrations, I often wrap an existing CLI to avoid reimplementing auth — `gh` for GitHub, for example. AWS is one exception: the SDK is good enough, and the profile-based auth standardized enough, that calling it directly is preferable.
 
-For aws services however, they have such a well-developed SDK for multiple languages with a standardized auth procedure through profiles, so that's preferable.
-
-The foundation of my cloudwatch-insights tool is to execute queries against cloudwatch and store results locally. It supports templates for various queries, with variables grabbed from context. Let me explain that.
-
-A typical workflow might start with me getting alarms in some service. I want to investigate any error logs and see how they relate to the code. In this situation I run the tool from the service repository. The tool then picks up per-service configuration about log groups and appropriate filters and executes the right query. You can then analyze the logs with `jq` or the tool of choice.
-
-Here is how it works now. I'll probably tweak the user experience as I go along.
-
-I'll cd into the service repository and create a query.
+The foundation of the tool is to execute queries against CloudWatch Insights and store the results locally as JSONL. Queries are templated, with variables filled in from the working directory's context. A typical workflow: I get an alarm in some service, want to investigate error logs, and want to relate them back to the code. So I `cd` into that service's repo and run the tool from there. The repo carries per-service configuration — which log groups, which app filter — and the tool picks it up automatically.
 
 ```
 cd ~/code/some-service
 cloudwatch-insights query --new --environment prod
 ```
 
-It then creates a default query from a template and opens up my default editor with this content:
+This creates a query from the service's template and opens it in my editor:
 
 ```
 ---
@@ -47,7 +39,7 @@ fields @timestamp, @message
 | limit 200
 ```
 
-I get:
+The frontmatter declares variables that can reference each other — `{env}` expands to `prod` here. The body is a regular CloudWatch Insights query. I tweak as needed, save, and the run begins:
 
 ```
 Querying 1 log group(s) from 2026-04-26T08:29:49.798Z to 2026-04-26T09:29:49.798Z
@@ -59,6 +51,12 @@ Done. 200 rows written (matched=245 scanned=5717 bytes=27164644).
 /Users/simon/.skagedal-tools/cloudwatch-insights/latest-run.jsonl → /Users/simon/.skagedal-tools/cloudwatch-insights/queries/aira-web-backend/results/run-2026-04-26T09-29-51Z.jsonl
 ```
 
-Integration with IDE can also be just text. We don't need plugins. Let's print relevant lines in the format that VS Code picks up in shell so we can navigate to them.
+The output is a JSONL file under `~/.skagedal-tools/`, and `latest-run.jsonl` always symlinks to the most recent run. From there I can `jq` it, grep it, or hand it to Claude.
 
-* open the query in the browser console
+Integration with the IDE can also be just text — no plugins needed. The tool prints relevant lines in the format VS Code picks up from a shell, so I can click straight from terminal to the source location.
+
+<!-- TODO: section on asking Claude to analyze the downloaded logs — this is the second half of the meta-thesis: tool + agent + shared artifact -->
+
+<!-- TODO: original draft had a trailing bullet "open the query in the browser console" — flesh out or drop -->
+
+<!-- TODO: closing tie-back to the opening — same tool, used by me and by the agent; why this beats MCP for this kind of work -->
