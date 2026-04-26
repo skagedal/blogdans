@@ -1,11 +1,41 @@
 {
-  name: "Build and push Docker image",
-  on: { push: { branches: ["main"] } },
+  name: "CI",
+  on:
+    {
+      push: { branches: ["main"] },
+      pull_request: {},
+    },
   jobs:
     {
+      checks:
+        {
+          name: "Lint and type-check",
+          "runs-on": "ubuntu-latest",
+          steps:
+            [
+              { name: "Check out code", uses: "actions/checkout@v4" },
+              {
+                name: "Set up pnpm",
+                uses: "pnpm/action-setup@v4",
+              },
+              {
+                name: "Set up Node.js",
+                uses: "actions/setup-node@v4",
+                with: { "node-version": "22", cache: "pnpm" },
+              },
+              {
+                name: "Install dependencies",
+                run: "pnpm install --frozen-lockfile",
+              },
+              { name: "Lint", run: "pnpm lint" },
+              { name: "Type check", run: "pnpm tsc --noEmit" },
+            ],
+        },
       main:
         {
           name: "Build and deploy",
+          needs: "checks",
+          if: "${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}",
           "runs-on": "ubuntu-latest",
           steps:
             [
