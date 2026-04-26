@@ -22,7 +22,7 @@ const Front = z.object({
 export async function syncPostsToDatabase(): Promise<{ successCount: number, failureCount: number }> {
   const service = new Service(db);
   const files = await fs.readdir(postsDir);
-  const postSlugs: string[] = [];
+  let successCount = 0;
   let failureCount = 0;
 
   for (const file of files) {
@@ -35,17 +35,14 @@ export async function syncPostsToDatabase(): Promise<{ successCount: number, fai
       const raw = await fs.readFile(filePath, "utf8");
       const { data } = matter(raw);
 
-      // Validate frontmatter to ensure it's a valid post
       Front.parse(data);
 
-      postSlugs.push(slug);
-
-      // Insert or update the post record via service
       await service.syncPostToDatabase(slug);
+      successCount += 1;
     } catch (error) {
       logger.error(`Error processing post file ${file}:`, error);
       failureCount += 1;
     }
   }
-  return { successCount: postSlugs.length, failureCount };
+  return { successCount, failureCount };
 }
