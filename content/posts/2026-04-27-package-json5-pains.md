@@ -96,3 +96,6 @@ The honest answer is: stubbornness, and the small daily pleasure of a manifest w
 But I will keep planting small flags. JSON5 was right. Comments in config files are right. Trailing commas are right. And every time I edit a `package.json` and have to delete a comma or paste an explanatory comment somewhere else, I will know I was right.
 
 Until then, my workflow is: keep `package.json5` as the source of truth, rename entry files to `.mts` for projects without JSX, and accept that the dist runtime will piggyback on Node's auto-detect. It is not a beautiful arrangement, but it lets me have my comments. Most of the time.
+
+<!-- TODO: pnpm issue: https://github.com/pnpm/pnpm/issues/3027  - previous impl: https://github.com/pnpm/pnpm/issues/5541 -->
+<!-- TODO: only allow pnpm: https://pnpm.io/only-allow-pnpm -->
