@@ -3,22 +3,22 @@ layout: post
 title: "Small tools, shared with agents: a CloudWatch Insights example"
 date: 2026-04-26
 draft: true
-summary: "On building small CLI tools for myself — and now for my agents too. Walks through a recent one for querying CloudWatch Insights, and how I use Claude to analyze the logs it pulls down."
+summary: "On building small CLI tools for myself – and now for my agents too. Walks through a recent one for querying CloudWatch Insights, and how I use Claude to analyze the logs it pulls down."
 ---
 
 I've always enjoyed making small tools for myself to improve daily life as a software developer. Most of the time they are CLI tools, since the command line is where I live my life.
 
-With the advent of agentic coding, this tendency of mine has multiplied. Of course, I'm writing more tools now — agents are _really_ good at writing small, self-contained tools; I will often kick one off from the Claude app on the phone as I sit on the loo.
+With the advent of agentic coding, this tendency of mine has multiplied. Of course, I'm writing more tools now. Agents are _really_ good at writing small, self-contained tools, and you can kick one off from the Claude app on the phone as you sit on the loo. That's nice.
 
-And it has multiplied because agents love to use CLI tools as much as I do. So I don't just build them for my own direct use; I also use them indirectly, through Claude Code. Some people would advocate the use of MCP for that type of integration. I don't see much reason for that when the agent can just invoke the same tools I use myself — same artifacts, same logs, easier to follow what it's doing.
+But it has also multiplied in another way, because agents love to use CLI tools as much as I do. So I don't just build them for my own direct use; I also use them indirectly, through Claude Code (mostly). Some people would advocate the use of MCP for that type of integration. I don't see much reason for that[^mcp] when the agent can just invoke the same tools I use myself. Same artifacts, same interface, easier to follow what it's doing.
 
 ## The cloudwatch-insights tool
 
-One recent addition to my belt is a tool for fetching logs from CloudWatch Insights. There are existing tools for this, but I want one that fits my workflows.
+One recent addition to my belt is a tool for fetching logs from CloudWatch Insights. There are probably existing tools for this[^existing], but I want one that fits my workflows.
 
-When I build these integrations, I often wrap an existing CLI to avoid reimplementing auth — `gh` for GitHub, for example. AWS is one exception: the SDK is good enough, and the profile-based auth standardized enough, that calling it directly is preferable.
+When I build these integrations, I often wrap an existing CLI to avoid reimplementing auth – `gh` for GitHub, for example. AWS is one exception: the SDK is good enough, and the profile-based auth standardized enough, that calling it directly is preferable.
 
-The foundation of the tool is to execute queries against CloudWatch Insights and store the results locally as JSONL. Queries are templated, with variables filled in from the working directory's context. A typical workflow: I get an alarm in some service, want to investigate error logs, and want to relate them back to the code. So I `cd` into that service's repo and run the tool from there. The repo carries per-service configuration — which log groups, which app filter — and the tool picks it up automatically.
+The foundation of the tool is to execute queries against CloudWatch Insights and store the results locally as JSONL. Queries are templated, with variables filled in from the working directory's context. A typical workflow: I get an alarm in some service, want to investigate error logs, and want to relate them back to the code. So I `cd` into that service's repo and run the tool from there. The repo carries per-service configuration – which log groups, which app filter – and the tool picks it up automatically.
 
 ```shell
 cd ~/code/some-service
@@ -46,7 +46,7 @@ If you have used Cloudwatch Insights before, you might recognize the second part
 - `time` is the time range to run the query against, in a human-friendly format. 
 - `env` and `app` are two pre-defined variables that can be used in the query, or in other variables (as we see here with `log-group`).
 
-After you have tweaked as needed, you save and exit the editor, and the tool runs the query. The output looks something like this:
+After you have tweaked as needed, you save and exit the editor, and the tool runs the query. The tool will say something like this:
 
 ```shell
 Querying 1 log group(s) from 2026-04-26T08:29:49.798Z to 2026-04-26T09:29:49.798Z
@@ -59,7 +59,7 @@ Done. 200 rows written (matched=245 scanned=5717 bytes=27164644).
 ```
 
 
-The output is a JSONL file under `~/.skagedal-tools/`, and `latest-run.jsonl` always symlinks to the most recent run. From there I can just hand things to `claude` – I'm already in the right codebase.
+The output is a JSONL file under `~/.skagedal-tools/`, and `latest-run.jsonl` always symlinks to the most recent run. From there I can just hand things to `claude` – I'm already in the right codebase.
 
 > Run `cloudwatch-insights show` and fix the errors.
 
@@ -71,14 +71,13 @@ Even classic IDE:s integrate well with text! In the inline terminal of VS Code o
 jq -r 'select(.level == "ERROR") | .message' ~/.skagedal-tools/cloudwatch-insights/latest-run.jsonl | grep -Eo '(/[^:]+):([0-9]+)' | sed 's/:/ /' | while read file line; do echo -e "\e]8;;file://$file\e\\$file:$line\e]8;;\e\\"; done
 ```
 
-No plugins, no MCP, just text. It's the future.
+No plugins, no MCP, just text. Like I like it. 
 
+Finally I just wanted to mention another nice little feature of my `cloudwatch-insights` tool: it can also generate a link to the query in the CloudWatch console. This is useful for sharing with others in Slack, or for using the console's features for further tweaking and exploration.
 
-<!-- TODO: original draft had a trailing bullet "open the query in the browser console" — flesh out or drop -->
-
-<!-- TODO: closing tie-back to the opening — same tool, used by me and by the agent; why this beats MCP for this kind of work -->
-
-<!-- TODO: mention that others have the same idea about MCP, see this blog post: https://mariozechner.at/posts/2025-11-02-what-if-you-dont-need-mcp/ – also the tool https://pi.dev/ -->
 
 <!-- Footnotes -->
+[^existing]: A few worth mentionging: [`saw`](https://github.com/TylerBrock/saw) and [`cw`](https://github.com/lucagrulla/cw), both Go CLIs focused on tailing and searching log groups, and [`awslogs`](https://github.com/jorgebastida/awslogs), a long-standing Python tool in the same space. These are more oriented toward log streaming than Insights queries, but they cover overlapping ground.
 [^singlegroup]: We should allow this to be an array of log groups, but for now it's just one.
+[^mcp]: This isn't just my take about MCP (Model Context Protocol), see for example [this blog post](https://mariozechner.at/posts/2025-11-02-what-if-you-dont-need-mcp/). The [pi.dev](https://pi.dev/) tool also seems to be going in the direction.
+
