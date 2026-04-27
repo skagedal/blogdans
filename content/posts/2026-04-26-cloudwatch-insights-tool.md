@@ -36,7 +36,7 @@ app = "some-service-app"
 fields @timestamp, @message
 | sort @timestamp desc
 | filter app = '{{ app }}'
-| filter level in ['WARN', 'ERROR']
+| filter level in ['ERROR']
 | limit 200
 ```
 
@@ -59,15 +59,27 @@ Done. 200 rows written (matched=245 scanned=5717 bytes=27164644).
 ```
 
 
-The output is a JSONL file under `~/.skagedal-tools/`, and `latest-run.jsonl` always symlinks to the most recent run. From there I can `jq` it, grep it, or hand it to Claude.
+The output is a JSONL file under `~/.skagedal-tools/`, and `latest-run.jsonl` always symlinks to the most recent run. From there I can just hand things to `claude` – I'm already in the right codebase.
 
-Integration with the IDE can also be just text — no plugins needed. The tool prints relevant lines in the format VS Code picks up from a shell, so I can click straight from terminal to the source location.
+> Run `cloudwatch-insights show` and fix the errors.
+
+Of course, I can also do any other usual JSON processing on the results (`jq` and `fx` and friends <!-- TODO: link to previous post on fx -->). It's not just modern LLM-based tooling that work well with plain text. 
+
+Even classic IDE:s integrate well with text! In the inline terminal of VS Code or IntelliJ, I can run something like this to show the failing locations from stack traces:
+
+```shell
+jq -r 'select(.level == "ERROR") | .message' ~/.skagedal-tools/cloudwatch-insights/latest-run.jsonl | grep -Eo '(/[^:]+):([0-9]+)' | sed 's/:/ /' | while read file line; do echo -e "\e]8;;file://$file\e\\$file:$line\e]8;;\e\\"; done
+```
+
+No plugins, no MCP, just text. It's the future.
 
 <!-- TODO: section on asking Claude to analyze the downloaded logs — this is the second half of the meta-thesis: tool + agent + shared artifact -->
 
 <!-- TODO: original draft had a trailing bullet "open the query in the browser console" — flesh out or drop -->
 
 <!-- TODO: closing tie-back to the opening — same tool, used by me and by the agent; why this beats MCP for this kind of work -->
+
+<!-- TODO: mention that others have the same idea about MCP, see this blog post: https://mariozechner.at/posts/2025-11-02-what-if-you-dont-need-mcp/ – also the tool https://pi.dev/ -->
 
 <!-- Footnotes -->
 [^singlegroup]: We should allow this to be an array of log groups, but for now it's just one.
