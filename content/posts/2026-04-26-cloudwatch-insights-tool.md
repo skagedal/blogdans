@@ -73,7 +73,6 @@ jq -r 'select(.level == "ERROR") | .message' ~/.skagedal-tools/cloudwatch-insigh
 
 No plugins, no MCP, just text. It's the future.
 
-<!-- TODO: section on asking Claude to analyze the downloaded logs — this is the second half of the meta-thesis: tool + agent + shared artifact -->
 
 <!-- TODO: original draft had a trailing bullet "open the query in the browser console" — flesh out or drop -->
 
