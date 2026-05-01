@@ -102,6 +102,7 @@ export default async function PostPage({
               pageId={slug}
               hackernews={post.hackernews}
               bluesky={post.bluesky}
+              linkedin={post.linkedin}
             />
           )}
         </article>

@@ -11,9 +11,10 @@ type Props = {
   pageId: string;
   hackernews?: string;
   bluesky?: string;
+  linkedin?: string;
 }
 
-export async function Comments({ pageId, hackernews, bluesky }: Props) {
+export async function Comments({ pageId, hackernews, bluesky, linkedin }: Props) {
   const user = await getUser();
   console.log('User:', user);
 
@@ -23,7 +24,7 @@ export async function Comments({ pageId, hackernews, bluesky }: Props) {
         <MessageSquare className="mr-2 h-5 w-5" />
         Comments
       </h2>
-      <DiscussLinks hackernews={hackernews} bluesky={bluesky} />
+      <DiscussLinks hackernews={hackernews} bluesky={bluesky} linkedin={linkedin} />
       <ClientContext>
         <FormOrLogin pageId={pageId} user={user} />
         <CommentsList pageId={pageId} />

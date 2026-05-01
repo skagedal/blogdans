@@ -15,6 +15,7 @@ const Front = z.object({
   ogImage: z.string().optional(),
   hackernews: z.string().url().optional(),
   bluesky: z.string().url().optional(),
+  linkedin: z.string().url().optional(),
 });
 
 export type Post = {
@@ -27,6 +28,7 @@ export type Post = {
   ogImage?: string;
   hackernews?: string;
   bluesky?: string;
+  linkedin?: string;
 };
 
 export type PostComplete = Post & {
@@ -58,7 +60,7 @@ export async function getAllPosts(): Promise<Post[]> {
     const slug = file.replace(/\.md$/, "");
     const raw = await fs.readFile(path.join(postsDir, file), "utf8");
     const { data } = matter(raw);
-    const { title, date: frontmatterDate, draft, summary, tags, ogImage, hackernews, bluesky } = Front.parse(data);
+    const { title, date: frontmatterDate, draft, summary, tags, ogImage, hackernews, bluesky, linkedin } = Front.parse(data);
     const date = frontmatterDate ?? getDateFromSlug(slug);
     posts.push({
       title,
@@ -70,6 +72,7 @@ export async function getAllPosts(): Promise<Post[]> {
       ogImage,
       hackernews,
       bluesky,
+      linkedin,
     });
   }
 
@@ -82,7 +85,7 @@ export async function getAllPosts(): Promise<Post[]> {
 export async function getPost(slug: string): Promise<PostComplete> {
   const raw = await fs.readFile(path.join(postsDir, `${slug}.md`), "utf8");
   const { data, content } = matter(raw);
-  const { title, date: frontmatterDate, draft, summary, tags, ogImage, hackernews, bluesky } = Front.parse(data);
+  const { title, date: frontmatterDate, draft, summary, tags, ogImage, hackernews, bluesky, linkedin } = Front.parse(data);
   const date = frontmatterDate ?? getDateFromSlug(slug);
 
   // Build the current post
@@ -96,6 +99,7 @@ export async function getPost(slug: string): Promise<PostComplete> {
     ogImage,
     hackernews,
     bluesky,
+    linkedin,
     content,
   };
 

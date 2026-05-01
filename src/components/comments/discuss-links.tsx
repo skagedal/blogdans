@@ -3,10 +3,11 @@ import { Anchor } from "@/components/ui/typography";
 type Props = {
   hackernews?: string;
   bluesky?: string;
+  linkedin?: string;
 };
 
-export function DiscussLinks({ hackernews, bluesky }: Props) {
-  if (!hackernews && !bluesky) {
+export function DiscussLinks({ hackernews, bluesky, linkedin }: Props) {
+  if (!hackernews && !bluesky && !linkedin) {
     return null;
   }
 
@@ -22,6 +23,13 @@ export function DiscussLinks({ hackernews, bluesky }: Props) {
     links.push(
       <Anchor key="bsky" href={bluesky}>
         Blue Sky
+      </Anchor>
+    );
+  }
+  if (linkedin) {
+    links.push(
+      <Anchor key="li" href={linkedin}>
+        LinkedIn
       </Anchor>
     );
   }
