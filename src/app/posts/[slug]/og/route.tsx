@@ -1,9 +1,16 @@
 import { ImageResponse } from "next/og";
 import { format } from "date-fns";
-import { getPost } from "@/lib/posts";
+import { getAllPosts, getPost } from "@/lib/posts";
 
 export const contentType = "image/png";
 export const size = { width: 1200, height: 630 };
+export const dynamic = "force-static";
+export const revalidate = false;
+
+export async function generateStaticParams() {
+  const posts = await getAllPosts();
+  return posts.map((p) => ({ slug: p.slug }));
+}
 
 export async function GET(
   _req: Request,
@@ -107,6 +114,12 @@ export async function GET(
         </div>
       </div>
     ),
-    { ...size }
+    {
+      ...size,
+      headers: {
+        "Cache-Control":
+          "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800",
+      },
+    }
   );
 }
