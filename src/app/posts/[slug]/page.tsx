@@ -37,9 +37,35 @@ export async function generateMetadata(
     };
   }
 
+  const description = post.summary || `Read "${post.title}" on skagedal.tech`;
+  const ogImageUrl = post.ogImage ?? `/posts/${post.slug}/og`;
+
   return {
     title: `${post.title} | skagedal.tech`,
-    description: post.summary || `Read "${post.title}" on skagedal.tech`,
+    description,
+    openGraph: {
+      type: "article",
+      title: post.title,
+      description,
+      url: `/posts/${post.slug}`,
+      publishedTime: post.date.toISOString(),
+      authors: ["Simon Kågedal Reimer"],
+      tags: post.tags,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description,
+      images: [ogImageUrl],
+    },
   };
 }
 
