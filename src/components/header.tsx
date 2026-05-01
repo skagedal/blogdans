@@ -8,7 +8,7 @@ export function Header() {
           href="/"
           className="font-semibold tracking-tight hover:opacity-80"
         >
-          skagedal.tech
+          skagedal.tech <span aria-hidden="true">✨</span>
         </Link>
       </nav>
     </header>
