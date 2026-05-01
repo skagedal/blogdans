@@ -12,6 +12,7 @@ const Front = z.object({
   draft: z.boolean().optional().default(false),
   tags: z.array(z.string()).optional(),
   summary: z.string().optional(),
+  ogImage: z.string().optional(),
 });
 
 export type Post = {
@@ -20,6 +21,8 @@ export type Post = {
   draft: boolean;
   summary: string;
   slug: string;
+  tags?: string[];
+  ogImage?: string;
 };
 
 export type PostComplete = Post & {
@@ -51,7 +54,7 @@ export async function getAllPosts(): Promise<Post[]> {
     const slug = file.replace(/\.md$/, "");
     const raw = await fs.readFile(path.join(postsDir, file), "utf8");
     const { data } = matter(raw);
-    const { title, date: frontmatterDate, draft, summary } = Front.parse(data);
+    const { title, date: frontmatterDate, draft, summary, tags, ogImage } = Front.parse(data);
     const date = frontmatterDate ?? getDateFromSlug(slug);
     posts.push({
       title,
@@ -59,6 +62,8 @@ export async function getAllPosts(): Promise<Post[]> {
       draft: draft || false,
       summary: summary || "",
       slug,
+      tags,
+      ogImage,
     });
   }
 
@@ -71,7 +76,7 @@ export async function getAllPosts(): Promise<Post[]> {
 export async function getPost(slug: string): Promise<PostComplete> {
   const raw = await fs.readFile(path.join(postsDir, `${slug}.md`), "utf8");
   const { data, content } = matter(raw);
-  const { title, date: frontmatterDate, draft, summary } = Front.parse(data);
+  const { title, date: frontmatterDate, draft, summary, tags, ogImage } = Front.parse(data);
   const date = frontmatterDate ?? getDateFromSlug(slug);
 
   // Build the current post
@@ -81,6 +86,8 @@ export async function getPost(slug: string): Promise<PostComplete> {
     draft: draft || false,
     summary: summary || "",
     slug,
+    tags,
+    ogImage,
     content,
   };
 

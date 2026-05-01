@@ -59,6 +59,8 @@ The Zod schema in `src/lib/posts.ts` requires `title` and accepts optional `date
 
 6. **Stop there.** Do not commit or push unless the user asks. Report the new filename and a one-line summary of what changed.
 
+7. **Remind the user to check social preview links.** Once the post is live, point them to `PUBLISHING.md` at the repo root for the list of OG/Twitter Card preview tools to verify the post renders correctly when shared.
+
 ## Notes
 
 - If multiple drafts exist and the user is ambiguous, ask which one — don't publish more than one at a time.
