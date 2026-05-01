@@ -28,10 +28,10 @@ cloudwatch-insights query --new --env prod
 This creates a query file from a template, fills it in with values from the command line and from repo-level settings, and opens it in my `$EDITOR`. It can look like this:
 
 ```text
-log-group = "/logs/{{ env }}/services"
 time = "1h"
 env = "prod"
 app = "some-service-app"
+log-group = "/logs/{{ env }}/services"
 ---
 fields @timestamp, @message
 | sort @timestamp desc
@@ -42,24 +42,22 @@ fields @timestamp, @message
 
 If you have used Cloudwatch Insights before, you might recognize the second part here as a query in what they call the [Logs Insights QL](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/CWL_QuerySyntax.html) language. The section before that – the "front-matter" – contains various settings on how the query is run, and certain variables that will be replaced in the query. 
 
-- `log-group` is the log group[^singlegroup] to run the query against.
 - `time` is the time range to run the query against, in a human-friendly format. 
 - `env` and `app` are two pre-defined variables that can be used in the query, or in other variables (as we see here with `log-group`).
+- `log-group` is the log group – or, if you pass a TOML array, several log groups – to run the query against.
 
 After you have tweaked as needed, you save and exit the editor, and the tool runs the query. The tool will say something like this:
 
 ```shell
-Querying 1 log group(s) from 2026-04-26T08:29:49.798Z to 2026-04-26T09:29:49.798Z
-log groups: /logs/prod/services
-status: Scheduled
-status: Complete
-/Users/simon/.skagedal-tools/cloudwatch-insights/queries/some-service/results/run-2026-04-26T09-29-51Z.jsonl
-Done. 200 rows written (matched=245 scanned=5717 bytes=27164644).
-/Users/simon/.skagedal-tools/cloudwatch-insights/latest-run.jsonl → /Users/simon/.skagedal-tools/cloudwatch-insights/queries/some-service/results/run-2026-04-26T09-29-51Z.jsonl
+AWS region:  eu-north-1
+Log groups:  /logs/prod/services
+Time range:  1h
+Status:      Complete (scanned 5.7k records, 26.5 KiB, 200 rows)
+
+Use cloudwatch-insights show to view results. (Open in AWS)
 ```
 
-
-The output is a JSONL file under `~/.skagedal-tools/`, and `latest-run.jsonl` always symlinks to the most recent run. From there I can just hand things to `claude` – I'm already in the right codebase.
+The results are written as a JSONL file under `~/.skagedal-tools/`, and `latest-run.jsonl` always symlinks to the most recent run. From there I can just hand things to `claude` – I'm already in the right codebase. `Open in AWS` is a clickable hyperlink to the same query in the CloudWatch console, in terminals that support [OSC 8](https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda).
 
 > Run `cloudwatch-insights show` and fix the errors.
 
@@ -73,11 +71,10 @@ jq -r 'select(.level == "ERROR") | .message' ~/.skagedal-tools/cloudwatch-insigh
 
 No plugins, no MCP, just text. Like I like it. 
 
-Finally I just wanted to mention another nice little feature of my `cloudwatch-insights` tool: it can also generate a link to the query in the CloudWatch console. This is useful for sharing with others in Slack, or for using the console's features for further tweaking and exploration.
+You may have noticed the `Open in AWS` link in the output above: every query also produces a shareable AWS Console URL pointing at the same query. Beyond clicking the link in your terminal, there's a `cloudwatch-insights copy-link` subcommand that copies the URL to the system pasteboard – handy for sharing in Slack, or for using the console's features for further tweaking and exploration. There's also an inverse `paste-link` that takes a console URL (from the pasteboard, or as an argument) and decodes it back into a `current.insights` file, so you can replay or tweak someone else's query locally.
 
 
 <!-- Footnotes -->
 [^existing]: A few worth mentionging: [`saw`](https://github.com/TylerBrock/saw) and [`cw`](https://github.com/lucagrulla/cw), both Go CLIs focused on tailing and searching log groups, and [`awslogs`](https://github.com/jorgebastida/awslogs), a long-standing Python tool in the same space. These are more oriented toward log streaming than Insights queries, but they cover overlapping ground.
-[^singlegroup]: We should allow this to be an array of log groups, but for now it's just one.
 [^mcp]: This isn't just my take about MCP (Model Context Protocol), see for example [this blog post](https://mariozechner.at/posts/2025-11-02-what-if-you-dont-need-mcp/). The [pi.dev](https://pi.dev/) tool also seems to be going in the direction.
 
