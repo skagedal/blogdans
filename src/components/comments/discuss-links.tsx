@@ -29,20 +29,23 @@ export function DiscussLinks({ hackernews, bluesky, linkedin }: Props) {
   if (linkedin) {
     links.push(
       <Anchor key="li" href={linkedin}>
-        LinkedIn
+        Linked In
       </Anchor>
     );
   }
 
   const joined: React.ReactNode[] = [];
   links.forEach((link, i) => {
-    if (i > 0) joined.push(<span key={`sep-${i}`}> or </span>);
+    if (i > 0) {
+      const sep = i === links.length - 1 ? " or " : ", ";
+      joined.push(<span key={`sep-${i}`}>{sep}</span>);
+    }
     joined.push(link);
   });
 
   return (
     <p className="mb-6 text-muted-foreground">
-      Or discuss this post on {joined}.
+      Discuss this post on {joined}.
     </p>
   );
 }
