@@ -1,8 +1,7 @@
 ---
 layout: post
 title: "Small tools, shared with agents: a CloudWatch Insights example"
-date: 2026-04-26
-draft: true
+date: 2026-05-01
 summary: "On building small CLI tools for myself – and now for my agents too. Walks through a recent one for querying CloudWatch Insights, and how I use Claude to analyze the logs it pulls down."
 ---
 
