@@ -46,7 +46,7 @@ If you have used Cloudwatch Insights before, you might recognize the second part
 - `env` and `app` are two pre-defined variables that can be used in the query, or in other variables (as we see here with `log-group`).
 - `log-group` is the log group – or, if you pass a TOML array, several log groups – to run the query against.
 
-After you have tweaked as needed, you save and exit the editor, and the tool runs the query. The tool will say something like this on stderr:
+After you have tweaked as needed, you save and exit the editor, and the tool runs the query. The tool will say something like this:
 
 ```shell
 AWS region:  eu-north-1
@@ -57,7 +57,7 @@ Status:      Complete (scanned 5.7k records, 26.5 KiB, 200 rows)
 Use cloudwatch-insights show to view results. (Open in AWS)
 ```
 
-The `Status:` line is rewritten in place as the query runs, and `Open in AWS` is a clickable hyperlink to the same query in the CloudWatch console (in terminals that support [OSC 8](https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda)). The results themselves are written as a JSONL file under `~/.skagedal-tools/`, and `latest-run.jsonl` always symlinks to the most recent run. From there I can just hand things to `claude` – I'm already in the right codebase.
+The results are written as a JSONL file under `~/.skagedal-tools/`, and `latest-run.jsonl` always symlinks to the most recent run. From there I can just hand things to `claude` – I'm already in the right codebase. `Open in AWS` is a clickable hyperlink to the same query in the CloudWatch console, in terminals that support [OSC 8](https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda).
 
 > Run `cloudwatch-insights show` and fix the errors.
 
