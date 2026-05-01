@@ -97,7 +97,13 @@ export default async function PostPage({
           </header>
           {post.draft && <DraftCard />}
           <MarkdownPost content={post.content} />
-          {showComments && <Comments pageId={slug} />}
+          {showComments && (
+            <Comments
+              pageId={slug}
+              hackernews={post.hackernews}
+              bluesky={post.bluesky}
+            />
+          )}
         </article>
       </main>
       <Footer previous={post.previous} next={post.next} />
