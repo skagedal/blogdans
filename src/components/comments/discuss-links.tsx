@@ -1,3 +1,5 @@
+import { Anchor } from "@/components/ui/typography";
+
 type Props = {
   hackernews?: string;
   bluesky?: string;
@@ -11,16 +13,16 @@ export function DiscussLinks({ hackernews, bluesky }: Props) {
   const links: React.ReactNode[] = [];
   if (hackernews) {
     links.push(
-      <a key="hn" href={hackernews} className="underline">
+      <Anchor key="hn" href={hackernews}>
         Hacker News
-      </a>
+      </Anchor>
     );
   }
   if (bluesky) {
     links.push(
-      <a key="bsky" href={bluesky} className="underline">
+      <Anchor key="bsky" href={bluesky}>
         Blue Sky
-      </a>
+      </Anchor>
     );
   }
 
@@ -32,7 +34,7 @@ export function DiscussLinks({ hackernews, bluesky }: Props) {
 
   return (
     <p className="mb-6 text-muted-foreground">
-      Discuss this post on {joined}.
+      Or discuss this post on {joined}.
     </p>
   );
 }
