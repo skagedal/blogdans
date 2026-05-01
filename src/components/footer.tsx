@@ -37,7 +37,7 @@ export default function SocialLinks() {
       <a href="https://bsky.app/profile/skagedal.tech">
         <SiBluesky />
       </a>
-      <a href="/feed.xml">
+      <a href="/feed.xml" aria-label="RSS feed" title="RSS feed">
         <RssIcon />
       </a>
     </nav>
