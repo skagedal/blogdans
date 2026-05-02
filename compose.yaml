@@ -10,9 +10,8 @@
         "3000:3000"
       ],
       environment: {
-        MOCK_USER: "true",
-        AUTH_SECRET: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-        AUTH_TRUST_HOST: "true",
+        BETTER_AUTH_SECRET: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+        BETTER_AUTH_URL: "http://localhost:3000",
         DATABASE_URL: "postgresql://blogdans:secret@database:5432/blogdans?sslmode=disable"
       }
     },

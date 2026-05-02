@@ -4,7 +4,7 @@ import { MessageSquare } from "lucide-react";
 import { Alert, AlertDescription } from "../ui/alert";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
-import { handleLogin } from "@/lib/login";
+import { authClient } from "@/lib/auth-client";
 
 export function NotLoggedIn() {
   return (
@@ -21,7 +21,9 @@ export function NotLoggedIn() {
         </Alert>
       </CardContent>
       <CardFooter className="flex justify-end px-6 pb-6 pt-0">
-        <Button onClick={handleLogin}>Log in with Google</Button>
+        <Button onClick={() => authClient.signIn.social({ provider: "google", callbackURL: window.location.pathname })}>
+          Log in with Google
+        </Button>
       </CardFooter>
     </Card>
   );

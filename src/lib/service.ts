@@ -1,8 +1,6 @@
 import type { DB } from "@/db/schema";
 import { reporter } from "./reporter";
-import { blogdansRole, BlogdansRole, BlogdansUser } from "./user-types";
-import { sql, type Kysely } from "kysely";
-import { logger } from "@/logger";
+import { type Kysely } from "kysely";
 
 export class Service {
   constructor(private db: Kysely<DB>) {}
@@ -11,7 +9,7 @@ export class Service {
     try {
       // Get author name before inserting comment
       const author = await this.db
-        .selectFrom("blogdans_user")
+        .selectFrom("user")
         .select("name")
         .where("id", "=", authorId)
         .executeTakeFirst();
@@ -55,9 +53,9 @@ export class Service {
     try {
       return await this.db
         .selectFrom("comment")
-        .innerJoin("blogdans_user", "comment.author_id", "blogdans_user.id")
+        .innerJoin("user", "comment.author_id", "user.id")
         .selectAll("comment")
-        .select(["blogdans_user.name as author_name", "blogdans_user.email as author_email"])
+        .select(["user.name as author_name", "user.email as author_email"])
         .where("comment.approved_at", "is", null)
         .orderBy("comment.created_at", "desc")
         .execute();
@@ -71,9 +69,10 @@ export class Service {
     try {
       return await this.db
         .selectFrom("comment")
+        .innerJoin("user", "comment.author_id", "user.id")
         .innerJoin("blogdans_user", "comment.author_id", "blogdans_user.id")
         .selectAll("comment")
-        .select(["blogdans_user.name as author_name", "blogdans_user.photo as author_photo"])
+        .select(["user.name as author_name", "blogdans_user.photo as author_photo"])
         .where("comment.post_id", "=", postId)
         .where("comment.approved_at", "is not", null)
         .orderBy("comment.created_at", "asc")
@@ -88,9 +87,10 @@ export class Service {
     try {
       return await this.db
         .selectFrom("comment")
+        .innerJoin("user", "comment.author_id", "user.id")
         .innerJoin("blogdans_user", "comment.author_id", "blogdans_user.id")
         .selectAll("comment")
-        .select(["blogdans_user.name as author_name", "blogdans_user.photo as author_photo"])
+        .select(["user.name as author_name", "blogdans_user.photo as author_photo"])
         .where("comment.post_id", "=", postId)
         .where("comment.author_id", "=", userId)
         .where("comment.approved_at", "is", null)
@@ -132,11 +132,19 @@ export class Service {
   async getUsers(page: number = 1, limit: number = 20) {
     try {
       const offset = (page - 1) * limit;
-      
+
       const users = await this.db
-        .selectFrom("blogdans_user")
-        .selectAll()
-        .orderBy("created_at", "desc")
+        .selectFrom("user")
+        .innerJoin("blogdans_user", "blogdans_user.id", "user.id")
+        .select([
+          "user.id",
+          "user.name",
+          "user.email",
+          "blogdans_user.photo",
+          "user.createdAt as created_at",
+          "user.updatedAt as updated_at",
+        ])
+        .orderBy("user.createdAt", "desc")
         .limit(limit)
         .offset(offset)
         .execute();
@@ -149,7 +157,7 @@ export class Service {
             .select("role")
             .where("user_id", "=", user.id)
             .execute();
-          
+
           return {
             ...user,
             roles: userRoles.map(r => r.role)
@@ -158,7 +166,7 @@ export class Service {
       );
 
       const total = await this.db
-        .selectFrom("blogdans_user")
+        .selectFrom("user")
         .select(({ fn }) => fn.count<number>("id").as("count"))
         .executeTakeFirstOrThrow();
 
@@ -191,59 +199,4 @@ export class Service {
     }
   }
 
-  async getOrCreateGoogleLink(googleId: string): Promise<string> {
-    const inserted = await this.db.insertInto("google_user"
-      ).values({ 
-        id: googleId, 
-        blog_user_id: sql`gen_random_uuid()`
-      })
-      .returning("blog_user_id")
-      .onConflict((oc) => oc.column("id").doNothing())
-      .execute();
-    
-    if (inserted[0]) {
-      return inserted[0].blog_user_id;
-    }
-
-    // If the insert didn't happen, it means the user already exists
-    const existing = await this.db
-      .selectFrom("google_user")
-      .select("blog_user_id")
-      .where("id", "=", googleId)
-      .executeTakeFirst();
-
-    if (!existing) {
-      throw new Error(`Google user ${googleId} not found`);
-    }
-    return existing.blog_user_id;
-  }
-
-  async getOrCreateBlogUser(blogdansUser: Omit<BlogdansUser, 'roles'>): Promise<BlogdansUser> {
-    const {id, name, email, photo} = blogdansUser;
-    const inserted = await this.db
-      .insertInto("blogdans_user")
-      .values({ id, name, email, photo })
-      .onConflict((oc) => oc.column("id").doNothing())
-      .execute();
-
-    if (inserted.length === 0) {
-      logger.info(`Blog user ${id} already exists, returning existing user`);
-      return {...blogdansUser, roles: await this.getRoles(id)};
-    }
-    if (inserted.length === 1) {
-      reporter.info(`Created new blog user ${id}`);
-      return {...blogdansUser, roles: await this.getRoles(id)};
-    }
-    throw new Error(`Unexpected number of inserted blog users: ${inserted.length}`);
-  }
-
-  private async getRoles(id: string): Promise<BlogdansRole[]> {
-    const roles = await this.db
-      .selectFrom("user_roles")
-      .select("role")
-      .where("user_id", "=", id)
-      .execute();
-
-    return roles.flatMap(role => blogdansRole.parse(role.role));
-  }
 }

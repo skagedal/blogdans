@@ -9,14 +9,21 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { LogOut, UserCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { BlogdansUser } from "@/lib/user-types";
-import { handleLogout } from "@/lib/login";
+import { authClient } from "@/lib/auth-client";
 
 type UserMenuProps = {
   user: BlogdansUser;
 };
 
 export function UserMenu({ user }: UserMenuProps) {
+  const router = useRouter();
+  const handleLogout = async () => {
+    await authClient.signOut();
+    router.push("/");
+    router.refresh();
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -48,7 +55,7 @@ export function UserMenu({ user }: UserMenuProps) {
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          onClick={async () => await handleLogout()}
+          onClick={handleLogout}
           className="cursor-pointer"
         >
           <LogOut className="mr-2 h-4 w-4" />

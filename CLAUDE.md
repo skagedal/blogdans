@@ -35,10 +35,9 @@ Uses PostgreSQL with Kysely query builder and a normalized schema:
 - Auto-updating timestamps via database triggers
 
 ### Authentication
-- **NextAuth.js** with Google OAuth
-- **Dual user model**: Google accounts link to internal blog users
-- **Session middleware** protects routes
-- **Development mock user** via `MOCK_USER` env var
+- **Better Auth** with Google OAuth
+- **Profile model**: `blogdans_user` is a slim profile table joined to Better Auth's `user` table by id
+- **Local dev**: real Google OAuth (or email+password once PR 2 lands)
 
 ### Key Technologies
 - **tRPC v11** for type-safe APIs with superjson transformer
