@@ -1,6 +1,8 @@
-minimumReleaseAge: 7200
 
 ignoredBuiltDependencies:
   - '@tailwindcss/oxide'
+  - esbuild
+  - protobufjs
   - sharp
   - unrs-resolver
+minimumReleaseAge: 7200
