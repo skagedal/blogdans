@@ -1,4 +1,4 @@
-import { Resend } from "resend";
+import nodemailer, { type Transporter } from "nodemailer";
 import { config } from "@/config";
 import { logger } from "@/logger";
 
@@ -9,33 +9,34 @@ type SendEmailArgs = {
   text: string;
 };
 
-let resendClient: Resend | undefined;
-function getResend(): Resend | undefined {
-  if (!config.resendApiKey) return undefined;
-  resendClient ??= new Resend(config.resendApiKey);
-  return resendClient;
+let transporter: Transporter | undefined;
+function getTransporter(): Transporter | undefined {
+  if (!config.smtp) return undefined;
+  transporter ??= nodemailer.createTransport({
+    host: config.smtp.host,
+    port: config.smtp.port,
+    secure: config.smtp.port === 465, // STARTTLS on 587, implicit TLS on 465
+    auth: { user: config.smtp.user, pass: config.smtp.password },
+  });
+  return transporter;
 }
 
 /**
- * Send a transactional email via Resend. In environments without
- * RESEND_API_KEY (i.e. local dev) the email is logged instead, so the rest
- * of the flow can still be exercised end-to-end.
+ * Send a transactional email via SMTP. In environments without an SMTP
+ * config (i.e. local dev) the email is logged instead, so the rest of the
+ * flow can still be exercised end-to-end.
  */
 export async function sendEmail({ to, subject, html, text }: SendEmailArgs): Promise<void> {
-  const resend = getResend();
-  if (!resend) {
-    logger.info("RESEND_API_KEY not set; would have sent email", { to, subject, text });
+  const t = getTransporter();
+  if (!t || !config.smtp) {
+    logger.info("SMTP not configured; would have sent email", { to, subject, text });
     return;
   }
-  const { error } = await resend.emails.send({
-    from: config.resendFromEmail,
-    to: [to],
-    subject,
-    html,
-    text,
-  });
-  if (error) {
-    logger.error("Resend send failed", { to, subject, error });
+  try {
+    await t.sendMail({ from: config.smtp.from, to, subject, html, text });
+    logger.info("Sent email", { to, subject });
+  } catch (error) {
+    logger.error("SMTP send failed", { to, subject, error });
     throw new Error("Failed to send email");
   }
 }

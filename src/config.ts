@@ -5,11 +5,18 @@ import z from "zod";
 
 const featureVersion = z.enum(["next", "current"]);
 
+type SmtpConfig = {
+  host: string;
+  port: number;
+  user: string;
+  password: string;
+  from: string;
+};
+
 type Config = {
   databaseUrl: string;
   slackWebhookUrl?: string;
-  resendApiKey?: string;
-  resendFromEmail: string;
+  smtp?: SmtpConfig;
   featureVersion: z.infer<typeof featureVersion> | undefined;
   showDrafts: boolean;
 };
@@ -70,11 +77,22 @@ function environmentFeatureVersion(): z.infer<typeof featureVersion> | undefined
   return result.data;
 }
 
+function environmentSmtp(): SmtpConfig | undefined {
+  const password = readSecretIfAvailable('SMTP_PASSWORD');
+  const host = env.SMTP_HOST;
+  const user = env.SMTP_USER;
+  const from = env.SMTP_FROM;
+  if (!password || !host || !user || !from) {
+    return undefined;
+  }
+  const port = Number(env.SMTP_PORT ?? '587');
+  return { host, port, user, password, from };
+}
+
 export const config: Config = {
   databaseUrl: environmentDatabaseUrl(),
   slackWebhookUrl: readSecretIfAvailable('SLACK_WEBHOOK_URI'),
-  resendApiKey: readSecretIfAvailable('RESEND_API_KEY'),
-  resendFromEmail: env.RESEND_FROM_EMAIL ?? 'Skagedal <noreply@skagedal.tech>',
+  smtp: environmentSmtp(),
   featureVersion: environmentFeatureVersion(),
   showDrafts: env.SHOW_DRAFTS === 'true',
 };
