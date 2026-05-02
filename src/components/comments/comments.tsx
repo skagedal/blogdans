@@ -16,7 +16,6 @@ type Props = {
 
 export async function Comments({ pageId, hackernews, bluesky, linkedin }: Props) {
   const user = await getUser();
-  console.log('User:', user);
 
   return (
     <div className="py-8 animate-fade-in">

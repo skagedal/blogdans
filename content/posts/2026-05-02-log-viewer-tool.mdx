@@ -26,7 +26,13 @@ My first attempt at solving that problem was a little tool I called [log-jsonify
 
 Useful for simple cases, but still, it'd be nice with some interactivity. I'd like to have a nice little tool that shows (possibly streaming) JSONL logs from any source – a file dumped by my CloudWatch Insights tool, or the output of `stern` with the `-o json` flag, or any other source of JSONL logs – even just a locally running service. And then I want to be able to filter and explore those logs in an interactive way, without having to write `jq` queries.
 
-I guess I spent _some_ small amount of time searching the web for such a tool, but quickly decided to just roll my own. Please let me know what I missed. 
+I guess I spent _some_ small amount of time searching the web for such a tool, but quickly decided to just roll my own. Please let me know what I missed. Here's what it ended up looking like:
+
+<Asciinema
+  src="/casts/log-viewer.cast"
+  alt="A short recording of log-viewer browsing JSONL logs: scrolling, filtering, and opening an entry's detail view."
+/>
+
 
 One idea I had for this is that I wanted it to be both a TUI and a web app. TUI is nice for superquickly exploring some logs in the terminal. But sometimes a more scrollable and interactive app is nice. 
 
