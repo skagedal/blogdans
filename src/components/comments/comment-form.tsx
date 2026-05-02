@@ -18,7 +18,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { handleLogout } from "@/lib/login";
+import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
 
 interface CommentFormProps {
   user: BlogdansUser;
@@ -48,6 +49,11 @@ export function CommentForm({
   const { toast } = useToast();
   const trpc = useTRPC();
   const queryClient = useQueryClient();
+  const router = useRouter();
+  const handleLogout = async () => {
+    await authClient.signOut();
+    router.refresh();
+  };
 
   const { mutateAsync: submitComment, isPending: isSubmitting } = useMutation(trpc.post.submitComment.mutationOptions());
 
@@ -126,7 +132,7 @@ export function CommentForm({
               </div>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={async () => await handleLogout()}
+                onClick={handleLogout}
                 className="cursor-pointer"
               >
                 <LogOut className="mr-2 h-4 w-4" />

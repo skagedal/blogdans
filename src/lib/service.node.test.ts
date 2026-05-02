@@ -77,10 +77,33 @@ describe("service tests using real db", () => {
     // Clean up test data before each test
 
     await db.deleteFrom("comment").execute();
-    await db.deleteFrom("google_user").execute();
     await db.deleteFrom("blogdans_user").execute();
+    await db.deleteFrom("user").execute();
     await db.deleteFrom("post").execute();
   });
+
+  async function insertTestUser(opts: {
+    id: string;
+    name: string;
+    email: string;
+    photo: string;
+  }) {
+    await db
+      .insertInto("user")
+      .values({
+        id: opts.id,
+        name: opts.name,
+        email: opts.email,
+        emailVerified: true,
+        image: opts.photo,
+        updatedAt: new Date(),
+      })
+      .execute();
+    await db
+      .insertInto("blogdans_user")
+      .values({ id: opts.id, photo: opts.photo })
+      .execute();
+  }
 
   it("can perform some database operations", async () => {
     const result = await db.executeQuery(sql`SELECT 1`.compile(db));
@@ -96,15 +119,12 @@ describe("service tests using real db", () => {
 
     // First create required dependencies
     await db.insertInto("post").values({ id: postId }).execute();
-    await db
-      .insertInto("blogdans_user")
-      .values({
-        id: authorId,
-        name: "Test User",
-        email: "test@example.com",
-        photo: "test-photo.jpg",
-      })
-      .execute();
+    await insertTestUser({
+      id: authorId,
+      name: "Test User",
+      email: "test@example.com",
+      photo: "test-photo.jpg",
+    });
 
     const result = await service.insertComment(postId, authorId, content);
 
@@ -124,15 +144,12 @@ describe("service tests using real db", () => {
     const authorId = uuidv4();
     const content = "Test comment content";
 
-    await db
-      .insertInto("blogdans_user")
-      .values({
-        id: authorId,
-        name: "Test User",
-        email: "test@example.com",
-        photo: "test-photo.jpg",
-      })
-      .execute();
+    await insertTestUser({
+      id: authorId,
+      name: "Test User",
+      email: "test@example.com",
+      photo: "test-photo.jpg",
+    });
 
     await expect(
       service.insertComment(postId, authorId, content)
@@ -146,15 +163,12 @@ describe("service tests using real db", () => {
       const content = "Test comment content";
 
       await db.insertInto("post").values({ id: postId }).execute();
-      await db
-        .insertInto("blogdans_user")
-        .values({
-          id: authorId,
-          name: "Test User",
-          email: "test@example.com",
-          photo: "test-photo.jpg",
-        })
-        .execute();
+      await insertTestUser({
+        id: authorId,
+        name: "Test User",
+        email: "test@example.com",
+        photo: "test-photo.jpg",
+      });
 
       await service.insertComment(postId, authorId, content);
 
@@ -175,15 +189,12 @@ describe("service tests using real db", () => {
       const content = "Test comment content";
 
       await db.insertInto("post").values({ id: postId }).execute();
-      await db
-        .insertInto("blogdans_user")
-        .values({
-          id: authorId,
-          name: "Test User",
-          email: "test@example.com",
-          photo: "test-photo.jpg",
-        })
-        .execute();
+      await insertTestUser({
+        id: authorId,
+        name: "Test User",
+        email: "test@example.com",
+        photo: "test-photo.jpg",
+      });
 
       await service.insertComment(postId, authorId, content);
 
@@ -204,15 +215,12 @@ describe("service tests using real db", () => {
       const content = "Test comment content";
 
       await db.insertInto("post").values({ id: postId }).execute();
-      await db
-        .insertInto("blogdans_user")
-        .values({
-          id: authorId,
-          name: "Test User",
-          email: "test@example.com",
-          photo: "test-photo.jpg",
-        })
-        .execute();
+      await insertTestUser({
+        id: authorId,
+        name: "Test User",
+        email: "test@example.com",
+        photo: "test-photo.jpg",
+      });
 
       await service.insertComment(postId, authorId, content);
 
@@ -240,15 +248,12 @@ describe("service tests using real db", () => {
       const content = "Test comment content";
 
       await db.insertInto("post").values({ id: postId }).execute();
-      await db
-        .insertInto("blogdans_user")
-        .values({
-          id: authorId,
-          name: "Test User",
-          email: "test@example.com",
-          photo: "test-photo.jpg",
-        })
-        .execute();
+      await insertTestUser({
+        id: authorId,
+        name: "Test User",
+        email: "test@example.com",
+        photo: "test-photo.jpg",
+      });
 
       await service.insertComment(postId, authorId, content);
 
@@ -273,23 +278,18 @@ describe("service tests using real db", () => {
       const userId1 = uuidv4();
       const userId2 = uuidv4();
 
-      await db
-        .insertInto("blogdans_user")
-        .values([
-          {
-            id: userId1,
-            name: "User One",
-            email: "user1@example.com",
-            photo: "photo1.jpg",
-          },
-          {
-            id: userId2,
-            name: "User Two",
-            email: "user2@example.com",
-            photo: "photo2.jpg",
-          },
-        ])
-        .execute();
+      await insertTestUser({
+        id: userId1,
+        name: "User One",
+        email: "user1@example.com",
+        photo: "photo1.jpg",
+      });
+      await insertTestUser({
+        id: userId2,
+        name: "User Two",
+        email: "user2@example.com",
+        photo: "photo2.jpg",
+      });
 
       const result = await service.getUsers(1, 10);
 
@@ -308,7 +308,9 @@ describe("service tests using real db", () => {
         photo: `photo${i + 1}.jpg`,
       }));
 
-      await db.insertInto("blogdans_user").values(users).execute();
+      for (const u of users) {
+        await insertTestUser(u);
+      }
 
       const result = await service.getUsers(2, 10);
 

@@ -11,11 +11,25 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
 
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
+export interface Account {
+  accessToken: string | null;
+  accessTokenExpiresAt: Timestamp | null;
+  accountId: string;
+  createdAt: Generated<Timestamp>;
+  id: string;
+  idToken: string | null;
+  password: string | null;
+  providerId: string;
+  refreshToken: string | null;
+  refreshTokenExpiresAt: Timestamp | null;
+  scope: string | null;
+  updatedAt: Timestamp;
+  userId: string;
+}
+
 export interface BlogdansUser {
   created_at: Generated<Timestamp>;
-  email: string;
   id: string;
-  name: string;
   photo: string;
   updated_at: Generated<Timestamp>;
 }
@@ -30,13 +44,6 @@ export interface Comment {
   updated_at: Generated<Timestamp>;
 }
 
-export interface GoogleUser {
-  blog_user_id: string;
-  created_at: Generated<Timestamp>;
-  id: string;
-  updated_at: Generated<Timestamp>;
-}
-
 export interface Post {
   created_at: Generated<Timestamp>;
   id: string;
@@ -47,6 +54,27 @@ export interface Roles {
   role: string;
 }
 
+export interface Session {
+  createdAt: Generated<Timestamp>;
+  expiresAt: Timestamp;
+  id: string;
+  ipAddress: string | null;
+  token: string;
+  updatedAt: Timestamp;
+  userAgent: string | null;
+  userId: string;
+}
+
+export interface User {
+  createdAt: Generated<Timestamp>;
+  email: string;
+  emailVerified: boolean;
+  id: string;
+  image: string | null;
+  name: string;
+  updatedAt: Generated<Timestamp>;
+}
+
 export interface UserRoles {
   created_at: Generated<Timestamp>;
   id: Generated<string>;
@@ -55,11 +83,23 @@ export interface UserRoles {
   user_id: string;
 }
 
+export interface Verification {
+  createdAt: Generated<Timestamp>;
+  expiresAt: Timestamp;
+  id: string;
+  identifier: string;
+  updatedAt: Generated<Timestamp>;
+  value: string;
+}
+
 export interface DB {
+  account: Account;
   blogdans_user: BlogdansUser;
   comment: Comment;
-  google_user: GoogleUser;
   post: Post;
   roles: Roles;
+  session: Session;
+  user: User;
   user_roles: UserRoles;
+  verification: Verification;
 }
