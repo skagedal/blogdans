@@ -1,28 +1,29 @@
 "use client";
 
 import { MessageSquare } from "lucide-react";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 import { Alert, AlertDescription } from "../ui/alert";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
-import { authClient } from "@/lib/auth-client";
 
 export function NotLoggedIn() {
+  const pathname = usePathname();
+  const href = `/login?next=${encodeURIComponent(pathname)}`;
   return (
     <Card className="mb-8">
       <CardContent className="p-6">
         <Alert>
           <MessageSquare className="h-4 w-4" />
           <AlertDescription>
-            Please log in to leave a comment. Currently, only Google login is
-            supported. If this is a problem for you, and you would like to
-            comment on the blog, please contact me through any of the means
-            listed at the site footer.
+            Please sign in to leave a comment. You can sign in with Google or
+            with an email address and password.
           </AlertDescription>
         </Alert>
       </CardContent>
       <CardFooter className="flex justify-end px-6 pb-6 pt-0">
-        <Button onClick={() => authClient.signIn.social({ provider: "google", callbackURL: window.location.pathname })}>
-          Log in with Google
+        <Button asChild>
+          <Link href={href}>Sign in</Link>
         </Button>
       </CardFooter>
     </Card>
