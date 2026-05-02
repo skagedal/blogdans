@@ -24,7 +24,7 @@ export async function GET() {
       .map(async (post) => {
         const url = `${site.url}/posts/${escapeXml(post.slug)}/`;
         const fullPost = await getPost(post.slug);
-        const htmlContent = await markdownToHtml(fullPost.content);
+        const htmlContent = await markdownToHtml(fullPost.content, fullPost.format);
         
         return `
         <item>

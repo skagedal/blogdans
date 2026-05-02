@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { format } from "date-fns";
 import { getPost, getAllPosts } from "@/lib/posts";
 import type { Metadata } from "next";
-import { MarkdownPost } from "@/components/markdown-components";
+import { MarkdownPost, MdxPost } from "@/components/markdown-components";
 import { Footer } from "@/components/footer";
 import z from "zod";
 import { Comments } from "@/components/comments/comments";
@@ -96,7 +96,11 @@ export default async function PostPage({
             </div>
           </header>
           {post.draft && <DraftCard />}
-          <MarkdownPost content={post.content} />
+          {post.format === "mdx" ? (
+            <MdxPost content={post.content} />
+          ) : (
+            <MarkdownPost content={post.content} />
+          )}
           {showComments && (
             <Comments
               pageId={slug}

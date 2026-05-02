@@ -74,7 +74,9 @@ function createReporter(): Reporter {
     };
   }
 
-  logger.info("No Slack reporting will be done, webhook URL is not configured.");
+  if (process.env.NODE_ENV === "production") {
+    logger.info("No Slack reporting will be done, webhook URL is not configured.");
+  }
   return winstonReporter;
 }
 
