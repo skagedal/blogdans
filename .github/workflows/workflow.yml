@@ -64,31 +64,22 @@
                     tags: "skagedal/blogdans:latest",
                   },
               },
+              { name: "Set up kubectl", uses: "azure/setup-kubectl@v4" },
               {
-                id: "ssh",
-                name: "Set up SSH",
+                name: "Configure kubeconfig",
                 env:
                   {
-                    SSH_KEY: "${{ secrets.SSH_KEY }}",
-                    SSH_KNOWN_HOSTS: "${{ secrets.SSH_KNOWN_HOSTS }}",
+                    KUBECONFIG_BASE64: "${{ secrets.KUBECONFIG_BASE64 }}",
                   },
-                run: "./ci/setup-ssh",
+                run: "./ci/setup-kubeconfig",
               },
               {
-                name: "Deploy files to server",
-                run: "rsync --archive --verbose --compress --delete ./bin ./db blogdans:",
+                name: "Run database migrations",
+                run: "./ci/run-migrations",
               },
               {
-                name: "Run migrations",
-                run: "ssh blogdans ./bin/run-migrations",
-              },
-              {
-                name: "Pull Docker image",
-                run: "ssh blogdans ./bin/fetch-latest",
-              },
-              {
-                name: "Stop Docker container, making systemd restart it",
-                run: "ssh blogdans ./bin/stop-service",
+                name: "Roll out the new image",
+                run: "kubectl -n blogdans rollout restart deploy/blogdans && kubectl -n blogdans rollout status deploy/blogdans --timeout=180s",
               },
               {
                 id: "report-success",

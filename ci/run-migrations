@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+# Apply pending dbmate migrations against the in-cluster Postgres via a
+# one-shot Kubernetes Job. SQL files are mounted from a ConfigMap built
+# fresh from db/migrations/ on every run. Requires $KUBECONFIG to be set
+# (./ci/setup-kubeconfig handles that earlier in the workflow).
+#
+# Why a Job instead of `kubectl exec` against the running pod: keeps the
+# blogdans image free of dbmate, separates migration failures from app
+# rollout (a failed Job stops the workflow before we restart the
+# Deployment, so the old pods keep serving), and the same approach
+# generalises if we ever add other apps with their own migrations.
+set -euo pipefail
+
+NS=blogdans
+SHA=${GITHUB_SHA:-$(git rev-parse HEAD)}
+SHORT=${SHA:0:7}
+JOB="blogdans-migrate-${SHORT}"
+CM="blogdans-migrations"
+
+echo "==> Uploading migration SQL into ConfigMap ${CM}"
+kubectl -n "$NS" create configmap "$CM" \
+  --from-file=db/migrations \
+  --dry-run=client -o yaml | kubectl apply -f -
+
+# Drop any prior Job with the same name (e.g. retry of the same SHA);
+# Jobs are immutable, so we can't just re-apply.
+kubectl -n "$NS" delete job "$JOB" --ignore-not-found --wait=true
+
+echo "==> Submitting migration Job ${JOB}"
+cat <<YAML | kubectl apply -f -
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ${JOB}
+  namespace: ${NS}
+  labels:
+    app: blogdans-migrate
+    sha: "${SHORT}"
+spec:
+  backoffLimit: 0
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: dbmate
+          image: ghcr.io/amacneil/dbmate:latest
+          args: ["up"]
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: blogdans
+                  key: database_url
+            # dbmate defaults to ./db/migrations relative to cwd, which is
+            # awkward when the cwd is just a container default. Pin it.
+            - name: DBMATE_MIGRATIONS_DIR
+              value: /migrations
+          volumeMounts:
+            - name: migrations
+              mountPath: /migrations
+      volumes:
+        - name: migrations
+          configMap:
+            name: ${CM}
+YAML
+
+# kubectl wait can only check one condition at a time, so poll for either
+# Complete=True or Failed=True (whichever lands first).
+echo "==> Waiting for the Job to finish"
+RESULT=timeout
+for _ in $(seq 1 120); do
+  CONDS=$(kubectl -n "$NS" get job "$JOB" \
+    -o jsonpath='{.status.conditions[?(@.type=="Complete")].status},{.status.conditions[?(@.type=="Failed")].status}' \
+    2>/dev/null || echo ',')
+  case "$CONDS" in
+    True,*) RESULT=ok; break ;;
+    *,True) RESULT=failed; break ;;
+  esac
+  sleep 1
+done
+
+echo "==> Migration logs"
+kubectl -n "$NS" logs --tail=500 "job/$JOB" 2>&1 || true
+
+if [ "$RESULT" != ok ]; then
+  echo "Migration result: $RESULT"
+  exit 1
+fi
+echo "Migrations succeeded."
