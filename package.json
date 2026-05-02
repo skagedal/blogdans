@@ -43,6 +43,7 @@
     "remark-gfm": "latest",
     "remark-parse": "latest",
     "remark-rehype": "latest",
+    "resend": "^6.12.2",
     "superjson": "latest",
     "tailwind-merge": "latest",
     "unified": "latest",

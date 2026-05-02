@@ -8,6 +8,8 @@ const featureVersion = z.enum(["next", "current"]);
 type Config = {
   databaseUrl: string;
   slackWebhookUrl?: string;
+  resendApiKey?: string;
+  resendFromEmail: string;
   featureVersion: z.infer<typeof featureVersion> | undefined;
   showDrafts: boolean;
 };
@@ -71,6 +73,8 @@ function environmentFeatureVersion(): z.infer<typeof featureVersion> | undefined
 export const config: Config = {
   databaseUrl: environmentDatabaseUrl(),
   slackWebhookUrl: readSecretIfAvailable('SLACK_WEBHOOK_URI'),
+  resendApiKey: readSecretIfAvailable('RESEND_API_KEY'),
+  resendFromEmail: env.RESEND_FROM_EMAIL ?? 'Skagedal <noreply@skagedal.tech>',
   featureVersion: environmentFeatureVersion(),
   showDrafts: env.SHOW_DRAFTS === 'true',
 };

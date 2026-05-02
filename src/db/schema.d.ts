@@ -44,6 +44,12 @@ export interface Comment {
   updated_at: Generated<Timestamp>;
 }
 
+export interface PasswordResetLog {
+  email: string;
+  id: Generated<string>;
+  sent_at: Generated<Timestamp>;
+}
+
 export interface Post {
   created_at: Generated<Timestamp>;
   id: string;
@@ -96,6 +102,7 @@ export interface DB {
   account: Account;
   blogdans_user: BlogdansUser;
   comment: Comment;
+  password_reset_log: PasswordResetLog;
   post: Post;
   roles: Roles;
   session: Session;
