@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -104,7 +105,17 @@ export function LoginForm({ next }: { next: string }) {
             />
           </div>
           <div className="space-y-1">
-            <label htmlFor="password" className="text-sm font-medium">Password</label>
+            <div className="flex items-baseline justify-between">
+              <label htmlFor="password" className="text-sm font-medium">Password</label>
+              {!isSignUp && (
+                <Link
+                  href="/forgot-password"
+                  className="text-xs text-muted-foreground underline hover:text-foreground"
+                >
+                  Forgot your password?
+                </Link>
+              )}
+            </div>
             <input
               id="password"
               type="password"

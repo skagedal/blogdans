@@ -80,6 +80,17 @@ CREATE TABLE public.comment (
 
 
 --
+-- Name: password_reset_log; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.password_reset_log (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    sent_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    email text NOT NULL
+);
+
+
+--
 -- Name: post; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -191,6 +202,14 @@ ALTER TABLE ONLY public.comment
 
 
 --
+-- Name: password_reset_log password_reset_log_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.password_reset_log
+    ADD CONSTRAINT password_reset_log_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: post post_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -274,6 +293,13 @@ CREATE INDEX "account_userId_idx" ON public.account USING btree ("userId");
 --
 
 CREATE INDEX idx_user_roles_user_id ON public.user_roles USING btree (user_id);
+
+
+--
+-- Name: password_reset_log_sent_at_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX password_reset_log_sent_at_idx ON public.password_reset_log USING btree (sent_at DESC);
 
 
 --
@@ -389,4 +415,5 @@ INSERT INTO public.schema_migrations (version) VALUES
     ('20250601073353'),
     ('20250710092143'),
     ('20251123141230'),
-    ('20260502231838');
+    ('20260502231838'),
+    ('20260503003414');
