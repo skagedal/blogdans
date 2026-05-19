@@ -23,7 +23,7 @@
     "@trpc/next": "latest",
     "@trpc/server": "latest",
     "@trpc/tanstack-react-query": "latest",
-    "better-auth": "^1.6.9",
+    "better-auth": "latest",
     "class-variance-authority": "latest",
     "clsx": "latest",
     "date-fns": "latest",
