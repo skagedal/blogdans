@@ -1,3 +1,7 @@
+# YAML manifest instead of package.json, so we can write comments like this one.
+# We'd prefer package.json5, but pnpm/action-setup (used in our CI workflow) doesn't
+# read the packageManager field from package.json5 yet - only package.json/package.yaml.
+# See https://github.com/pnpm/action-setup/pull/191 (open, unmerged as of 2026-07-30).
 {
   "name": "blogdans",
   "version": "0.1.0",
@@ -10,7 +14,7 @@
     "lint:fix": "eslint . --fix",
     "db": "kysely-codegen --out-file src/db/schema.d.ts",
     "test": "vitest",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
   },
   "dependencies": {
     "@radix-ui/react-avatar": "latest",
@@ -48,7 +52,7 @@
     "tailwind-merge": "latest",
     "unified": "latest",
     "winston": "latest",
-    "zod": "latest"
+    "zod": "latest",
   },
   "devDependencies": {
     "@tailwindcss/postcss": "latest",
@@ -64,6 +68,9 @@
     "@vitest/browser-playwright": "latest",
     "@vitest/ui": "latest",
     "dbmate": "latest",
+    # Pinned below 10.x: eslint-plugin-react (pulled in via eslint-config-next) crashes on
+    # ESLint 10 with "contextOrFilename.getFilename is not a function". Tracked at
+    # https://github.com/jsx-eslint/eslint-plugin-react/issues/3977 (open as of 2026-07-30).
     "eslint": "^9",
     "eslint-config-next": "latest",
     "kysely-codegen": "latest",
@@ -71,10 +78,14 @@
     "postcss": "latest",
     "tailwindcss": "latest",
     "testcontainers": "latest",
+    # typescript-eslint doesn't support real TS 7 yet (github.com/typescript-eslint/typescript-eslint/issues/10940),
+    # since TS 7.0 ships without a stable programmatic API. So "typescript" resolves to the
+    # 6.0 API compat shim for tooling, while @typescript/native provides the real, fast TS 7
+    # compiler as the `tsc` binary.
     "typescript": "npm:@typescript/typescript6@^6",
     "uuid": "latest",
     "vitest": "latest",
-    "vitest-browser-react": "latest"
+    "vitest-browser-react": "latest",
   },
-  "packageManager": "pnpm@10.34.5+sha512.a4ee05f2f73658255bd6a89859c065a45c28a57daefae2c893a168ee2b73168c37b91e83e57ea67654ad03f03031746430e8bce38e362e042605fb8abc80192e"
+  "packageManager": "pnpm@10.34.5+sha512.a4ee05f2f73658255bd6a89859c065a45c28a57daefae2c893a168ee2b73168c37b91e83e57ea67654ad03f03031746430e8bce38e362e042605fb8abc80192e",
 }
