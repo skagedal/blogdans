@@ -7,7 +7,7 @@ WORKDIR /build
 # UPGRADE_POINT
 RUN npm install -g pnpm@10.23.0
 
-COPY ./package.json ./
+COPY ./package.yaml ./
 COPY ./pnpm-lock.yaml ./
 
 RUN pnpm install --frozen-lockfile
