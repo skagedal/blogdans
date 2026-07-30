@@ -130,7 +130,7 @@ importers:
         specifier: latest
         version: 26.1.1
       '@types/nodemailer':
-        specifier: ^8.0.1
+        specifier: latest
         version: 8.0.1
       '@types/pg':
         specifier: latest
@@ -157,7 +157,7 @@ importers:
         specifier: latest
         version: 2.34.1
       eslint:
-        specifier: ^9.39.4
+        specifier: ^9
         version: 9.39.5(jiti@2.7.0)
       eslint-config-next:
         specifier: latest
