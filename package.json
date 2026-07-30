@@ -59,6 +59,7 @@
     "@types/pg": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "@typescript/native": "npm:typescript@^7",
     "@vitest/browser": "latest",
     "@vitest/browser-playwright": "latest",
     "@vitest/ui": "latest",
@@ -70,7 +71,7 @@
     "postcss": "latest",
     "tailwindcss": "latest",
     "testcontainers": "latest",
-    "typescript": "^6",
+    "typescript": "npm:@typescript/typescript6@^6",
     "uuid": "latest",
     "vitest": "latest",
     "vitest-browser-react": "latest"
