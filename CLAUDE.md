@@ -26,6 +26,10 @@ This is a Next.js blog application for skagedal.tech with App Router, featuring:
 - **Filename-based dating**: Posts follow `YYYY-MM-DD-slug.md` convention
 - **Draft support**: Posts can be marked as drafts in frontmatter
 - **Navigation**: Chronological ordering with prev/next links
+- **Standalone pages** stored in `/content/pages/` (e.g. About, CV), served at `/<slug>`
+  by `src/app/[slug]/page.tsx`. Frontmatter: `title`, optional `navTitle`, `navOrder`
+  (menu order), `nav: false` (hide from menu) and `summary`. Adding a markdown file
+  there is enough to get a page and a menu entry.
 
 ### Database Design
 Uses PostgreSQL with Kysely query builder and a normalized schema:
@@ -70,3 +74,13 @@ Supports flexible configuration:
 - **Styling**: Uses shadcn/ui components with Tailwind CSS helpers (tailwind-merge, clsx, class-variance-authority)
 - **Icons**: Lucide React for general icons, react-icons for social media
 - **Deployment**: Configured for standalone Docker builds with nginx reverse proxy
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
