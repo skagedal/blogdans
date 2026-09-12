@@ -55,6 +55,14 @@
     "zod": "latest",
   },
   "devDependencies": {
+    # Next's rules on their own, rather than eslint-config-next, which also
+    # bundles eslint-plugin-react, eslint-plugin-import and
+    # eslint-plugin-jsx-a11y. All three cap their eslint peer at 9, and
+    # eslint-plugin-react crashes outright on 10. Next documents this split
+    # under "Using the plugin directly"; nothing Next-specific is lost, the
+    # plugin ships every rule and both presets.
+    "@eslint-react/eslint-plugin": "latest",
+    "@next/eslint-plugin-next": "latest",
     "@tailwindcss/postcss": "latest",
     "@tailwindcss/typography": "latest",
     "@testcontainers/postgresql": "latest",
@@ -68,16 +76,14 @@
     "@vitest/browser-playwright": "latest",
     "@vitest/ui": "latest",
     "dbmate": "latest",
-    # Pinned below 10.x: eslint-plugin-react (pulled in via eslint-config-next) crashes on
-    # ESLint 10 with "contextOrFilename.getFilename is not a function". Tracked at
-    # https://github.com/jsx-eslint/eslint-plugin-react/issues/3977 (open as of 2026-07-30).
-    "eslint": "^9",
-    "eslint-config-next": "latest",
+    "eslint": "latest",
+    "eslint-plugin-react-hooks": "latest",
     "kysely-codegen": "latest",
     "playwright": "latest",
     "postcss": "latest",
     "tailwindcss": "latest",
     "testcontainers": "latest",
+    "typescript-eslint": "latest",
     # typescript-eslint doesn't support real TS 7 yet (github.com/typescript-eslint/typescript-eslint/issues/10940),
     # since TS 7.0 ships without a stable programmatic API. So "typescript" resolves to the
     # 6.0 API compat shim for tooling, while @typescript/native provides the real, fast TS 7

@@ -1,3 +1,26 @@
 #!/usr/bin/env bash
-corepack up
+#
+# There is no `corepack up` here. Corepack locates a project by looking for a
+# package.json, and this repo's manifest is package.yaml, so the command exits
+# 1 having done nothing. pnpm cannot stand in for it either: pnpm on this
+# machine *is* corepack, and `pnpm self-update` refuses to run under it.
+#
+# So the packageManager field in package.yaml is hand-maintained. It pins a
+# pnpm major, and moving to a newer one is a manual edit, the same as any
+# other range in this repo.
 pnpm update --no-save
+
+# Pin the actions in .github/workflows to commit SHAs and move them forward,
+# honouring the three-day min_age in .pinact.yaml. Exit 1 means pinact found
+# something to pin and 2 that something needs a person to decide, neither of
+# which should fail this script — bin/update-dependencies.sh in dotfiles runs
+# under set -e and would stop sweeping the other repos.
+#
+# Unauthenticated GitHub API calls are capped at 60 an hour, which one run
+# can get through, so lend it the gh token when there is one.
+if [[ -z "${PINACT_GITHUB_TOKEN:-}" && -z "${GITHUB_TOKEN:-}" ]] &&
+    command -v gh >/dev/null 2>&1; then
+    PINACT_GITHUB_TOKEN="$(gh auth token 2>/dev/null || true)"
+    [[ -n "$PINACT_GITHUB_TOKEN" ]] && export PINACT_GITHUB_TOKEN
+fi
+pinact run --update || echo "pinact exited $?, see above"
