@@ -2,7 +2,7 @@
 
 person=$(git log -n1 --format='format:%aN' | awk '{print $1}')
 commithash=$(git log -n1 --format='format:%H')
-commiturl="https://github.com/skagedal/blog.skagedal.tech/commit/${commithash}"
+commiturl="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commit/${commithash}"
 commit="<${commiturl}|commit>"
 
 if [[ "$1" == "success" ]]; then
