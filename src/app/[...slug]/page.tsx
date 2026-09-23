@@ -8,9 +8,14 @@ import { Footer } from "@/components/footer";
 /* Only the pages in content/pages live here; anything else is a 404. */
 export const dynamicParams = false;
 
+/* A catch-all segment, so that content/pages/tools/privacy.md is /tools/privacy. */
 const paramsSchema = z.object({
-  slug: z.string(),
+  slug: z.array(z.string()),
 });
+
+function slugOf(params: z.infer<typeof paramsSchema>): string {
+  return params.slug.join("/");
+}
 
 interface ContentPageProps {
   params: Promise<z.infer<typeof paramsSchema>>;
@@ -19,14 +24,14 @@ interface ContentPageProps {
 export async function generateStaticParams() {
   const pages = await getAllPages();
   return pages.map((page) => ({
-    slug: page.slug,
+    slug: page.slug.split("/"),
   }));
 }
 
 export async function generateMetadata(
   props: ContentPageProps
 ): Promise<Metadata> {
-  const { slug } = paramsSchema.parse(await props.params);
+  const slug = slugOf(paramsSchema.parse(await props.params));
   const page = await getPage(slug);
 
   if (!page) {
@@ -38,7 +43,7 @@ export async function generateMetadata(
   const description = page.summary || `${page.title} on skagedal.tech`;
 
   return {
-    title: `${page.title} | skagedal.tech`,
+    title: page.title,
     description,
     openGraph: {
       type: "website",
@@ -55,7 +60,7 @@ export async function generateMetadata(
 }
 
 export default async function ContentPage({ params }: ContentPageProps) {
-  const { slug } = paramsSchema.parse(await params);
+  const slug = slugOf(paramsSchema.parse(await params));
   const page = await getPage(slug);
 
   if (!page) {

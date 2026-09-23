@@ -41,7 +41,7 @@ export async function generateMetadata(
   const ogImageUrl = post.ogImage ?? `/posts/${post.slug}/og`;
 
   return {
-    title: `${post.title} | skagedal.tech`,
+    title: post.title,
     description,
     openGraph: {
       type: "article",
