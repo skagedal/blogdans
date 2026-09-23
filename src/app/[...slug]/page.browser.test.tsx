@@ -3,11 +3,14 @@ import { expect, test, vi } from 'vitest'
 import ContentPage from './page'
 
 // next/navigation needs a `process` global, which the browser test environment lacks
-vi.mock('next/navigation', () => ({
-  notFound: () => {
+vi.mock('next/navigation', () => {
+  const notFound = () => {
     throw new Error('notFound')
-  },
-}))
+  }
+  // The pre-bundled next/navigation is interop'd with a default export, and
+  // the mock has to match its shape or the import of it fails to link.
+  return { notFound, default: { notFound } }
+})
 
 vi.mock('@/lib/pages', () => ({
   getAllPages: vi.fn(() => Promise.resolve([])),
@@ -31,7 +34,7 @@ vi.mock('@/components/footer', () => ({
 
 test('renders a markdown page', async () => {
   const screen = await render(
-    await ContentPage({ params: Promise.resolve({ slug: 'cv' }) })
+    await ContentPage({ params: Promise.resolve({ slug: ['cv'] }) })
   )
 
   // The title comes from the frontmatter, not the markdown body

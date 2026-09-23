@@ -5,8 +5,14 @@ import { z } from "zod";
 
 const pagesDir = path.join(process.cwd(), "content", "pages");
 
-/** Slugs come straight from the URL, so keep them boring. */
-const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+/**
+ * Slugs come straight from the URL, so keep them boring. A slug may have
+ * several segments — `content/pages/tools/privacy.md` is `/tools/privacy` —
+ * and since each segment is lowercase letters, digits and hyphens only, a
+ * slug can never climb out of content/pages.
+ */
+const segment = "[a-z0-9]+(?:-[a-z0-9]+)*";
+const slugPattern = new RegExp(`^${segment}(?:/${segment})*$`);
 
 const Front = z.object({
   title: z.string(),
@@ -52,17 +58,23 @@ function byNavOrderThenTitle(a: Page, b: Page): number {
  * @returns Metadata for all pages
  */
 export async function getAllPages(): Promise<Page[]> {
-  const files = await fs.readdir(pagesDir);
   const pages: Page[] = [];
 
-  for (const file of files) {
-    if (!file.endsWith(".md")) continue;
-    const slug = file.replace(/\.md$/, "");
-    const raw = await fs.readFile(path.join(pagesDir, file), "utf8");
-    const { data } = matter(raw);
-    pages.push(toPage(slug, data));
+  async function walk(dir: string, prefix: string): Promise<void> {
+    for (const entry of await fs.readdir(dir, { withFileTypes: true })) {
+      const next = prefix ? `${prefix}/${entry.name}` : entry.name;
+      if (entry.isDirectory()) {
+        await walk(path.join(dir, entry.name), next);
+      } else if (entry.name.endsWith(".md")) {
+        const slug = next.replace(/\.md$/, "");
+        const raw = await fs.readFile(path.join(dir, entry.name), "utf8");
+        const { data } = matter(raw);
+        pages.push(toPage(slug, data));
+      }
+    }
   }
 
+  await walk(pagesDir, "");
   return pages.sort(byNavOrderThenTitle);
 }
 

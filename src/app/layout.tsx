@@ -9,7 +9,7 @@ const site = getSite();
 export const metadata: Metadata = {
   title: {
     default: site.name,
-    template: `%s · {site.name}`,
+    template: `%s · ${site.name}`,
   },
   description: site.description,
   authors: [{ name: "Simon Kågedal Reimer", url: "https://skagedal.tech" }],
