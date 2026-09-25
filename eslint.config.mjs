@@ -1,7 +1,7 @@
 // Flat config for ESLint 10. Next's rules come from @next/eslint-plugin-next
 // directly rather than from eslint-config-next, which also bundles
 // eslint-plugin-react, eslint-plugin-import and eslint-plugin-jsx-a11y, none
-// of which support ESLint 10. See the comment in package.yaml.
+// of which support ESLint 10. See the comment in package.json5.
 //
 // The import and accessibility rules those plugins brought are deliberately
 // not replaced. eslint-plugin-import-x covers the first and does support

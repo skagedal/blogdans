@@ -1,7 +1,6 @@
-# YAML manifest instead of package.json, so we can write comments like this one.
-# We'd prefer package.json5, but pnpm/action-setup (used in our CI workflow) doesn't
-# read the packageManager field from package.json5 yet - only package.json/package.yaml.
-# See https://github.com/pnpm/action-setup/pull/191 (open, unmerged as of 2026-07-30).
+// JSON5 manifest instead of package.json, so we can write comments like this one.
+// pnpm/action-setup doesn't read the packageManager field from package.json5 yet, so CI
+// uses a fork that does until https://github.com/pnpm/action-setup/pull/290 lands.
 {
   "name": "blogdans",
   "version": "0.1.0",
@@ -55,12 +54,12 @@
     "zod": "latest",
   },
   "devDependencies": {
-    # Next's rules on their own, rather than eslint-config-next, which also
-    # bundles eslint-plugin-react, eslint-plugin-import and
-    # eslint-plugin-jsx-a11y. All three cap their eslint peer at 9, and
-    # eslint-plugin-react crashes outright on 10. Next documents this split
-    # under "Using the plugin directly"; nothing Next-specific is lost, the
-    # plugin ships every rule and both presets.
+    // Next's rules on their own, rather than eslint-config-next, which also
+    // bundles eslint-plugin-react, eslint-plugin-import and
+    // eslint-plugin-jsx-a11y. All three cap their eslint peer at 9, and
+    // eslint-plugin-react crashes outright on 10. Next documents this split
+    // under "Using the plugin directly"; nothing Next-specific is lost, the
+    // plugin ships every rule and both presets.
     "@eslint-react/eslint-plugin": "latest",
     "@next/eslint-plugin-next": "latest",
     "@tailwindcss/postcss": "latest",
@@ -84,10 +83,10 @@
     "tailwindcss": "latest",
     "testcontainers": "latest",
     "typescript-eslint": "latest",
-    # typescript-eslint doesn't support real TS 7 yet (github.com/typescript-eslint/typescript-eslint/issues/10940),
-    # since TS 7.0 ships without a stable programmatic API. So "typescript" resolves to the
-    # 6.0 API compat shim for tooling, while @typescript/native provides the real, fast TS 7
-    # compiler as the `tsc` binary.
+    // typescript-eslint doesn't support real TS 7 yet (github.com/typescript-eslint/typescript-eslint/issues/10940),
+    // since TS 7.0 ships without a stable programmatic API. So "typescript" resolves to the
+    // 6.0 API compat shim for tooling, while @typescript/native provides the real, fast TS 7
+    // compiler as the `tsc` binary.
     "typescript": "npm:@typescript/typescript6@^6",
     "uuid": "latest",
     "vitest": "latest",
