@@ -28,9 +28,6 @@ export default defineConfig({
             '@': resolve(__dirname, './src'),
           },
         },
-        esbuild: {
-          jsx: 'automatic',
-        },
       },
       // Node.js tests
       {
@@ -44,9 +41,6 @@ export default defineConfig({
           alias: {
             '@': resolve(__dirname, './src'),
           },
-        },
-        esbuild: {
-          jsx: 'automatic',
         },
       },
     ],
