@@ -16,10 +16,11 @@ cd "$(dirname "$0")/.." || exit 1
 pnpm update --no-save
 
 # Pin the actions in .github/workflows to commit SHAs and move them forward,
-# honouring the three-day min_age in .pinact.yaml. Exit 1 means pinact found
-# something to pin and 2 that something needs a person to decide, neither of
-# which should fail this script — finding something to pin is the point of
-# running it, and the caller reads the working tree to see what happened.
+# honouring the three-day min_age in .pinact.yaml. Exit 2 means pinact found
+# something it will not decide on its own — a branch ref, or a pin younger
+# than min_age — which is worth reading but no reason to throw away the rest
+# of the update. Any other failure is pinact itself failing, a GitHub API
+# error or a rate limit, and fails the script with it.
 #
 # Unauthenticated GitHub API calls are capped at 60 an hour, which one run
 # can get through, so lend it the gh token when there is one.
@@ -28,4 +29,10 @@ if [[ -z "${PINACT_GITHUB_TOKEN:-}" && -z "${GITHUB_TOKEN:-}" ]] &&
     PINACT_GITHUB_TOKEN="$(gh auth token 2>/dev/null || true)"
     [[ -n "$PINACT_GITHUB_TOKEN" ]] && export PINACT_GITHUB_TOKEN
 fi
-pinact run --update || echo "pinact exited $?, see above"
+status=0
+pinact run --update || status=$?
+case "$status" in
+    0) ;;
+    2) echo "pinact left something for a person to decide, see above" ;;
+    *) echo "pinact failed (exit $status)" >&2; exit "$status" ;;
+esac
