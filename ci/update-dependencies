@@ -8,13 +8,18 @@
 # So the packageManager field in package.yaml is hand-maintained. It pins a
 # pnpm major, and moving to a newer one is a manual edit, the same as any
 # other range in this repo.
+
+# Both commands below act on the current directory, so the script has to be
+# somewhere known rather than wherever it was called from.
+cd "$(dirname "$0")/.." || exit 1
+
 pnpm update --no-save
 
 # Pin the actions in .github/workflows to commit SHAs and move them forward,
 # honouring the three-day min_age in .pinact.yaml. Exit 1 means pinact found
 # something to pin and 2 that something needs a person to decide, neither of
-# which should fail this script — bin/update-dependencies.sh in dotfiles runs
-# under set -e and would stop sweeping the other repos.
+# which should fail this script — finding something to pin is the point of
+# running it, and the caller reads the working tree to see what happened.
 #
 # Unauthenticated GitHub API calls are capped at 60 an hour, which one run
 # can get through, so lend it the gh token when there is one.
