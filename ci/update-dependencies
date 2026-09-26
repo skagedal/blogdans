@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 #
 # There is no `corepack up` here. Corepack locates a project by looking for a
-# package.json, and this repo's manifest is package.yaml, so the command exits
+# package.json, and this repo's manifest is package.json5, so the command exits
 # 1 having done nothing. pnpm cannot stand in for it either: pnpm on this
 # machine *is* corepack, and `pnpm self-update` refuses to run under it.
 #
-# So the packageManager field in package.yaml is hand-maintained. It pins a
+# So the packageManager field in package.json5 is hand-maintained. It pins a
 # pnpm major, and moving to a newer one is a manual edit, the same as any
 # other range in this repo.
 
