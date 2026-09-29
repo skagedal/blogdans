@@ -54,21 +54,16 @@ function parseFile(file: string): { slug: string; format: PostFormat } | null {
   return null;
 }
 
-async function findPostFile(slug: string): Promise<{ filePath: string; format: PostFormat } | null> {
-  const mdxPath = path.join(postsDir, `${slug}.mdx`);
-  try {
-    await fs.access(mdxPath);
-    return { filePath: mdxPath, format: "mdx" };
-  } catch {
-    // fall through
+async function readPostFile(slug: string): Promise<{ raw: string; format: PostFormat } | null> {
+  for (const format of ["mdx", "md"] as const) {
+    try {
+      const raw = await fs.readFile(path.join(postsDir, `${slug}.${format}`), "utf8");
+      return { raw, format };
+    } catch {
+      // try the next format
+    }
   }
-  const mdPath = path.join(postsDir, `${slug}.md`);
-  try {
-    await fs.access(mdPath);
-    return { filePath: mdPath, format: "md" };
-  } catch {
-    return null;
-  }
+  return null;
 }
 
 /**
@@ -114,12 +109,11 @@ export async function getAllPosts(): Promise<Post[]> {
 }
 
 export async function getPost(slug: string): Promise<PostComplete> {
-  const found = await findPostFile(slug);
+  const found = await readPostFile(slug);
   if (!found) {
     throw new Error(`Post not found: ${slug}`);
   }
-  const raw = await fs.readFile(found.filePath, "utf8");
-  const { data, content } = matter(raw);
+  const { data, content } = matter(found.raw);
   const { title, date: frontmatterDate, draft, summary, tags, ogImage, hackernews, bluesky, linkedin } = Front.parse(data);
   const date = frontmatterDate ?? getDateFromSlug(slug);
 
