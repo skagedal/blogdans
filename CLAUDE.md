@@ -24,6 +24,9 @@ This is a Next.js blog application for skagedal.tech with App Router, featuring:
 ### Content System
 - **Markdown blog posts** stored in `/content/posts/` with frontmatter
 - **Filename-based dating**: Posts follow `YYYY-MM-DD-slug.md` convention
+- **MDX posts**: A post can be `.mdx` instead of `.md` to embed components such as
+  `<Asciinema src=... alt=... />` (allowlist in `src/components/markdown-components.tsx`).
+  The RSS feed replaces components with their `alt` text. See `RECORDING.md` for casts.
 - **Draft support**: Posts can be marked as drafts in frontmatter
 - **Navigation**: Chronological ordering with prev/next links
 - **Standalone pages** stored in `/content/pages/` (e.g. About, CV), served at `/<slug>`

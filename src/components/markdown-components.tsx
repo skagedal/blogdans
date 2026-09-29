@@ -6,6 +6,7 @@ import rehypeHighlight from "rehype-highlight";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize from "rehype-sanitize";
 import { defaultSchema } from "rehype-sanitize";
+import { MDXRemote } from "next-mdx-remote/rsc";
 import {
   Paragraph,
   H1,
@@ -27,6 +28,7 @@ import {
   TableHeaderRow,
   TableCell,
 } from "./ui/typography";
+import { Asciinema } from "./asciinema";
 
 // Note: I added rehype-raw and rehype-sanitize only to allow the iframe and figure tags
 // used in some early blog posts. Would be neat if we could avoid this.
@@ -80,5 +82,28 @@ export function MarkdownPost({ content }: { content: string }) {
     >
       {content}
     </Markdown>
+  );
+}
+
+// MDX content is authored in this repo and trusted, so we don't run
+// rehype-sanitize. Safety comes from the component allowlist below — anything
+// not listed renders as a plain HTML element with no extra capabilities.
+const mdxComponents = {
+  ...markdownComponents,
+  Asciinema,
+};
+
+export function MdxPost({ content }: { content: string }) {
+  return (
+    <MDXRemote
+      source={content}
+      components={mdxComponents}
+      options={{
+        mdxOptions: {
+          remarkPlugins: [remarkGfm],
+          rehypePlugins: [rehypeHighlight],
+        },
+      }}
+    />
   );
 }
