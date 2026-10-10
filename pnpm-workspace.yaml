@@ -4,3 +4,9 @@ allowBuilds:
   ssh2: true
 
 minimumReleaseAge: 7200
+
+# Security fixes the parents don't pick up on their own; drop each once they do.
+overrides:
+  # asciinema-player > solid-js@1.9.15 wants seroval ~1.5 (Dependabot #4, #5).
+  seroval: ^1.6.3
+  seroval-plugins: ^1.6.3
