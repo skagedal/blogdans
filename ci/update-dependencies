@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
 #
-# There is no `corepack up` here. Corepack locates a project by looking for a
-# package.json, and this repo's manifest is package.json5, so the command exits
-# 1 having done nothing. pnpm cannot stand in for it either: pnpm on this
-# machine *is* corepack, and `pnpm self-update` refuses to run under it.
+# This script does not update pnpm itself. `pnpm self-update` updates the pnpm
+# on PATH and leaves the packageManager field in package.json5 alone.
 #
-# So the packageManager field in package.json5 is hand-maintained. It pins a
-# pnpm major, and moving to a newer one is a manual edit, the same as any
-# other range in this repo.
+# So that field is hand-maintained: it pins an exact pnpm, and moving to a
+# newer one is a manual edit. The pnpm version in main.Dockerfile has to move
+# with it.
 
 # Both commands below act on the current directory, so the script has to be
 # somewhere known rather than wherever it was called from.
