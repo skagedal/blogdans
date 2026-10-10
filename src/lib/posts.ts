@@ -48,7 +48,7 @@ function getDateFromSlug(slug: string): Date {
   return new Date(`${parts[0]}-${parts[1]}-${parts[2]}`);
 }
 
-function parseFile(file: string): { slug: string; format: PostFormat } | null {
+export function parseFile(file: string): { slug: string; format: PostFormat } | null {
   if (file.endsWith(".mdx")) return { slug: file.replace(/\.mdx$/, ""), format: "mdx" };
   if (file.endsWith(".md")) return { slug: file.replace(/\.md$/, ""), format: "md" };
   return null;

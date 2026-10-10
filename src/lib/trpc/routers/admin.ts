@@ -1,9 +1,6 @@
 import { router, protectedProcedure } from '../server';
 import { z } from 'zod';
-import { Service } from '@/lib/service';
-import { db } from '@/db/client';
-
-const service = new Service(db);
+import { service } from '@/lib/service';
 
 const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
   ctx.permission.check('admin:write');
