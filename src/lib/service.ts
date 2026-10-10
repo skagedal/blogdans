@@ -1,6 +1,7 @@
 import type { DB } from "@/db/schema";
 import { reporter } from "./reporter";
 import { type Kysely } from "kysely";
+import { db } from "@/db/client";
 
 export class Service {
   constructor(private db: Kysely<DB>) {}
@@ -200,3 +201,5 @@ export class Service {
   }
 
 }
+
+export const service = new Service(db);

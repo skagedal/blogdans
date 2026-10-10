@@ -2,9 +2,9 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import matter from "gray-matter";
 import { z } from "zod";
-import { Service } from "./service";
+import { service } from "./service";
+import { parseFile } from "./posts";
 import { logger } from "@/logger";
-import { db } from "@/db/client";
 
 const postsDir = path.join(process.cwd(), "content", "posts");
 
@@ -20,15 +20,15 @@ const Front = z.object({
  * Creates a record in the post table for each markdown file in content/posts
  */
 export async function syncPostsToDatabase(): Promise<{ successCount: number, failureCount: number }> {
-  const service = new Service(db);
   const files = await fs.readdir(postsDir);
   let successCount = 0;
   let failureCount = 0;
 
   for (const file of files) {
-    if (!file.endsWith(".md")) continue;
+    const parsed = parseFile(file);
+    if (!parsed) continue;
 
-    const slug = file.replace(/\.md$/, "");
+    const { slug } = parsed;
     const filePath = path.join(postsDir, file);
 
     try {
