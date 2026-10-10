@@ -5,10 +5,10 @@ FROM base AS build
 WORKDIR /build
 
 # UPGRADE_POINT
-RUN npm install -g pnpm@10.23.0
+RUN npm install -g pnpm@12.10.1
 
 COPY ./package.json5 ./
-COPY ./pnpm-lock.yaml ./
+COPY ./pnpm-lock.yaml ./pnpm-workspace.yaml ./
 
 RUN pnpm install --frozen-lockfile
 
