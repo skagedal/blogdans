@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { Anchor } from "@/components/ui/typography";
 
 type Props = {
@@ -11,37 +12,18 @@ export function DiscussLinks({ hackernews, bluesky, linkedin }: Props) {
     return null;
   }
 
-  const links: React.ReactNode[] = [];
-  if (hackernews) {
-    links.push(
-      <Anchor key="hn" href={hackernews}>
-        Hacker News
-      </Anchor>
-    );
-  }
-  if (bluesky) {
-    links.push(
-      <Anchor key="bsky" href={bluesky}>
-        Blue Sky
-      </Anchor>
-    );
-  }
-  if (linkedin) {
-    links.push(
-      <Anchor key="li" href={linkedin}>
-        Linked In
-      </Anchor>
-    );
-  }
+  const links = [
+    { key: "hn", href: hackernews, label: "Hacker News" },
+    { key: "bsky", href: bluesky, label: "Blue Sky" },
+    { key: "li", href: linkedin, label: "Linked In" },
+  ].filter((link): link is typeof link & { href: string } => !!link.href);
 
-  const joined: React.ReactNode[] = [];
-  links.forEach((link, i) => {
-    if (i > 0) {
-      const sep = i === links.length - 1 ? " or " : ", ";
-      joined.push(<span key={`sep-${i}`}>{sep}</span>);
-    }
-    joined.push(link);
-  });
+  const joined = links.map(({ key, href, label }, i) => (
+    <Fragment key={key}>
+      {i > 0 && (i === links.length - 1 ? " or " : ", ")}
+      <Anchor href={href}>{label}</Anchor>
+    </Fragment>
+  ));
 
   return (
     <p className="mb-6 text-muted-foreground">
