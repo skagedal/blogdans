@@ -30,6 +30,9 @@ export default tseslint.config(
   {
     rules: {
       "@next/next/no-img-element": "off",
+      // Warnings in the preset, raised to errors once the code had none left.
+      "@eslint-react/no-forward-ref": "error",
+      "@eslint-react/no-array-index-key": "error",
     },
   },
 );
