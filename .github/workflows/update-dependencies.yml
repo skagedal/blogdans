@@ -42,7 +42,8 @@ jobs:
 
       # The pnpm version comes from the packageManager field in the manifest,
       # which the action needs pointing at because it is not a package.json.
-      - uses: skagedal/action-pnpm-setup@18f18a578001a9bddec4c6c1583d7ab2f25d7b4d # json5-package-manifest, pnpm/action-setup#290
+      # A fork that reads package.json5, until pnpm/action-setup#290 lands.
+      - uses: skagedal/action-pnpm-setup@18f18a578001a9bddec4c6c1583d7ab2f25d7b4d # v6.1.1-json5.1
         with:
           package_json_file: package.json5
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0

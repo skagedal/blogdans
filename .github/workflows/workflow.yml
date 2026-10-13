@@ -12,8 +12,9 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # A fork that reads package.json5, until pnpm/action-setup#290 lands.
       - name: Set up pnpm
-        uses: skagedal/action-pnpm-setup@18f18a578001a9bddec4c6c1583d7ab2f25d7b4d # json5-package-manifest, pnpm/action-setup#290
+        uses: skagedal/action-pnpm-setup@18f18a578001a9bddec4c6c1583d7ab2f25d7b4d # v6.1.1-json5.1
         with:
           package_json_file: package.json5
       - name: Set up Node.js
