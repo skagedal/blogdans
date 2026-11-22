@@ -15,16 +15,19 @@ humanity. Father, musician and psychologist. Long story.
 
 *2023 – present*
 
-- Building design tools for heat engineers.
+- Building design tools for heat engineers and process support tools for installers.
 - Backend development. *Java, Spring Boot, PostgreSQL, Kafka.*
-- Web development. *TypeScript, React, NextJS.*
+- Frontend development for web and mobile. *TypeScript, React, Next.js, Flutter.*
 - Cloud infrastructure. *AWS, Terraform, Kubernetes.*
+- Data analysis. *BigQuery, dbt, Grafana.*
+- Agentic development. *Claude Code.*
+- Driving security initiatives.
 
 ### Kry
 
 *2019 – 2023*
 
-- Building patient-facing functionality. *Health coach, iCBT, real-time chat.*
+- Building digital health services for patients. *Health coach, iCBT, real-time chat.*
 - Backend development. *Java, Kotlin, MySQL, Redis, Vert.x, RxJava.*
 - Mobile app development. *Swift, iOS, Kotlin, Android.*
 - Cloud infrastructure. *AWS, Terraform.*
