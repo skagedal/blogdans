@@ -5,7 +5,7 @@ navOrder: 2
 summary: CV for Simon Kågedal Reimer, a software developer in Uppsala, Sweden.
 ---
 
-Passionate developer who cares about products that work, efficient
+Passionate developer who cares about solving real problems, efficient
 collaboration and great code. Fascinated by AI, deeply concerned about
 humanity. Father, musician and psychologist. Long story.
 
