@@ -26,7 +26,7 @@ test('renders the index page', async () => {
   await expect.element(screen.getByRole('main')).toBeVisible()
 
   // Check that the personal introduction is rendered
-  await expect.element(screen.getByText(/My name is Simon Kågedal Reimer/)).toBeVisible()
+  await expect.element(screen.getByText(/My name is Simon Kågedal/)).toBeVisible()
 
   // Check that the Posts section is rendered
   await expect.element(screen.getByRole('heading', { name: 'Posts' })).toBeVisible()

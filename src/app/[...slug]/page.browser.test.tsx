@@ -17,7 +17,7 @@ vi.mock('@/lib/pages', () => ({
   getPage: vi.fn(() =>
     Promise.resolve({
       slug: 'cv',
-      title: 'Simon Kågedal Reimer: CV',
+      title: 'Simon Kågedal: CV',
       navTitle: 'CV',
       navOrder: 2,
       nav: true,
@@ -39,7 +39,7 @@ test('renders a markdown page', async () => {
 
   // The title comes from the frontmatter, not the markdown body
   await expect
-    .element(screen.getByRole('heading', { level: 1, name: 'Simon Kågedal Reimer: CV' }))
+    .element(screen.getByRole('heading', { level: 1, name: 'Simon Kågedal: CV' }))
     .toBeVisible()
 
   // The markdown body is rendered

@@ -11,7 +11,7 @@ export default async function BlogIndex() {
         <div>
           <div className="max-w-none mb-8">
             <Paragraph>
-              My name is Simon Kågedal Reimer. I am a software engineer
+              My name is Simon Kågedal. I am a software engineer
               based in Uppsala, Sweden. This is my personal blog where I share
               my thoughts on software development, technology, and other topics
               that interest me.
