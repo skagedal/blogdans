@@ -22,7 +22,7 @@ export function Footer({ previous, next }: { previous?: Post; next?: Post }) {
       ) : (
         <div className="w-full border-t" />
       )}
-      <div className="text-muted-foreground">Simon Kågedal Reimer &lt;skagedal@gmail.com&gt;</div>
+      <div className="text-muted-foreground">Simon Kågedal &lt;skagedal@gmail.com&gt;</div>
       <SocialLinks />
     </footer>
   );

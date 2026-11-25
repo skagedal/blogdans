@@ -12,7 +12,7 @@ This page exists because services I register the tool with ask for a privacy pol
 
 ## Who is responsible
 
-Simon Kågedal Reimer, Uppsala, Sweden. [skagedal@gmail.com](mailto:skagedal@gmail.com).
+Simon Kågedal, Uppsala, Sweden. [skagedal@gmail.com](mailto:skagedal@gmail.com).
 
 ## What it does with data
 

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     template: `%s · ${site.name}`,
   },
   description: site.description,
-  authors: [{ name: "Simon Kågedal Reimer", url: "https://skagedal.tech" }],
+  authors: [{ name: "Simon Kågedal", url: "https://skagedal.tech" }],
   metadataBase: new URL(site.url),
   openGraph: {
     type: "website",

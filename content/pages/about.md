@@ -1,10 +1,10 @@
 ---
 title: About
 navOrder: 1
-summary: Simon Kågedal Reimer — a software developer in Uppsala, Sweden.
+summary: Simon Kågedal — a software developer in Uppsala, Sweden.
 ---
 
-My name is Simon Kågedal Reimer. I am a software engineer based in Uppsala,
+My name is Simon Kågedal. I am a software engineer based in Uppsala,
 Sweden, currently bringing clean energy to European homes at [Aira](https://www.airahome.com/).
 See my [CV](/cv) for details.
 

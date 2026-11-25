@@ -20,7 +20,7 @@ describe("pages", () => {
 
   test("reads a page with its content", async () => {
     const page = await getPage("cv");
-    expect(page?.title).toBe("Simon Kågedal Reimer: CV");
+    expect(page?.title).toBe("Simon Kågedal: CV");
     expect(page?.navTitle).toBe("CV");
     expect(page?.content).toContain("## Experience");
   });

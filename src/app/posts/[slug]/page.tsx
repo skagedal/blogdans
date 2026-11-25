@@ -49,7 +49,7 @@ export async function generateMetadata(
       description,
       url: `/posts/${post.slug}`,
       publishedTime: post.date.toISOString(),
-      authors: ["Simon Kågedal Reimer"],
+      authors: ["Simon Kågedal"],
       tags: post.tags,
       images: [
         {

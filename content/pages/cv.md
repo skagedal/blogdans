@@ -1,8 +1,8 @@
 ---
-title: "Simon Kågedal Reimer: CV"
+title: "Simon Kågedal: CV"
 navTitle: CV
 navOrder: 2
-summary: CV for Simon Kågedal Reimer, a software developer in Uppsala, Sweden.
+summary: CV for Simon Kågedal, a software developer in Uppsala, Sweden.
 ---
 
 Passionate developer who cares about solving real problems, efficient
